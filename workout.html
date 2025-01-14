@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>2025 Calendar (Single vs Multi Modal)</title>
+
+  <!-- [ADDED for Chart.js] - Include Chart.js from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* Prevent text selection on the entire page */
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #1E1E1E;
+      color: #EAEAEA;
+      font-family: 'Montserrat', sans-serif;
+      user-select: none;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .main-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+      padding: 1rem;
+    }
+    /* Month Bar */
+    .month-bar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 1rem;
+      width: 100%;
+      justify-content: center;
+    }
+    .month-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      width: 140px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .arrow-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 2rem;
+    }
+    .month-nav-buttons {
+      display: inline-flex;
+      gap: 0.5rem;
+    }
+    .data-buttons {
+      display: inline-flex;
+      gap: 0.5rem;
+      margin-left: 1.5rem;
+    }
+    .arrow-button {
+      background-color: #333;
+      border: 1px solid #555;
+      color: #EAEAEA;
+      cursor: pointer;
+      font-size: 1rem;
+      min-width: 2rem;
+      height: 2rem;
+      border-radius: 4px;
+      text-align: center;
+      line-height: 2rem;
+      padding: 0 0.5rem;
+      transition: background-color 0.2s;
+    }
+    .arrow-button:hover {
+      background-color: #444;
+    }
+    /* Calendar Layout */
+    .calendar-container {
+      width: 100%;
+      max-width: 700px;
+    }
+    .calendar-header,
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.3rem;
+    }
+    .calendar-header div {
+      text-align: center;
+      font-weight: bold;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #444;
+      font-size: 0.85rem;
+    }
+    .calendar-grid {
+      margin-top: 0.5rem;
+    }
+    /* Day Cell */
+    .day-cell {
+      aspect-ratio: 1 / 1;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      padding: 0.5rem;
+    }
+    .day-cell:hover {
+      outline: 2px solid #888;
+    }
+    .faded {
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    /* SHIFT BACKGROUNDS */
+    .morning-bg    { background-color: #FFAD66; }
+    .late-day-bg   { background-color: #CC8A52; }
+    .afternoon-bg  { background-color: #7AB6D9; }
+    .evening-bg    { background-color: #4F7EAA; }
+    .night-bg      { background-color: #5C4EA2; }
+    .off-bg        { background-color: #3A3A3A; }
+    .al-bg         { background-color: #616161; }
+    /* SELECTED: green border */
+    .selected {
+      outline: 2px solid limegreen !important;
+    }
+    /* Date, Refresh, Info, etc. */
+    .date-num {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-weight: bold;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.8);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .refresh-emoji {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 1rem;
+      z-index: 3;
+      cursor: pointer;
+      opacity: 0.15;
+      transition: opacity 0.2s;
+    }
+    .refresh-emoji:hover {
+      opacity: 1.0;
+    }
+    .weight-display {
+      position: absolute;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.9rem;
+      text-align: center;
+      white-space: nowrap;
+      color: #FFF;
+      font-weight: bold;
+      pointer-events: none;
+    }
+    .shift-time-text {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      font-weight: bold;
+      white-space: nowrap;
+      color: rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+    }
+    .workout-info {
+      position: absolute;
+      bottom: 4px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      line-height: 1.1;
+      color: #FFF;
+      opacity: 0.75;
+      pointer-events: none;
+    }
+    .today {
+      outline: 3px solid #FFD700;
+    }
+    /* COMPLETED BADGE */
+    .completed-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 1rem;
+      text-align: center;
+      line-height: 24px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+      opacity: 0;
+    }
+    .day-cell:hover .completed-badge:not(.enabled) {
+      opacity: 0.3;
+    }
+    .day-cell.completed .completed-badge.enabled {
+      opacity: 1.0;
+    }
+    .completed-badge:hover {
+      transform: scale(1.1);
+      opacity: 1.0;
+    }
+    /* ALERT FEATURE */
+    .alert-overlay {
+      position: absolute;
+      top: 0;
+      left: 0; 
+      right: 0;
+      height: 50%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .alert-text {
+      position: absolute;
+      top: 1.2rem;  
+      left: 0; 
+      right: 0;
+      margin: 0 auto;
+      width: 80%;
+      text-align: center;
+      font-size: 0.65rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      z-index: 3;
+      pointer-events: none;
+    }
+    /* Overlays and Modals */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 999; 
+      justify-content: center;
+      align-items: center;
+    }
+    .overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: #2D2D2D;
+      padding: 1.5rem;
+      border-radius: 6px;
+      width: 420px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .modal-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .modal-row label {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .reset-emoji {
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      font-size: 1rem;
+    }
+    .reset-emoji:hover {
+      opacity: 1.0;
+    }
+    .modal-row select, 
+    .modal-row input[type=text] {
+      width: 100%;
+      padding: 0.3rem;
+      border: 1px solid #555;
+      background: #444;
+      color: #EAEAEA;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .modal-buttons button {
+      flex: 1;
+      cursor: pointer;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #444;
+      color: #EAEAEA;
+      transition: background-color 0.2s;
+    }
+    .modal-buttons button:hover {
+      background: #555;
+    }
+    /* Color Swatches */
+    .color-swatches {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+    .swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      flex: 0 0 auto;
+    }
+    .swatch.active {
+      border-color: limegreen;
+    }
+    /* SHIFT LABEL TEXT */
+    .shift-label-text {
+      color: #f0f0f0;
+      font-weight: bold;
+    }
+    /* Stats counters text styling (modified for pastel green) */
+    .counter-value {
+      color: #77DD77;
+      font-weight: bold;
+    }
+    /* New styling for the stats summary above the graph
+       Updated to display vertically (one stat per line) */
+    .stats-summary {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .stat-item {
+      font-size: 1.1rem;
+      color: #77DD77;
+      margin-bottom: 0.5rem;
+    }
+    /* [ADDED for Chart.js] Make the chart row taller so it’s clearly visible */
+    #weightChart {
+      width: 100%;
+      height: 250px; /* The chart will resize */
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+
+    <!-- Month/Navigation/Buttons Bar -->
+    <div class="month-bar">
+      <div id="monthLabel" class="month-title">January 2025</div>
+      <div class="arrow-buttons">
+        <div class="month-nav-buttons">
+          <button class="arrow-button" onclick="prevMonth()">▲</button>
+          <button class="arrow-button" onclick="nextMonth()">▼</button>
+        </div>
+        <div class="data-buttons">
+          <button class="arrow-button" id="saveDataBtn">Save</button>
+          <button class="arrow-button" id="loadDataBtn">Load</button>
+          <button class="arrow-button" id="statsBtn">📉</button>
+        </div>
+      </div>
+      <!-- Hidden file input for Load -->
+      <input type="file" id="importFileInput" accept=".json" style="display: none;">
+    </div>
+
+    <!-- Calendar -->
+    <div class="calendar-container" id="calendar"></div>
+  </div>
+
+  <!-- Single-Cell Edit Overlay -->
+  <div class="overlay" id="singleOverlay">
+    <div class="modal" id="singleModal">
+      <h2>Edit Cell</h2>
+      <!-- SHIFT (swatches) -->
+      <div class="modal-row">
+        <label>
+          <span id="singleShiftMainLabel">Shift:</span>
+          <span class="shift-label-text" id="singleShiftLabelText">(none)</span>
+          <span class="reset-emoji" data-field="shiftClass">⟳</span>
+        </label>
+        <div class="color-swatches" id="singleColorSwatchesContainer"></div>
+      </div>
+      <!-- GYM -->
+      <div class="modal-row">
+        <label>Workout Type
+          <span class="reset-emoji" data-field="gym">⟳</span>
+        </label>
+        <select id="singleWorkoutTypeSelect">
+          <option value="Push">Push</option>
+          <option value="Pull">Pull</option>
+          <option value="Rest">Rest</option>
+        </select>
+      </div>
+      <!-- Gym Time -->
+      <div class="modal-row">
+        <label>Gym Time (HHMM)
+          <span class="reset-emoji" data-field="gymTime">⟳</span>
+        </label>
+        <input type="text" id="singleGymTimeInput" placeholder="e.g. 2100">
+      </div>
+      <!-- Work Time -->
+      <div class="modal-row">
+        <label>Work Time (HHMM)
+          <span class="reset-emoji" data-field="workTime">⟳</span>
+        </label>
+        <input type="text" id="singleWorkTimeInput" placeholder="e.g. 0600">
+      </div>
+      <!-- Weight -->
+      <div class="modal-row">
+        <label>Weight (kg)
+          <span class="reset-emoji" data-field="weight">⟳</span>
+        </label>
+        <input type="text" id="singleWeightInput" placeholder="e.g. 88.0">
+      </div>
+      <!-- ALERT TYPE -->
+      <div class="modal-row">
+        <label>Alert Type
+          <span class="reset-emoji" data-field="alertType">⟳</span>
+        </label>
+        <select id="singleAlertTypeSelect">
+          <option value="None">⚪ None</option>
+          <option value="Generic">🟢 Generic</option>
+          <option value="Birthday">🟣 Birthday</option>
+          <option value="Work">🔵 Work</option>
+          <option value="PublicHoliday">🟡 Public Holiday</option>
+        </select>
+      </div>
+      <!-- ALERT TEXT -->
+      <div class="modal-row">
+        <label>Alert Text
+          <span class="reset-emoji" data-field="alertText">⟳</span>
+        </label>
+        <input type="text" id="singleAlertTextInput" placeholder="e.g. My birthday!">
+      </div>
+      <div class="modal-buttons">
+        <button id="singleSaveBtn">Save</button>
+        <button id="singleRevertBtn" style="font-size:1.5rem;">⟳</button>
+        <button id="singleCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Cell Edit Overlay -->
+  <div class="overlay" id="multiOverlay">
+    <div class="modal" id="multiModal">
+      <h2>Edit Cells</h2>
+      <!-- Key to Change -->
+      <div class="modal-row">
+        <label>Select Key to Change</label>
+        <select id="multiKeySelect">
+          <option value="">(select key)</option>
+          <option value="shiftClass">Shift</option>
+          <option value="gym">Workout Type</option>
+          <option value="gymTime">Gym Time</option>
+          <option value="workTime">Work Time</option>
+          <option value="weight">Weight</option>
+          <option value="alertType">Alert Type</option>
+          <option value="alertText">Alert Text</option>
+        </select>
+      </div>
+      <!-- SHIFT Swatches Row -->
+      <div class="modal-row" id="multiShiftSwatchesRow" style="display:none;">
+        <label>
+          Choose Shift:
+          <span class="shift-label-text" id="multiShiftLabelText">(none)</span>
+        </label>
+        <div class="color-swatches" id="multiColorSwatchesContainer"></div>
+      </div>
+      <!-- ALERT TYPE Row -->
+      <div class="modal-row" id="multiAlertTypeRow" style="display:none;">
+        <label>Alert Type</label>
+        <select id="multiAlertTypeSelect">
+          <option value="None">⚪ None</option>
+          <option value="Generic">🟢 Generic</option>
+          <option value="Birthday">🟣 Birthday</option>
+          <option value="Work">🔵 Work</option>
+          <option value="PublicHoliday">🟡 Public Holiday</option>
+        </select>
+      </div>
+      <!-- Value Row -->
+      <div class="modal-row" id="multiValueRow" style="display:none;">
+        <label>New Value</label>
+        <input type="text" id="multiValueInput" placeholder="">
+      </div>
+      <div class="modal-buttons">
+        <button id="multiSaveBtn">Save</button>
+        <button id="multiRevertBtn" style="font-size:1.5rem;">⟳</button>
+        <button id="multiCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Overlay -->
+  <div class="overlay" id="statsOverlay">
+    <div class="modal" id="statsModal">
+      <h2>Statistics</h2>
+      <!-- New Stats Summary (weight stat removed) -->
+      <div class="stats-summary">
+        <div class="stat-item">Sessions Completed: <span class="counter-value" id="sessionCounter">0</span></div>
+        <div class="stat-item">Days Trained: <span class="counter-value" id="daysTrainedCounter">0</span></div>
+        <div class="stat-item">Percentage Trained: <span class="counter-value" id="percentageCounter">0.00%</span></div>
+      </div>
+      <!-- [ADDED for Chart.js] A row to display the weight chart -->
+      <div class="modal-row" style="height:300px;">
+        <canvas id="weightChart"></canvas>
+      </div>
+
+      <div class="modal-buttons">
+        <button id="statsCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =============================
+       1) Data + Config
+       ============================= */
+    const monthNames = [
+      "January","February","March","April","May","June",
+      "July","August","September","October","November","December"
+    ];
+    const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const LS_CALENDAR_DATA_KEY = "calendar2025Data";
+    const MS_IN_DAY = 86400000;
+
+    // Single object for all day data
+    let calendarData = JSON.parse(localStorage.getItem(LS_CALENDAR_DATA_KEY)) || {};
+
+    // The reference date for cycle
+    const referenceCycleDate = new Date(2025, 0, 9);
+
+    // Default cycle data
+    const cycleData = {
+      1:  { shiftClass: "morning-bg",   gym: "Rest", gymTime: "",      defaultShift: "0600" },
+      2:  { shiftClass: "morning-bg",   gym: "Push", gymTime: "2100",  defaultShift: "0600" },
+      3:  { shiftClass: "afternoon-bg", gym: "Pull", gymTime: "0030",  defaultShift: "1400" },
+      4:  { shiftClass: "afternoon-bg", gym: "Push", gymTime: "0030",  defaultShift: "1400" },
+      5:  { shiftClass: "night-bg",     gym: "Pull", gymTime: "0730",  defaultShift: "2100" },
+      6:  { shiftClass: "night-bg",     gym: "Rest", gymTime: "",      defaultShift: "2100" },
+      7:  { shiftClass: "off-bg",       gym: "Push", gymTime: "2300",  defaultShift: "0000" },
+      8:  { shiftClass: "off-bg",       gym: "Pull", gymTime: "2300",  defaultShift: "0000" },
+      9:  { shiftClass: "off-bg",       gym: "Push", gymTime: "2300",  defaultShift: "0000" },
+      10: { shiftClass: "off-bg",       gym: "Pull", gymTime: "2000",  defaultShift: "0000" }
+    };
+
+    let currentYear = 2025;
+    let currentMonth = 0; 
+    const selectedDates = new Set(); // for multi-selection
+    let isDragging = false;
+
+    /* Alert colors => used for overlay */
+    const alertColors = {
+      "Generic": "#32CD32",
+      "Birthday": "#FF69B4",
+      "Work": "#1E90FF",
+      "PublicHoliday": "#FFD700" 
+    };
+
+    // For dynamic placeholders in multi edit
+    const multiPlaceholderMap = {
+      shiftClass: "Use swatches below",
+      gym: "e.g. Push / Pull / Rest",
+      gymTime: "HHMM e.g. 2100",
+      workTime: "HHMM e.g. 0600",
+      weight: "e.g. 88.0",
+      alertType: "",
+      alertText: "e.g. My special event"
+    };
+
+    /* =============================
+       2) Helper Functions
+       ============================= */
+    const getDateKey = (dateObj) => {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2,"0");
+      const d = String(dateObj.getDate()).padStart(2,"0");
+      return `${y}-${m}-${d}`;
+    };
+    const parseDateKey = (dateKey) => {
+      const [y,m,d] = dateKey.split("-").map(Number);
+      return new Date(y, m-1, d);
+    };
+    const getCycleDay = (dateObj) => {
+      const diffMs  = dateObj - referenceCycleDate;
+      const diffDays= Math.floor(diffMs / MS_IN_DAY);
+      // cycle of 10
+      const cycleIndex = ((diffDays % 10) + 10) % 10;
+      return cycleIndex + 1;
+    };
+    const isToday = (dateObj) => {
+      const now = new Date();
+      return (
+        dateObj.getFullYear() === now.getFullYear() &&
+        dateObj.getMonth() === now.getMonth() &&
+        dateObj.getDate() === now.getDate()
+      );
+    };
+    const isOffDayShift = (shiftClass) => (shiftClass === "off-bg" || shiftClass === "al-bg");
+    const validateTimeHHMM = (value) => {
+      if(!value) return true; 
+      return !!value.match(/^([01]\d|2[0-3])[0-5]\d$/);
+    };
+    const formatTimeForDisplay = (time24) => {
+      if(!time24) return "";
+      const hour = parseInt(time24.substring(0,2),10);
+      const minute = time24.substring(2,4);
+      let period = "am";
+      let displayHour = hour;
+      if(hour >= 12){
+        period = "pm";
+        if(hour > 12) displayHour = hour - 12;
+      }
+      if(hour === 0){
+        displayHour = 12;
+        period = "am";
+      }
+      return `${displayHour}:${minute}${period}`;
+    };
+    const getLastRecordedWeightBefore = (dateKey) => {
+      const dateObj = parseDateKey(dateKey);
+      const d = new Date(dateObj.getTime());
+      d.setDate(d.getDate() - 1);
+      while(d.getFullYear() === 2025 && d >= new Date(2025,0,1)) {
+        const prevKey = getDateKey(d);
+        if(calendarData[prevKey] && calendarData[prevKey].weight > 0) {
+          return calendarData[prevKey].weight;
+        }
+        d.setDate(d.getDate() - 1);
+      }
+      return null;
+    };
+    const getWeightArrow = (dateKey) => {
+      const dayObj = getDayData(dateKey);
+      if(!dayObj.weight || dayObj.weight <= 0) return ""; 
+      const lastWeight = getLastRecordedWeightBefore(dateKey);
+      if(!lastWeight) return "";
+      if(dayObj.weight > lastWeight)  return "↑";
+      if(dayObj.weight < lastWeight)  return "↓";
+      return ""; 
+    };
+
+    const getDayData = (dateKey) => {
+      if(!calendarData[dateKey]) {
+        const dateObj = parseDateKey(dateKey);
+        const cDay = getCycleDay(dateObj);
+        const { shiftClass, gym, gymTime, defaultShift } = cycleData[cDay];
+        calendarData[dateKey] = {
+          shiftClass,
+          gym,
+          gymTime,
+          workTime: defaultShift,
+          completed: false,
+          weight: null,
+          alert: null
+        };
+      }
+      return calendarData[dateKey];
+    };
+    const setDayData = (dateKey, newData) => {
+      if(!calendarData[dateKey]) {
+        calendarData[dateKey] = {};
+      }
+      Object.assign(calendarData[dateKey], newData);
+      localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+    };
+
+    /* =============================
+       3) Rendering
+       ============================= */
+    const renderCalendar = (year, month) => {
+      document.getElementById("monthLabel").textContent = `${monthNames[month]} ${year}`;
+      const calendar = document.getElementById("calendar");
+      calendar.innerHTML = "";
+
+      const headerEl = renderCalendarHeader();
+      const gridEl   = renderCalendarGrid(year, month);
+      calendar.appendChild(headerEl);
+      calendar.appendChild(gridEl);
+      updateCounters();
+    };
+    const renderCalendarHeader = () => {
+      const headerGrid = document.createElement("div");
+      headerGrid.classList.add("calendar-header");
+      dayNames.forEach(d => {
+        const hd = document.createElement("div");
+        hd.textContent = d;
+        headerGrid.appendChild(hd);
+      });
+      return headerGrid;
+    };
+    const renderCalendarGrid = (year, month) => {
+      const grid = document.createElement("div");
+      grid.classList.add("calendar-grid");
+
+      const daysInMonth = new Date(year, month+1, 0).getDate();
+      const firstDay    = new Date(year, month, 1);
+      const startWeekday= firstDay.getDay();
+      let rowIndex = 0, colIndex = 0;
+
+      // leading blank days
+      for(let i=0; i<startWeekday; i++){
+        grid.appendChild(blankCell(rowIndex, colIndex++));
+      }
+
+      // actual days
+      for(let dayNum=1; dayNum<=daysInMonth; dayNum++){
+        const dateObj = new Date(year, month, dayNum);
+        const cell = renderDayCell(dateObj, dayNum);
+        cell.setAttribute("data-row", rowIndex);
+        cell.setAttribute("data-col", colIndex);
+        grid.appendChild(cell);
+
+        colIndex++;
+        if(colIndex > 6){
+          colIndex = 0;
+          rowIndex++;
+        }
+      }
+
+      // trailing blanks (fill up 6 rows max => 42 total cells)
+      const totalCellsUsed = startWeekday + daysInMonth;
+      const remainingCells = 42 - totalCellsUsed;
+      for(let i=0; i<remainingCells; i++){
+        grid.appendChild(blankCell(rowIndex, colIndex++));
+        if(colIndex > 6){
+          colIndex = 0;
+          rowIndex++;
+        }
+      }
+      return grid;
+    };
+    const blankCell = (row, col) => {
+      const blank = document.createElement("div");
+      blank.classList.add("day-cell","faded");
+      blank.setAttribute("data-row", row);
+      blank.setAttribute("data-col", col);
+      return blank;
+    };
+
+    const renderDayCell = (dateObj, dayNum) => {
+      const dateKey = getDateKey(dateObj);
+      const dayData = getDayData(dateKey);
+
+      const cell = document.createElement("div");
+      cell.classList.add("day-cell", dayData.shiftClass);
+      cell.setAttribute("data-date-key", dateKey);
+
+      if(isToday(dateObj)) cell.classList.add("today");
+      if(dayData.completed) cell.classList.add("completed");
+      if(selectedDates.has(dateKey)) cell.classList.add("selected");
+
+      // date top-left
+      const dateDiv = document.createElement("div");
+      dateDiv.classList.add("date-num");
+      dateDiv.textContent = dayNum;
+      cell.appendChild(dateDiv);
+
+      // refresh top-right
+      const refreshDiv = document.createElement("div");
+      refreshDiv.classList.add("refresh-emoji");
+      refreshDiv.textContent = "⟳";
+      // Stop event propagation on mousedown so we don't start drag from the refresh
+      refreshDiv.addEventListener("mousedown", e => e.stopPropagation());
+      refreshDiv.addEventListener("click", e => {
+        e.stopPropagation();
+        if(!selectedDates.has(dateKey)) {
+          selectedDates.clear();
+          selectedDates.add(dateKey);
+        }
+        openCustomizationPopup();
+      });
+      cell.appendChild(refreshDiv);
+
+      // alert overlay
+      if(dayData.alert && dayData.alert.type && dayData.alert.type !== "None"){
+        const color = alertColors[ dayData.alert.type ] || "#32CD32";
+        const overlay = document.createElement("div");
+        overlay.classList.add("alert-overlay");
+        overlay.style.background = `linear-gradient(to bottom, ${color}CC, transparent 100%)`;
+        cell.appendChild(overlay);
+
+        const alertSpan = document.createElement("div");
+        alertSpan.classList.add("alert-text");
+        alertSpan.textContent = dayData.alert.text || "";
+        cell.appendChild(alertSpan);
+      }
+
+      // weight center
+      const weightDiv = document.createElement("div");
+      weightDiv.classList.add("weight-display");
+      if(dayData.weight && parseFloat(dayData.weight) > 0){
+        const arrow = getWeightArrow(dateKey);
+        let arrowColor = "#FFF";
+        if(arrow === "↑") arrowColor = "#FF4444";
+        if(arrow === "↓") arrowColor = "#66CC66";  
+        const textSpan = `${dayData.weight}kg`;
+        if(arrow){
+          if(arrow === "↑"){
+            weightDiv.innerHTML = `
+              <span style="font-size:120%; color:${arrowColor}; margin-right:0.3em;">${arrow}</span> ${textSpan}
+            `;
+          } else {
+            weightDiv.innerHTML = `
+              ${textSpan} <span style="font-size:120%; color:${arrowColor}; margin-left:0.3em;">${arrow}</span>
+            `;
+          }
+          weightDiv.style.color = arrowColor;
+        } else {
+          weightDiv.textContent = textSpan;
+        }
+      }
+      cell.appendChild(weightDiv);
+
+      // shift time
+      const shiftTimeDiv = document.createElement("div");
+      shiftTimeDiv.classList.add("shift-time-text");
+      if(dayData.shiftClass === "al-bg") {
+        shiftTimeDiv.textContent = "AL";
+      } else if(!isOffDayShift(dayData.shiftClass)) {
+        shiftTimeDiv.textContent = dayData.workTime; 
+      }
+      cell.appendChild(shiftTimeDiv);
+
+      // workout bottom
+      const wDiv = document.createElement("div");
+      wDiv.classList.add("workout-info");
+      if(dayData.gym === "Rest"){
+        wDiv.innerHTML = `😴`;
+      } else {
+        wDiv.innerHTML = `${dayData.gym}: ${formatTimeForDisplay(dayData.gymTime || "")}`;
+      }
+      cell.appendChild(wDiv);
+
+      // completed badge
+      const badgeDiv = document.createElement("div");
+      badgeDiv.classList.add("completed-badge");
+      if(dayData.completed) badgeDiv.classList.add("enabled");
+      badgeDiv.addEventListener("mousedown", e => e.stopPropagation());
+      badgeDiv.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setDayData(dateKey, { completed: !dayData.completed });
+        renderCalendar(currentYear, currentMonth);
+      });
+      badgeDiv.innerHTML = `
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      `;
+      cell.appendChild(badgeDiv);
+
+      return cell;
+    };
+
+    /* =============================
+       4) Multi-Select + Popup
+       ============================= */
+    const openCustomizationPopup = () => {
+      if(selectedDates.size === 0) {
+        alert("No days selected. Please select a cell first.");
+        return;
+      }
+      if(selectedDates.size === 1) {
+        openSingleModal();
+      } else {
+        openMultiModal();
+      }
+    };
+
+    /* =============================
+       4a) SINGLE-CELL MODAL LOGIC
+       ============================= */
+    let currentSingleDayKey = null;
+    let singleModalDefaultMap = {};
+
+    const openSingleModal = () => {
+      document.getElementById("singleOverlay").classList.add("active");
+      document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
+
+      const [dKey] = [...selectedDates];
+      currentSingleDayKey = dKey;
+      const dayData = getDayData(dKey);
+      const dateObj = parseDateKey(dKey);
+      const cDay = getCycleDay(dateObj);
+
+      // defaults for partial resets
+      singleModalDefaultMap = {
+        shiftClass: cycleData[cDay].shiftClass,
+        gym: cycleData[cDay].gym,
+        gymTime: cycleData[cDay].gymTime,
+        workTime: cycleData[cDay].defaultShift,
+        weight: null,
+        alertType: "None",
+        alertText: ""
+      };
+
+      // Pre-select shift swatch
+      const shiftSwatch = document.getElementById("swatch-single-" + dayData.shiftClass);
+      if(shiftSwatch) shiftSwatch.classList.add("active");
+
+      // Update shift label text
+      const foundOpt = colorOptions.find(opt => opt.className === dayData.shiftClass);
+      document.getElementById("singleShiftLabelText").textContent = foundOpt ? foundOpt.label : "(none)";
+
+      // Fill fields
+      document.getElementById("singleWorkoutTypeSelect").value = dayData.gym || "Rest";
+      document.getElementById("singleGymTimeInput").value = dayData.gymTime || "";
+      document.getElementById("singleWorkTimeInput").value = dayData.workTime || "";
+      document.getElementById("singleWeightInput").value = dayData.weight || "";
+
+      // alertType
+      let alertVal = "None";
+      if(dayData.alert && dayData.alert.type && dayData.alert.type !== "None"){
+        alertVal = dayData.alert.type;
+      }
+      document.getElementById("singleAlertTypeSelect").value = alertVal;
+      document.getElementById("singleAlertTextInput").value =
+        (dayData.alert && dayData.alert.text) ? dayData.alert.text : "";
+    };
+    const closeSingleModal = () => {
+      document.getElementById("singleOverlay").classList.remove("active");
+    };
+    const resetSingleField = (fieldName) => {
+      if(!currentSingleDayKey) return;
+      const defVal = singleModalDefaultMap[fieldName];
+
+      if(fieldName === "shiftClass"){
+        document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
+        const swatch = document.getElementById("swatch-single-" + defVal);
+        if(swatch) swatch.classList.add("active");
+        const foundOpt = colorOptions.find(opt => opt.className === defVal);
+        document.getElementById("singleShiftLabelText").textContent = foundOpt ? foundOpt.label : "(none)";
+      }
+      else if(fieldName === "gym"){
+        document.getElementById("singleWorkoutTypeSelect").value = defVal;
+      }
+      else if(fieldName === "gymTime"){
+        document.getElementById("singleGymTimeInput").value = defVal || "";
+      }
+      else if(fieldName === "workTime"){
+        document.getElementById("singleWorkTimeInput").value = defVal || "";
+      }
+      else if(fieldName === "weight"){
+        document.getElementById("singleWeightInput").value = "";
+      }
+      else if(fieldName === "alertType"){
+        document.getElementById("singleAlertTypeSelect").value = "None";
+      }
+      else if(fieldName === "alertText"){
+        document.getElementById("singleAlertTextInput").value = "";
+      }
+    };
+    const saveSingleModal = () => {
+      if(!currentSingleDayKey) return;
+      const updates = {};
+
+      // SHIFT
+      const activeSwatch = document.querySelector("#singleColorSwatchesContainer .swatch.active");
+      if(activeSwatch) {
+        updates.shiftClass = activeSwatch.id.replace("swatch-single-","");
+      }
+
+      // GYM
+      updates.gym = document.getElementById("singleWorkoutTypeSelect").value.trim();
+
+      // GYM TIME
+      const newGymTime = document.getElementById("singleGymTimeInput").value.trim();
+      if(newGymTime){
+        if(!validateTimeHHMM(newGymTime)){
+          alert("Invalid Gym Time. Use HHMM format (e.g. 2100).");
+          return;
+        }
+        updates.gymTime = newGymTime;
+      } else {
+        updates.gymTime = "";
+      }
+
+      // WORK TIME
+      const newWorkTime = document.getElementById("singleWorkTimeInput").value.trim();
+      if(newWorkTime){
+        if(!validateTimeHHMM(newWorkTime)){
+          alert("Invalid Work Time. Use HHMM format (e.g. 0600).");
+          return;
+        }
+        updates.workTime = newWorkTime;
+      } else {
+        updates.workTime = "";
+      }
+      if(updates.shiftClass === "off-bg" || updates.shiftClass === "al-bg"){
+        updates.workTime = "0000";
+      }
+
+      // WEIGHT
+      const weightVal = document.getElementById("singleWeightInput").value.trim();
+      if(weightVal){
+        let wf = parseFloat(weightVal);
+        if(isNaN(wf) || wf <= 0){
+          alert("Invalid weight.");
+          return;
+        }
+        updates.weight = wf.toFixed(1);
+      } else {
+        updates.weight = null;
+      }
+
+      // ALERT
+      const alertType = document.getElementById("singleAlertTypeSelect").value;
+      const alertText = document.getElementById("singleAlertTextInput").value.trim();
+      if(alertType && alertType !== "None"){
+        updates.alert = { type: alertType, text: alertText || "" };
+      } else {
+        updates.alert = null;
+      }
+
+      setDayData(currentSingleDayKey, updates);
+      closeSingleModal();
+      renderCalendar(currentYear, currentMonth);
+    };
+    const revertSingleModal = () => {
+      if(!currentSingleDayKey) return;
+      const dateObj = parseDateKey(currentSingleDayKey);
+      const cDay = getCycleDay(dateObj);
+      const def  = cycleData[cDay];
+      setDayData(currentSingleDayKey, {
+        shiftClass: def.shiftClass,
+        gym: def.gym,
+        gymTime: def.gymTime,
+        workTime: def.defaultShift,
+        completed: false,
+        weight: null,
+        alert: null
+      });
+      closeSingleModal();
+      renderCalendar(currentYear, currentMonth);
+    };
+
+    /* =============================
+       4b) MULTI-CELL MODAL LOGIC
+       ============================= */
+    const openMultiModal = () => {
+      document.getElementById("multiOverlay").classList.add("active");
+      // reset UI
+      document.getElementById("multiKeySelect").value = "";
+      document.getElementById("multiValueInput").value = "";
+      document.getElementById("multiValueInput").placeholder = "";
+      document.getElementById("multiShiftSwatchesRow").style.display = "none";
+      document.getElementById("multiAlertTypeRow").style.display = "none";
+      document.getElementById("multiAlertTypeSelect").value = "None";
+      document.querySelectorAll("#multiColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
+      document.getElementById("multiShiftLabelText").textContent = "(none)";
+    };
+    const closeMultiModal = () => {
+      document.getElementById("multiOverlay").classList.remove("active");
+    };
+    const handleMultiKeyChange = () => {
+      const key = document.getElementById("multiKeySelect").value;
+      const valRow   = document.getElementById("multiValueRow");
+      const shiftRow = document.getElementById("multiShiftSwatchesRow");
+      const alertRow = document.getElementById("multiAlertTypeRow");
+
+      shiftRow.style.display = "none";
+      valRow.style.display = "none";
+      alertRow.style.display = "none";
+
+      if(key === "shiftClass"){
+        shiftRow.style.display = "flex";
+      } else if(key === "alertType"){
+        alertRow.style.display = "flex";
+      } else if(key){
+        valRow.style.display = "flex";
+        const ph = multiPlaceholderMap[key] || "";
+        document.getElementById("multiValueInput").placeholder = ph;
+      }
+    };
+    const saveMultiModal = () => {
+      const key = document.getElementById("multiKeySelect").value;
+      if(!key){
+        alert("Please select a key to change.");
+        return;
+      }
+
+      let newValue = null;
+      if(key === "shiftClass"){
+        const swatch = document.querySelector("#multiColorSwatchesContainer .swatch.active");
+        if(!swatch){
+          alert("Please choose a shift swatch.");
+          return;
+        }
+        newValue = swatch.id.replace("swatch-multi-","");
+      } else if(key === "alertType"){
+        newValue = document.getElementById("multiAlertTypeSelect").value;
+      } else {
+        newValue = document.getElementById("multiValueInput").value.trim();
+      }
+
+      // Validate time if needed
+      if((key === "gymTime" || key === "workTime") && newValue){
+        if(!validateTimeHHMM(newValue)){
+          alert("Invalid time. Use HHMM format (e.g. 0600).");
+          return;
+        }
+      }
+      // Validate weight
+      if(key === "weight"){
+        if(newValue){
+          let wf = parseFloat(newValue);
+          if(isNaN(wf) || wf <= 0){
+            alert("Invalid weight.");
+            return;
+          }
+          newValue = wf.toFixed(1);
+        } else {
+          newValue = null;
+        }
+      }
+
+      selectedDates.forEach(dKey => {
+        const dateObj = parseDateKey(dKey);
+        const cDay = getCycleDay(dateObj);
+        const def  = cycleData[cDay];
+        const old  = getDayData(dKey);
+        const updated = {};
+
+        if(key === "shiftClass"){
+          updated.shiftClass = newValue;
+          if(newValue === "off-bg" || newValue === "al-bg"){
+            updated.workTime = "0000";
+          }
+        } else if(key === "gym"){
+          updated.gym = newValue || "";
+        } else if(key === "gymTime"){
+          updated.gymTime = newValue || "";
+        } else if(key === "workTime"){
+          updated.workTime = newValue || "";
+        } else if(key === "weight"){
+          updated.weight = newValue ? newValue : null;
+        } else if(key === "alertType"){
+          if(newValue === "None"){
+            updated.alert = null;
+          } else {
+            updated.alert = { type: newValue, text: "" };
+          }
+        } else if(key === "alertText"){
+          if(newValue){
+            if(old.alert && old.alert.type && old.alert.type !== "None"){
+              updated.alert = { type: old.alert.type, text: newValue };
+            } else {
+              updated.alert = { type: "Generic", text: newValue };
+            }
+          } else {
+            updated.alert = null;
+          }
+        }
+        setDayData(dKey, updated);
+      });
+
+      closeMultiModal();
+      renderCalendar(currentYear, currentMonth);
+    };
+    const revertMultiModal = () => {
+      selectedDates.forEach(dKey => {
+        const dateObj = parseDateKey(dKey);
+        const cDay = getCycleDay(dateObj);
+        const def  = cycleData[cDay];
+        setDayData(dKey, {
+          shiftClass: def.shiftClass,
+          gym: def.gym,
+          gymTime: def.gymTime,
+          workTime: def.defaultShift,
+          completed: false,
+          weight: null,
+          alert: null
+        });
+      });
+      closeMultiModal();
+      renderCalendar(currentYear, currentMonth);
+    };
+
+    /* =============================
+       5) Counters
+       ============================= */
+    let weightChart = null; // [ADDED for Chart.js] Keep reference to our chart
+
+    const updateCounters = () => {
+      let completedCount = 0;
+      let earliestDateKey = null;
+      let weightKeys = [];
+
+      Object.keys(calendarData).forEach(key => {
+        const dayObj = calendarData[key];
+        if(dayObj.completed){
+          completedCount++;
+          if(!earliestDateKey || key < earliestDateKey){
+            earliestDateKey = key;
+          }
+        }
+        if(dayObj.weight && parseFloat(dayObj.weight) > 0){
+          weightKeys.push(key);
+        }
+      });
+
+      let daysTrained = 0;
+      if(earliestDateKey){
+        const earliestDate = parseDateKey(earliestDateKey);
+        const now = new Date();
+        if(now.getFullYear() === 2025){
+          let diff = now - earliestDate;
+          let rawDays = Math.floor(diff/MS_IN_DAY);
+          if(rawDays < 0) rawDays = 0;
+          daysTrained = rawDays + 1;
+        }
+      }
+
+      let percentage = 0;
+      if(daysTrained > 0){
+        percentage = (completedCount / daysTrained)*100;
+      }
+      document.getElementById("sessionCounter").textContent = completedCount;
+      document.getElementById("daysTrainedCounter").textContent = daysTrained;
+      document.getElementById("percentageCounter").textContent = percentage.toFixed(2) + '%';
+    };
+
+    /* =============================
+       6) Nav
+       ============================= */
+    const prevMonth = () => {
+      currentMonth--;
+      if(currentMonth < 0){
+        currentMonth = 11;
+        currentYear--;
+      }
+      if(currentYear < 2025){
+        currentYear = 2025;
+        currentMonth = 0;
+      }
+      selectedDates.clear();
+      renderCalendar(currentYear, currentMonth);
+    };
+    const nextMonth = () => {
+      currentMonth++;
+      if(currentMonth > 11){
+        currentMonth = 0;
+        currentYear++;
+      }
+      if(currentYear > 2025){
+        currentYear = 2025;
+        currentMonth = 11;
+      }
+      selectedDates.clear();
+      renderCalendar(currentYear, currentMonth);
+    };
+
+    /* =============================
+       7) Shift Color Swatches
+       ============================= */
+    const colorOptions = [
+      { className: "morning-bg",   label: "Day Shift" },
+      { className: "late-day-bg",  label: "Late Day Shift" },
+      { className: "afternoon-bg", label: "Afternoon Shift" },
+      { className: "evening-bg",   label: "Evening Shift" },
+      { className: "night-bg",     label: "Night Shift" },
+      { className: "off-bg",       label: "Off (Weekly Leave)" },
+      { className: "al-bg",        label: "Annual Leave" }
+    ];
+
+    const buildColorSwatches = () => {
+      // Helper for single vs multi
+      const buildSet = (containerId, prefix, labelTextId) => {
+        const container = document.getElementById(containerId);
+        colorOptions.forEach(opt => {
+          const div = document.createElement("div");
+          div.id = `swatch-${prefix}-${opt.className}`;
+          div.className = `swatch ${opt.className}`;
+          div.title = opt.label;
+
+          div.addEventListener("mouseover", () => {
+            document.getElementById(labelTextId).textContent = opt.label;
+          });
+          div.addEventListener("mouseout", () => {
+            const activeSw = container.querySelector(".swatch.active");
+            if(activeSw) {
+              const className = activeSw.id.replace(`swatch-${prefix}-`,"");
+              const found = colorOptions.find(o => o.className === className);
+              document.getElementById(labelTextId).textContent = found ? found.label : "(none)";
+            } else {
+              document.getElementById(labelTextId).textContent = "(none)";
+            }
+          });
+          div.addEventListener("click", () => {
+            container.querySelectorAll(".swatch").forEach(s => s.classList.remove("active"));
+            div.classList.add("active");
+          });
+          container.appendChild(div);
+        });
+      };
+      buildSet("singleColorSwatchesContainer", "single", "singleShiftLabelText");
+      buildSet("multiColorSwatchesContainer", "multi", "multiShiftLabelText");
+    };
+
+    /* =============================
+       8) Backup Functions
+       ============================= */
+    const saveData = () => {
+      const dataStr = JSON.stringify(calendarData, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url  = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'calendar-data-backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+    const loadData = (file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          if(!importedData || typeof importedData !== 'object') {
+            alert("Invalid JSON data.");
+            return;
+          }
+          calendarData = importedData;
+          localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+          selectedDates.clear();
+          renderCalendar(currentYear, currentMonth);
+          updateCounters();
+          alert("Data loaded successfully!");
+        } catch (err) {
+          alert("Failed to parse JSON file. Please ensure it's valid.");
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    /* =============================
+       9) Stats Modal + Weight Chart
+       ============================= */
+    const openStatsModal = () => {
+      document.getElementById("statsOverlay").classList.add("active");
+      // [ADDED for Chart.js]: Build / rebuild chart inside Stats modal
+      buildWeightChart();
+    };
+    const closeStatsModal = () => {
+      document.getElementById("statsOverlay").classList.remove("active");
+    };
+
+    // [ADDED for Chart.js] Build the weight line chart with a 1kg buffer on the y-axis
+    function buildWeightChart(){
+      // Collect all keys that have a valid weight
+      const weightKeys = Object.keys(calendarData)
+        .filter(k => calendarData[k].weight && parseFloat(calendarData[k].weight) > 0)
+        .sort();
+
+      // If no weight data, just destroy existing chart (if any) and return
+      if(weightKeys.length < 1){
+        if(weightChart){
+          weightChart.destroy();
+          weightChart = null;
+        }
+        return;
+      }
+
+      // Build the data points
+      // We'll use the dateKey as a label in "MMM dd" format for X axis
+      const dataPoints = weightKeys.map(k => {
+        const d = parseDateKey(k);
+        return {
+          x: k, 
+          y: parseFloat(calendarData[k].weight)
+        };
+      });
+
+      // Prepare chart labels for each key in the same order
+      // e.g. "Jan 03", "Jan 10", ...
+      const labels = weightKeys.map(k => {
+        const d = parseDateKey(k);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+
+      // Dynamically calculate a 1kg buffer for the y-axis
+      const weights = dataPoints.map(dp => dp.y);
+      const minWeight = Math.min(...weights);
+      const maxWeight = Math.max(...weights);
+      const suggestedMin = minWeight - 1;
+      const suggestedMax = maxWeight + 1;
+
+      // If a previous chart instance exists, destroy it before creating a new one
+      if(weightChart) {
+        weightChart.destroy();
+        weightChart = null;
+      }
+
+      const ctx = document.getElementById('weightChart').getContext('2d');
+      weightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Weight (kg)',
+            data: dataPoints.map(dp => dp.y),
+            borderColor: '#77DD77',
+            backgroundColor: 'rgba(119,221,119,0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              },
+              ticks: {
+                color: '#ccc'
+              },
+              grid: {
+                color: '#555'
+              }
+            },
+            y: {
+              // Here we apply the dynamic buffer of 1kg on both sides
+              suggestedMin: suggestedMin,
+              suggestedMax: suggestedMax,
+              title: {
+                display: true,
+                text: 'Weight (kg)'
+              },
+              ticks: {
+                color: '#ccc'
+              },
+              grid: {
+                color: '#555'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#eee'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    /* =============================
+       10) On DOM Loaded
+       ============================= */
+    window.addEventListener("DOMContentLoaded", () => {
+      // Build color swatches for single & multi
+      buildColorSwatches();
+
+      // Single modal
+      document.getElementById("singleSaveBtn").addEventListener("click", saveSingleModal);
+      document.getElementById("singleRevertBtn").addEventListener("click", revertSingleModal);
+      document.getElementById("singleCancelBtn").addEventListener("click", closeSingleModal);
+      document.querySelectorAll("#singleModal .reset-emoji").forEach(btn => {
+        btn.addEventListener("click", () => {
+          resetSingleField(btn.getAttribute("data-field"));
+        });
+      });
+
+      // Multi modal
+      document.getElementById("multiKeySelect").addEventListener("change", handleMultiKeyChange);
+      document.getElementById("multiSaveBtn").addEventListener("click", saveMultiModal);
+      document.getElementById("multiRevertBtn").addEventListener("click", revertMultiModal);
+      document.getElementById("multiCancelBtn").addEventListener("click", closeMultiModal);
+
+      // Stats modal
+      document.getElementById("statsBtn").addEventListener("click", openStatsModal);
+      document.getElementById("statsCloseBtn").addEventListener("click", closeStatsModal);
+
+      // Backup
+      document.getElementById("saveDataBtn").addEventListener("click", saveData);
+      document.getElementById("loadDataBtn").addEventListener("click", () => {
+        document.getElementById("importFileInput").click();
+      });
+      document.getElementById("importFileInput").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if(file) {
+          if(confirm("Loading data will overwrite your current calendar data. Proceed?")) {
+            loadData(file);
+          }
+        }
+        event.target.value = "";
+      });
+
+      // Add global mouse events for drag-selection
+      document.addEventListener("mousedown", (e) => {
+        // If a modal is active, do nothing
+        if(document.querySelector(".overlay.active")) return;
+
+        // If user clicked directly on refresh or completed badge, do not start drag
+        if(e.target.closest(".refresh-emoji") || e.target.closest(".completed-badge")) {
+          return;
+        }
+
+        // Prevent text selection
+        e.preventDefault();
+
+        const dayCell = e.target.closest(".day-cell");
+        if(!dayCell){
+          selectedDates.clear();
+          renderCalendar(currentYear, currentMonth);
+          return;
+        }
+
+        isDragging = true;
+
+        // If no ctrl/meta, clear selection first
+        if(!e.ctrlKey && !e.metaKey) {
+          selectedDates.clear();
+        }
+
+        const startRow = parseInt(dayCell.getAttribute("data-row"), 10);
+        const startCol = parseInt(dayCell.getAttribute("data-col"), 10);
+        const dateKey  = dayCell.getAttribute("data-date-key");
+        if(dateKey) selectedDates.add(dateKey);
+
+        renderCalendar(currentYear, currentMonth);
+
+        // on mouse move, select bounding box
+        const mouseMoveHandler = (moveEvent) => {
+          if(!isDragging) return;
+
+          const cell = moveEvent.target.closest(".day-cell");
+          if(cell) {
+            const row = parseInt(cell.getAttribute("data-row"), 10);
+            const col = parseInt(cell.getAttribute("data-col"), 10);
+
+            const minRow = Math.min(startRow, row);
+            const maxRow = Math.max(startRow, row);
+            const minCol = Math.min(startCol, col);
+            const maxCol = Math.max(startCol, col);
+
+            if(!moveEvent.ctrlKey && !moveEvent.metaKey) {
+              selectedDates.clear();
+            }
+            const allCells = document.querySelectorAll(".calendar-grid .day-cell");
+            allCells.forEach(c => {
+              const r = parseInt(c.getAttribute("data-row"), 10);
+              const cc= parseInt(c.getAttribute("data-col"), 10);
+              if(r >= minRow && r <= maxRow && cc >= minCol && cc <= maxCol) {
+                const dk = c.getAttribute("data-date-key");
+                if(dk) selectedDates.add(dk);
+              }
+            });
+            renderCalendar(currentYear, currentMonth);
+          }
+        };
+
+        const mouseUpHandler = () => {
+          isDragging = false;
+          document.removeEventListener("mousemove", mouseMoveHandler);
+          document.removeEventListener("mouseup", mouseUpHandler);
+        };
+
+        document.addEventListener("mousemove", mouseMoveHandler);
+        document.addEventListener("mouseup", mouseUpHandler);
+      });
+
+      // Initial render
+      renderCalendar(currentYear, currentMonth);
+    });
+  </script>
+</body>
+</html>
