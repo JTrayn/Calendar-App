@@ -45,9 +45,3 @@ This is a Calendar application I created mostly for personal use. It's designed 
     - View a graph tracking your weight change over time.
     - View graphs tracking your weight progress for a given rep range.
     - View graphs tracking your rep progress for a given weight.
-
-## Installation
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/calendar-app.git
