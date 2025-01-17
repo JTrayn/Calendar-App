@@ -312,6 +312,7 @@
       display: flex;
     }
     .modal {
+      position: relative; /* Added for positioning modal-date */
       background: #2D2D2D;
       padding: 1.5rem;
       border-radius: 6px;
@@ -320,8 +321,13 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      max-height: 90vh;
-      overflow-y: auto;
+    }
+    .modal-date {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 0.9rem;
+      color: #ccc;
     }
     .modal h2 {
       font-size: 1.2rem;
@@ -416,7 +422,7 @@
       color: #77DD77;
       margin-bottom: 0.5rem;
     }
-    #weightChart, #exerciseWeightProgressionChart, #exerciseRepProgressionChart {
+    #weightChart, #exerciseWeightProgressionChart, #exerciseRepProgressionChart, #volumeChart {
       width: 100%;
       height: 250px;
     }
@@ -499,6 +505,11 @@
       border-top: 1px solid #555;
       font-weight: bold;
       color: #77DD77;
+      cursor: pointer; /* Added cursor pointer */
+      transition: color 0.2s; /* Added transition for color change */
+    }
+    .hevy-total:hover {
+      color: #FFDD77; /* Change to desired hover color */
     }
 
     /* Hevy Modal Layout */
@@ -548,6 +559,18 @@
     #exerciseRepProgressionChart { /* Updated ID */
       width: 100%;
       height: 300px;
+    }
+
+    /* NEW: Volume Over Time Modal */
+    #volumeOverlay {
+      z-index: 1003; /* Higher than all other overlays */
+    }
+    #volumeModal {
+      width: 600px;
+    }
+    #volumeChart {
+      width: 100%;
+      height: 400px;
     }
 
     /* NEW: Custom Alert Overlay */
@@ -623,38 +646,7 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    /* NEW: Exercise Progress Modal */
-    /* ... existing styles ... */
-
-    /* NEW: Help Modal Styles */
-    .modal-content {
-      overflow-y: auto;
-      max-height: 70vh;
-    }
-    .modal-content h3 {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-      color: #FFD700;
-    }
-    .modal-content p {
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-    }
-    .modal-content ol, .modal-content ul {
-      margin-left: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .modal-content code {
-      background-color: #444;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: monospace;
-    }
-	#helpModal {
-	  width: 600px; /* Double the current width */
-	  font-size: 0.85rem; /* Make the font smaller */
-	}
+  
   </style>
 </head>
 <body>
@@ -676,7 +668,7 @@
             <img src="https://play-lh.googleusercontent.com/_HgX2ELOeBOIS6H-99ymHkNcEOlqoEncbt0x-D1MSgXx0ao8sTd7GRe16u-v70EgaAI"
                  alt="Hevy" style="width:18px;height:18px;">
           </button>
-          <!-- NEW: Populate Calendar Button -->
+          <!-- Populate Calendar Button -->
           <button class="arrow-button" id="populateCalendarBtn" title="Populate Calendar" disabled style="opacity: 0.5; border: 2px solid #555;">
             📅
           </button>
@@ -696,6 +688,7 @@
   <!-- Single-Cell Edit Overlay -->
   <div class="overlay" id="singleOverlay">
     <div class="modal" id="singleModal">
+      <div class="modal-date" id="singleModalDate">2 January</div>
       <h2>Edit Cell</h2>
       <!-- SHIFT Presets -->
       <div class="modal-row">
@@ -723,7 +716,7 @@
           <option value="Back">Back</option>
           <option value="Legs">Legs</option>
           <option value="Cardio">Cardio</option>
-          <!-- NEW: None Workout Type -->
+          <!-- None Workout Type -->
           <option value="None">None</option>
         </select>
       </div>
@@ -824,7 +817,7 @@
         <label>New Value</label>
         <input type="text" id="multiValueInput" placeholder="">
       </div>
-      <!-- NEW: Value Row for Workout Type -->
+      <!-- Value Row for Workout Type -->
       <div class="modal-row" id="multiWorkoutTypeRow" style="display:none;">
         <label>New Workout Type</label>
         <select id="multiWorkoutTypeSelect">
@@ -875,7 +868,7 @@
     </div>
   </div>
 
-  <!-- NEW: Hevy Workout Summary Overlay -->
+  <!-- Hevy Workout Summary Overlay -->
   <div class="overlay" id="hevyOverlay">
     <div class="modal" id="hevyModal">
       <h2>Hevy Workout Summary</h2>
@@ -892,9 +885,24 @@
     </div>
   </div>
 
-  <!-- NEW: Exercise Progress Modal -->
+  <!-- Volume Over Time Overlay -->
+  <div class="overlay" id="volumeOverlay">
+    <div class="modal" id="volumeModal">
+      <div class="modal-date" id="volumeModalDate"></div>
+      <h2>Volume Over Time</h2>
+      <div class="modal-row" style="height:300px;">
+        <canvas id="volumeChart"></canvas>
+      </div>
+      <div class="modal-buttons">
+        <button id="volumeCloseBtn" title="Close Volume Chart">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise Progress Modal -->
   <div class="overlay" id="exerciseProgressOverlay">
     <div class="modal" id="exerciseWeightProgressionModal">
+      <div class="modal-date" id="exerciseWeightProgressionModalDate"></div>
       <h2>Exercise: Weight Progression</h2>
       <div class="modal-row" style="height:300px;">
         <canvas id="exerciseWeightProgressionChart"></canvas>
@@ -905,9 +913,10 @@
     </div>
   </div>
 
-  <!-- NEW: Rep Progress Modal -->
+  <!-- Rep Progress Modal -->
   <div class="overlay" id="repProgressOverlay">
     <div class="modal" id="exerciseRepProgressionModal">
+      <div class="modal-date" id="exerciseRepProgressionModalDate"></div>
       <h2>Exercise: Rep Progression</h2>
       <div class="modal-row" style="height:300px;">
         <canvas id="exerciseRepProgressionChart"></canvas>
@@ -918,7 +927,7 @@
     </div>
   </div>
 
-  <!-- NEW: Custom Alert Overlay -->
+  <!-- Custom Alert Overlay -->
   <div class="overlay" id="customAlertOverlay">
     <div class="custom-alert-modal" id="customAlertModal">
       <p id="customAlertMessage"></p>
@@ -933,220 +942,11 @@
     </div>
   </div>
 
-  <!-- NEW: Loading Overlay -->
+  <!-- Loading Overlay -->
   <div class="overlay loading-overlay" id="loadingOverlay">
     <div class="custom-alert-modal">
       <p>Loading...</p>
       <div class="spinner"></div>
-    </div>
-  </div>
-
-  <!-- NEW: Help Modal Overlay -->
-  <div class="overlay" id="helpOverlay">
-    <div class="modal" id="helpModal">
-      <h2>2025 Calendar App User Guide</h2>
-      <div class="modal-content">
-        <p>This user guide walks you through all the functions of the 2025 Calendar App, from basic navigation to advanced features such as importing workouts from Hevy and viewing statistics. Let’s get started!</p>
-
-        <h3>1. Opening & Navigating the Calendar</h3>
-        <h4>Initial View</h4>
-        <p>When you open this application in your browser, you will see the current month (by default, January 2025).</p>
-
-        <h4>Month Navigation</h4>
-        <p>At the top of the calendar, you’ll see a bar that shows the current month and year (e.g., “January 2025”) along with two arrow buttons:</p>
-        <ol>
-          <li><strong>▲ (Previous Month)</strong> – moves the calendar one month backward.</li>
-          <li><strong>▼ (Next Month)</strong> – moves the calendar one month forward.</li>
-        </ol>
-        <p>You can only navigate between January and December of 2025 (the application is designed specifically for the 2025 calendar).</p>
-
-        <h3>2. Selecting Days</h3>
-        <h4>2.1 Single-Day Selection</h4>
-        <p>Click on any day cell in the calendar to select it. Once selected, the day cell is highlighted in green (.selected). Clicking the same cell again (without Ctrl/Command) will deselect all other days and keep only this one selected.</p>
-
-        <h4>2.2 Multi-Day Selection</h4>
-        <p>To select multiple days in a continuous block:</p>
-        <ol>
-          <li>Click and hold your mouse button on the first day cell you want.</li>
-          <li>Drag across the calendar until you highlight all desired days.</li>
-          <li>Release the mouse button.</li>
-        </ol>
-        <p>Alternatively, you can hold down Ctrl (or Cmd on Mac) while clicking individual days if you want to pick non-adjacent days.</p>
-
-        <h3>3. Editing Day Details</h3>
-        <p>Once you have selected days, you can open the editor to change their details.</p>
-
-        <h4>3.1 Single-Day Edit</h4>
-        <p>When only one day is selected, the app will open the Single-Cell Edit modal. To open the modal, you can either:</p>
-        <ol>
-          <li>Click the small ⟳ (refresh) icon in the top-right corner of the day cell; OR</li>
-          <li>Use the calendar’s right-click or custom button (depending on your setup) to open it.</li>
-          <li>Or select the day and then press any edit button (if you’ve configured one).</li>
-        </ol>
-        <p>Inside the Single-Cell Edit modal:</p>
-        <ul>
-          <li><strong>Shift Presets</strong> – You can set the day’s shift color (e.g., morning-bg, off-bg, etc.). This also sets a default workTime if you pick a shift that has a preset.</li>
-          <li><strong>Workout Type</strong> – Choose your planned workout for that day, e.g., Push, Pull, Rest, None, etc.</li>
-          <li><strong>Gym Time (HHMM)</strong> – Enter a time in 24-hour format without a colon (e.g., 2100 for 9 pm).</li>
-          <li><strong>Work Time (HHMM)</strong> – A dropdown of various possible start times (with color codes).</li>
-          <li><strong>Weight (kg)</strong> – Log your weight in kg; for instance, 88.0.</li>
-          <li><strong>Alert Type & Alert Text</strong> – Choose an alert (Generic, Birthday, Work, etc.) and optionally add a short note that will overlay on the cell.</li>
-        </ul>
-        <p>At the bottom of this modal, you will see:</p>
-        <ul>
-          <li><strong>Save</strong> – Saves the changes to that single day.</li>
-          <li><strong>⟳ (Revert)</strong> – Reverts this day to the default cycle data if one exists (or sets it to off/none).</li>
-          <li><strong>Cancel</strong> – Closes the modal without saving.</li>
-        </ul>
-
-        <h4>3.2 Multi-Day Edit</h4>
-        <p>When you have 2 or more days selected, the Multi-Cell Edit modal will open instead.</p>
-        <p>In the Multi-Cell Edit modal, you first choose a Key to change: Shift Presets, Workout Type, Gym Time, Work Time, Weight, Alert Type, or Alert Text.</p>
-        <p>Then you specify the new value, which will be applied to all the selected days at once.</p>
-        <p><strong>Example:</strong> If you want to set the same shift for 10 different days, you select those 10 days, open multi-edit, choose “Shift Presets,” pick “Night Shift,” and apply.</p>
-        <p>At the bottom of the Multi-Cell modal, you’ll see buttons:</p>
-        <ul>
-          <li><strong>Save</strong> – Applies the new value to all selected days.</li>
-          <li><strong>⟳ (Revert)</strong> – Reverts all selected days back to whatever the default cycle data is.</li>
-          <li><strong>Cancel</strong> – Closes the modal without saving.</li>
-        </ul>
-
-        <h3>4. Calendar Buttons Overview</h3>
-        <p>In the top month bar, there are several important buttons besides the month navigation:</p>
-        <ul>
-          <li><strong>💾 (Save Data)</strong> – Exports your current data (all days, including shifts, weight, alerts, etc.) to a JSON file. You’ll be prompted to download a <code>calendar-data-backup.json</code> file.</li>
-          <li><strong>📁 (Load Data)</strong> – Lets you import data from a previously exported JSON file. After choosing a file, you’ll get a confirmation to overwrite existing data. Useful for transferring your calendar setup to another browser or restoring a backup.</li>
-          <li><strong>Hevy Import (Gym Icon)</strong> – Prompts you for your Hevy API Key. Once provided, it fetches all your workouts from Hevy’s API and merges them into the days of 2025 that match the date in the Hevy workout title (must be in format DD/MM/YYYY). Once imported, you can view these workouts by middle-clicking on a date cell or using the “Hevy summary” feature.</li>
-          <li><strong>📅 (Populate Calendar)</strong> – Disabled unless you have selected 2 or more consecutive days. When enabled, clicking this will replicate that selected block (the “cycle”) throughout the entire 2025 calendar, going backward (before the earliest selected date) and forward (after the last selected date). This is very handy for shift patterns or repeated weekly routines.</li>
-          <li><strong>📉 (View Statistics)</strong> – Opens the Statistics modal showing:
-            <ul>
-              <li>Sessions Completed: The total number of days that have a workout AND are marked “completed.”</li>
-              <li>Days Trained: How many days have elapsed since your first completed training day in 2025 (used to see your training streak).</li>
-              <li>Percentage Trained: (Sessions Completed ÷ Days Trained) × 100.</li>
-              <li>It also shows a Weight Chart if you’ve logged any daily weights. The chart plots your weight changes over time.</li>
-            </ul>
-          </li>
-          <li><strong>🗋 (Clear Calendar)</strong> – Clears all data for the entire 2025 calendar, reverting every day to “None.” You’ll be prompted to confirm before doing this, as it cannot be undone except by re-importing from a saved backup.</li>
-          <li><strong>❔ (Help)</strong> – Currently shows a detailed user guide (this modal).</li>
-        </ul>
-
-        <h3>5. Using the Hevy Workouts Feature</h3>
-        <h4>Importing Hevy Data</h4>
-        <ol>
-          <li>Click the Hevy Import button (the Hevy logo).</li>
-          <li>Enter your Hevy API Key when prompted.</li>
-          <li>The app fetches all your Hevy workouts, scanning for any that have a title in the DD/MM/YYYY format and belong to 2025.</li>
-          <li>These workouts get attached to the matching date in your calendar.</li>
-          <li>Once imported, you can view these workouts by middle-clicking on a date cell or using the “Hevy summary” feature.</li>
-        </ol>
-
-        <h4>Viewing Hevy Workouts in a Day</h4>
-        <ol>
-          <li>Middle-click on a date cell (or use alternative triggers) to open the Hevy Workout Summary modal for that day.</li>
-          <li>You’ll see:
-            <ul>
-              <li>The workout(s) for that day listed.</li>
-              <li>Each workout’s exercises, sets, and total volume.</li>
-            </ul>
-          </li>
-          <li>Clicking on weight or rep numbers can open specialized charts:
-            <ul>
-              <li>Weight Progression (for a particular rep count).</li>
-              <li>Reps Progression (for a particular weight).</li>
-              <li>Weight/Rep Progression Charts.</li>
-            </ul>
-          </li>
-          <li>When you click on a certain set’s weight (e.g., “80kg”) or reps (e.g., “8 reps”), the app will search the entire 2025 calendar for that same exercise name and matching weight or rep count to build a progression line chart. This helps you see if you are improving (adding weight or reps) over time for the same exercise.</li>
-        </ol>
-
-        <h3>6. Completing a Day & Tracking Progress</h3>
-        <p>Each day cell has a small circular Completed Badge in the bottom-right corner. Clicking on this badge will toggle the day’s ‘completed’ status on or off. If the day is “completed,” the cell will visually show up as completed (and the badge will be fully green). This is used in calculating your training statistics (Sessions Completed, etc.).</p>
-
-        <h3>7. Alerts and Free-Time Calculations</h3>
-        <h4>Alerts</h4>
-        <p>If you set an alert (Birthday, Work, Generic, etc.) along with an Alert Text, the cell will show a colored overlay and a short text snippet. The color depends on the alert type (e.g., pink for Birthday, yellow for Public Holiday, etc.).</p>
-
-        <h4>Free Time</h4>
-        <p>The code attempts to calculate approximate “free time” between your current shift and the next shift (subtracting 8 hours for sleep). This appears in the cell as a small number (e.g., “6” or “10:30”). If you see “N/A,” it means it couldn’t calculate a meaningful gap or the day is off.</p>
-
-        <h3>8. Statistics</h3>
-        <p>When you press 📉 (View Statistics):</p>
-        <ol>
-          <li>A modal opens with three counters:
-            <ul>
-              <li>Sessions Completed: How many days you’ve marked “completed” (and were not set to “Rest” or “None”).</li>
-              <li>Days Trained: The number of consecutive days since your earliest completed session (minus any days before that).</li>
-              <li>Percentage Trained: (Sessions Completed ÷ Days Trained) × 100.</li>
-            </ul>
-          </li>
-          <li><strong>Weight Chart:</strong> If you have logged any daily weights in the calendar, a line chart appears showing each date’s weight. It automatically calculates min and max scales for the chart.</li>
-        </ol>
-
-        <h3>9. Saving & Loading Data</h3>
-        <h4>9.1 Save Data (💾)</h4>
-        <p>Click the 💾 button. The browser will let you download a JSON file named <code>calendar-data-backup.json</code>. Keep this file somewhere safe—this is your personal backup that you can restore later.</p>
-        <h4>9.2 Load Data (📁)</h4>
-        <p>Click the 📁 button. Select your previously saved .json file. You’ll see a confirmation message; if you proceed, your current calendar data will be overwritten with the file’s contents. This allows you to quickly restore your data to a previous state or move your data to another browser.</p>
-
-        <h3>10. Clearing the Calendar</h3>
-        <p>Use the 🗋 (Clear Calendar) button to completely reset the 2025 calendar. You’ll see a prompt to confirm. If you confirm “Yes,” all days are set to:</p>
-        <ul>
-          <li>shiftClass = off-bg</li>
-          <li>gym = None</li>
-          <li>gymTime = ""</li>
-          <li>workTime = ""</li>
-          <li>completed = false</li>
-          <li>weight = null</li>
-          <li>alert = null</li>
-          <li>hevyWorkouts = []</li>
-        </ul>
-        <p>If you regret clearing, you can Load a previously saved JSON file or manually re-populate your schedule.</p>
-
-        <h3>11. Populate Calendar with a Cycle</h3>
-        <p>One of the most powerful features: if you work with a repetitive schedule (e.g., 4-on, 4-off) or a certain repeating workout plan:</p>
-        <ol>
-          <li><strong>Select the pattern</strong>
-            <ol>
-              <li>Pick two or more consecutive days in the calendar that represent your typical cycle (e.g., maybe one week’s schedule).</li>
-              <li>Click the 📅 (Populate Calendar) button (becomes enabled once you have at least 2 days selected).</li>
-              <li>Confirm when prompted.</li>
-            </ol>
-          </li>
-          <li>This will:
-            <ul>
-              <li>Store that pattern in the app’s “default cycle.”</li>
-              <li>Apply it backward in time (to dates before your start date) and forward in time (after your last selected date) to fill the entire 2025 calendar with your chosen pattern.</li>
-              <li>Your daily data can still be edited afterward, but you get a big head start by automatically filling in your schedule.</li>
-            </ul>
-          </li>
-        </ol>
-
-        <h3>12. Help & Custom Prompts</h3>
-        <p>The ❔ (Help) button currently shows this detailed user guide. The app uses custom prompts or alerts whenever you do certain key actions (e.g., confirmation before clearing the calendar, or asking for your Hevy API key). These custom dialogs (pop-ups) have consistent styles and let you proceed or cancel.</p>
-
-        <h3>13. Tips & Best Practices</h3>
-        <ul>
-          <li>Use Single or Multi-Cell Editing for maximum control. Multi-cell editing is perfect for quickly setting a group of days to the same shift or workout.</li>
-          <li>Save often using the 💾 button. That JSON backup is your safety net.</li>
-          <li>Be mindful of your Hevy API Key. Only import from a trusted environment to keep your key safe.</li>
-          <li>Populate Calendar is a powerful feature—make sure you’ve selected the correct “cycle” pattern first.</li>
-          <li>If something goes wrong or you want to start fresh, you can always Clear your calendar or re-load your data from a saved backup.</li>
-        </ul>
-
-        <h3>Conclusion</h3>
-        <p>This Calendar App is a feature-rich scheduling, fitness, and shift-planning tool. With a simple UI for editing single or multiple days, integrated Hevy workout imports, and convenient data storage/backup, it can serve as a central hub for your 2025 health and scheduling journey.</p>
-
-        <h4>Key points to remember:</h4>
-        <ul>
-          <li>Select a day (or multiple) to edit.</li>
-          <li>Use the top bar for saving/loading data, importing from Hevy, populating with a cycle, clearing the calendar, and viewing stats.</li>
-          <li>Explore the modals and overlays to set up your shifts, workouts, alerts, and more.</li>
-          <li>Have fun planning your 2025!</li>
-        </ul>
-      </div>
-      <div class="modal-buttons">
-        <button id="helpCloseBtn" title="Close Help">Close</button>
-      </div>
     </div>
   </div>
 
@@ -1202,7 +1002,7 @@
       return (shiftClass === "off-bg" || shiftClass === "al-bg");
     }
     function isTrainingDay(dayObj) {
-      return (dayObj.gym !== "Rest");
+      return (dayObj.gym !== "Rest" && dayObj.gym !== "None");
     }
     function validateTimeHHMM(value) {
       if (!value) return true; 
@@ -1617,7 +1417,7 @@
         const option = document.createElement("option");
         option.value = time;
         option.textContent = time;
-        option.style.backgroundColor = workTimeColors[time];
+        option.style.backgroundColor = workTimeColors[time] || "#444";
         option.style.color = "#fff";
         if(time === selectedValue) { option.selected = true; }
         selectElem.appendChild(option);
@@ -1638,6 +1438,11 @@
       const [dKey] = [...selectedDates];
       currentSingleDayKey = dKey;
       const dayData = getDayData(dKey);
+
+      // Set the date
+      const dateObj = parseDateKey(currentSingleDayKey);
+      const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}`;
+      document.getElementById("singleModalDate").textContent = formattedDate;
 
       // Populate the Shift Preset based on current dayData
       document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(swatch => {
@@ -2161,7 +1966,7 @@
 
     /*
       =====================================
-      =        8) Data Backup (Load/Save)   =
+      =      8) Data Backup (Load/Save)   =
       =====================================
     */
     function saveData() {
@@ -2259,28 +2064,42 @@
         // Merge Hevy workouts data into calendarData for 2025
         let importedCount = 0;
         allWorkouts.forEach(workout => {
-          if (!workout.title) return;
-          const parts = workout.title.split("/");
-          if (parts.length !== 3) return;
+		  let dateKey = null;
 
-          const dayNum = parseInt(parts[0], 10);
-          const monthNum = parseInt(parts[1], 10);
-          const yearNum = parseInt(parts[2], 10);
-          if(yearNum !== 2025) return;
+		  // Check if title is in "xx/xx/2025" format
+		  if (workout.title && /^(\d{1,2})\/(\d{1,2})\/2025$/.test(workout.title)) {
+			const parts = workout.title.split("/");
+			const dayNum = parseInt(parts[0], 10);
+			const monthNum = parseInt(parts[1], 10);
+			const yearNum = parseInt(parts[2], 10);
+			if(yearNum === 2025){
+			  dateKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
+			}
+		  }
 
-          const dayKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
-          const dayData = getDayData(dayKey);
-          if (!dayData.hevyWorkouts) {
-            dayData.hevyWorkouts = [];
-          }
-          // Check duplicates by id
-          const duplicate = dayData.hevyWorkouts.some(existing => existing.id === workout.id);
-          if (!duplicate) {
-            dayData.hevyWorkouts.push(workout);
-            setDayData(dayKey, dayData);
-            importedCount++;
-          }
-        });
+		  // If title format is incorrect, use start_time
+		  if(!dateKey && workout.start_time){
+			const startTime = new Date(workout.start_time);
+			if(startTime.getFullYear() === 2025){
+			  dateKey = getDateKey(startTime);
+			}
+		  }
+
+		  if(dateKey && dateKey.startsWith("2025-")){
+			const dayData = getDayData(dateKey);
+			if (!dayData.hevyWorkouts) {
+			  dayData.hevyWorkouts = [];
+			}
+			// Check duplicates by id
+			const duplicate = dayData.hevyWorkouts.some(existing => existing.id === workout.id);
+			if (!duplicate) {
+			  dayData.hevyWorkouts.push(workout);
+			  dayData.completed = true; // Automatically mark day as completed
+			  setDayData(dateKey, dayData);
+			  importedCount++;
+			}
+		  }
+		});
         showCustomAlert(`Imported ${importedCount} new Hevy workouts into calendar.`);
         renderCalendar(currentYear, currentMonth);
       } catch(err) {
@@ -2301,6 +2120,7 @@
     let hevyProgressChart = null;  // For the Hevy set progression chart
     let exerciseWeightProgressionChart = null; // Renamed from exerciseProgressChart
     let exerciseRepProgressionChart = null; // Renamed from repProgressChart
+    let volumeChart = null; // For the Volume Over Time chart
 
     function openStatsModal() {
       document.getElementById("statsOverlay").classList.add("active");
@@ -2388,8 +2208,7 @@
     function openHevyModal(dateKey) {
       document.getElementById("hevyOverlay").classList.add("active");
       const dayData = getDayData(dateKey);
-      const workouts = dayData.hevyWorkouts || [];
-      renderHevyWorkoutsToContainer(workouts, "hevyModalWorkoutDetails");
+      renderHevyWorkoutsToContainer(dayData.hevyWorkouts, "hevyModalWorkoutDetails", dateKey);
 
       // Clear any existing chart in the progression area
       destroyHevyProgressChart();
@@ -2402,7 +2221,7 @@
 
     let currentlySelectedSet = null; // track the last clicked set (for toggling)
 
-    function renderHevyWorkoutsToContainer(workouts, containerId) {
+    function renderHevyWorkoutsToContainer(workouts, containerId, dateKey) {
       const container = document.getElementById(containerId);
       if (!workouts || workouts.length === 0) {
         container.innerHTML = "<p>No Hevy workout data for this day.</p>";
@@ -2410,8 +2229,8 @@
       }
 
       let html = "";
+      let totalWeight = 0; // Initialize total weight
       workouts.forEach(workout => {
-        let totalWeight = 0;
         html += `<div class="hevy-workout">`;
         html += `<div class="hevy-workout-title">${workout.title}</div>`;
 
@@ -2436,7 +2255,7 @@
           });
           html += `</div></div>`;
         });
-        html += `<div class="hevy-total">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
+        html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
         html += `</div>`;
       });
 
@@ -2473,6 +2292,15 @@
           currentlySelectedSet = null;
         }
       });
+
+      // Attach click listener to hevy-total to open Volume chart
+      const hevyTotalDiv = container.querySelector(".hevy-total");
+      if(hevyTotalDiv){
+        hevyTotalDiv.addEventListener("click", () => {
+          const associatedDateKey = hevyTotalDiv.getAttribute("data-date-key");
+          openVolumeModal(associatedDateKey);
+        });
+      }
     }
 
     // Escape HTML utility to avoid injection or weird chars
@@ -2502,7 +2330,7 @@
 
     function openExerciseProgressModal(exerciseName, repCount) {
       // Set modal title
-      document.querySelector("#exerciseWeightProgressionModal h2").textContent = `Exercise: Weight Progression`;
+      document.querySelector("#exerciseWeightProgressionModal h2").textContent = `Weight progress at ${repCount} reps`;
 
       // Show the modal
       document.getElementById("exerciseProgressOverlay").classList.add("active");
@@ -2626,7 +2454,7 @@
 
     function openRepProgressModal(exerciseName, weight) {
       // Set modal title
-      document.querySelector("#exerciseRepProgressionModal h2").textContent = `Exercise: Rep Progression`;
+      document.querySelector("#exerciseRepProgressionModal h2").textContent = `Rep progress at ${weight}kg`;
 
       // Show the modal
       document.getElementById("repProgressOverlay").classList.add("active");
@@ -2738,7 +2566,7 @@
 
     /*
       =====================================
-      =        14) DOM Loaded & Event Setup   =
+      =    14) DOM Loaded & Event Setup   =
       =====================================
     */
     window.addEventListener("DOMContentLoaded", () => {
@@ -2798,6 +2626,9 @@
       // Hevy summary modal
       document.getElementById("hevyCloseBtn").addEventListener("click", closeHevyModal);
 
+      // Volume chart modal close button
+      document.getElementById("volumeCloseBtn").addEventListener("click", closeVolumeModal);
+
       // Exercise Progress modal close button
       document.getElementById("exerciseProgressCloseBtn").addEventListener("click", closeExerciseProgressModal);
 
@@ -2807,12 +2638,9 @@
       // NEW: Clear Calendar button event
       document.getElementById("clearCalendarBtn").addEventListener("click", clearCalendar);
 
-      // NEW: Help Button Event
+      // NEW: Help Button Event (currently no function)
       document.getElementById("helpBtn").addEventListener("click", () => {
-        document.getElementById("helpOverlay").classList.add("active");
-      });
-      document.getElementById("helpCloseBtn").addEventListener("click", () => {
-        document.getElementById("helpOverlay").classList.remove("active");
+        showCustomAlert("Help feature is coming soon!");
       });
 
       // Calendar cell selection logic
@@ -2898,9 +2726,9 @@
     });
 
     /*
-      =====================================
-      =        NEW: Clear Calendar Function =
-      =====================================
+      ==============================
+      =    Clear Calendar Function =
+      ==============================
     */
     function clearCalendar() {
       showCustomConfirm("Are you sure you want to clear the entire calendar? This will remove all your data and set all days to 'None'. This action cannot be undone.", () => { // Updated message
@@ -3035,9 +2863,9 @@
     }
 
     /*
-      =====================================
-      =        NEW: Custom Alert Functions    =
-      =====================================
+      ==============================
+      =  Custom Alert Functions    =
+      ==============================
     */
     function showCustomAlert(message) {
       const overlay = document.getElementById("customAlertOverlay");
@@ -3162,6 +2990,97 @@
       overlay.classList.remove("active");
     }
 
+    /*
+      =====================================
+      =        NEW: Volume Over Time Chart    =
+      =====================================
+    */
+
+    function openVolumeModal(dateKey) {
+      document.getElementById("volumeOverlay").classList.add("active");
+      buildVolumeChart(dateKey);
+    }
+
+    function closeVolumeModal() {
+      document.getElementById("volumeOverlay").classList.remove("active");
+      if(volumeChart){
+        volumeChart.destroy();
+        volumeChart = null;
+      }
+    }
+
+    function buildVolumeChart(dateKey) {
+      // Collect volume only for days with Hevy workout data
+      const dateKeys = Object.keys(calendarData)
+        .filter(k => calendarData[k].hevyWorkouts && calendarData[k].hevyWorkouts.length > 0)
+        .sort();
+
+      const dataPoints = dateKeys.map(k => {
+        const day = calendarData[k];
+        let volume = 0;
+        day.hevyWorkouts.forEach(w => {
+          w.exercises.forEach(ex => {
+            ex.sets.forEach(set => {
+              volume += set.weight_kg * set.reps;
+            });
+          });
+        });
+        return { x: k, y: volume };
+      });
+
+      const labels = dataPoints.map(dp => {
+        const d = parseDateKey(dp.x);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+
+      const volumes = dataPoints.map(dp => dp.y);
+      const minVolume = Math.min(...volumes);
+      const maxVolume = Math.max(...volumes);
+      const suggestedMin = minVolume - 10 >= 0 ? minVolume - 10 : 0;
+      const suggestedMax = maxVolume + 10;
+
+      if(volumeChart){
+        volumeChart.destroy();
+        volumeChart = null;
+      }
+
+      const ctx = document.getElementById('volumeChart').getContext('2d');
+      volumeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Volume (kg)',
+            data: dataPoints.map(dp => dp.y),
+            borderColor: '#FFA500',
+            backgroundColor: 'rgba(255,165,0,0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 2,
+            pointHoverRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { 
+              title: { display: true, text: 'Date' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' }
+            },
+            y: { 
+              suggestedMin, 
+              suggestedMax, 
+              title: { display: true, text: 'Volume (kg)' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' } 
+            }
+          },
+          plugins: { legend: { labels: { color: '#eee' } } }
+        }
+      });
+    }
     /*
       =====================================
       =    16) Populate Calendar Button State =
