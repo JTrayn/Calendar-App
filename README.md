@@ -1,6 +1,9 @@
 # Calendar App
 
 ![calendar8](https://github.com/user-attachments/assets/e585a899-2724-4f34-ae36-a734d0d4890c)
+![image1](https://github.com/user-attachments/assets/d45d99c2-d153-4629-9e69-c3f694080da4)
+![image2](https://github.com/user-attachments/assets/625962ee-c3a8-45fd-b7fc-e8132e273384)
+![image3](https://github.com/user-attachments/assets/01e582e4-0fab-4b2e-8ced-eb65740268e7)
 
 This is a Calendar application I created mostly for personal use. It's designed to cater to my abnormal work shifts, as well as to track my workouts and weight.
 
