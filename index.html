@@ -96,7 +96,6 @@
       opacity: 0.5;
     }
 
-    /* Center the import icon vertically and adjust position */
     .arrow-button img {
       vertical-align: middle;
       display: inline-block;
@@ -312,7 +311,7 @@
       display: flex;
     }
     .modal {
-      position: relative; /* Added for positioning modal-date */
+      position: relative; /* For positioning modal-date if needed */
       background: #2D2D2D;
       padding: 1.5rem;
       border-radius: 6px;
@@ -427,7 +426,7 @@
       height: 250px;
     }
 
-    /* Pulse Animation */
+    /* Pulse Animation (generic) */
     @keyframes pulseEffect {
       0% {
         transform: scale(1);
@@ -446,6 +445,11 @@
       animation: pulseEffect 0.8s ease-out;
     }
 
+    /* Gold PR Border (no pulse) */
+    .pr-border {
+      border: 2px solid gold;
+    }
+
     /* Hevy Workout Blocks */
     .hevy-workout {
       margin-bottom: 1.5rem;
@@ -456,7 +460,7 @@
     .hevy-workout-title {
       font-size: 1.1rem;
       font-weight: bold;
-      color: #77DD77;
+      color: white;
       margin-bottom: 0.5rem;
     }
     .hevy-exercise {
@@ -464,11 +468,14 @@
       padding: 0.5rem;
       background: #2D2D2D;
       border-radius: 4px;
+      position: relative;
     }
     .hevy-exercise-title {
       font-weight: bold;
       color: #EAEAEA;
       margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
     }
     .hevy-sets {
       display: grid;
@@ -484,32 +491,49 @@
       cursor: pointer; /* We will use a click to show/hide graph */
       display: inline-block;
       position: relative;
+      transition: all 0.2s;
     }
-    /* NEW: Styles for weight and reps buttons within hevy-set */
     .hevy-set-weight, .hevy-set-reps {
       cursor: pointer;
       transition: color 0.2s;
     }
     .hevy-set-weight:hover, .hevy-set-reps:hover {
-      color: #77DD77; /* Pastel green */
-    }
-    .hevy-set-weight {
-      /* Optional: Add specific styles for weight if needed */
-    }
-    .hevy-set-reps {
-      /* Optional: Add specific styles for reps if needed */
+      color: #FFFF77; 
     }
     .hevy-total {
       margin-top: 1rem;
       padding-top: 0.5rem;
       border-top: 1px solid #555;
       font-weight: bold;
-      color: #77DD77;
-      cursor: pointer; /* Added cursor pointer */
-      transition: color 0.2s; /* Added transition for color change */
+      color: white;
+      cursor: pointer;
+      transition: color 0.2s;
     }
     .hevy-total:hover {
       color: #FFDD77; /* Change to desired hover color */
+    }
+
+    /* Updated: One Rep Max line */
+    .hevy-orm {
+      margin-top: 0.5rem;
+      color: white; /* matching the volume color */
+      font-weight: normal; /* not bold */
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .hevy-orm:hover {
+      color: #FFDD77;
+    }
+
+    /* Volume Over Time for Each Exercise */
+    .hevy-exercise-volume {
+      margin-top: 0.5rem;
+      color: white;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .hevy-exercise-volume:hover {
+      color: #FFDD77;
     }
 
     /* Hevy Modal Layout */
@@ -521,7 +545,6 @@
       align-items: center;
       justify-content: center;
     }
-    /* We will place the workouts on the left, chart on the right */
     #hevyModalWorkoutDetails {
       flex: 1;
       overflow-y: auto;
@@ -537,33 +560,45 @@
       height: 300px;
     }
 
-    /* NEW: Exercise Progress Modal */
-    #exerciseProgressOverlay {
+    /* Exercise Volume Over Time Modal */
+    #exerciseVolumeOverlay {
       z-index: 1000; /* Higher than hevyOverlay */
     }
-    #exerciseWeightProgressionModal { /* Updated ID */
+    #exerciseVolumeModal {
       width: 500px;
     }
-    #exerciseWeightProgressionChart { /* Updated ID */
+    #exerciseVolumeChart {
       width: 100%;
       height: 300px;
     }
 
-    /* NEW: Rep Progress Modal */
+    /* Exercise Weight Progression Modal */
+    #exerciseProgressOverlay {
+      z-index: 1001; /* Higher than exerciseVolumeOverlay */
+    }
+    #exerciseWeightProgressionModal {
+      width: 500px;
+    }
+    #exerciseWeightProgressionChart {
+      width: 100%;
+      height: 300px;
+    }
+
+    /* Rep Progress Modal */
     #repProgressOverlay {
-      z-index: 1001; /* Higher than exerciseProgressOverlay */
+      z-index: 1002; /* Higher than exerciseProgressOverlay */
     }
-    #exerciseRepProgressionModal { /* Updated ID */
+    #exerciseRepProgressionModal {
       width: 500px;
     }
-    #exerciseRepProgressionChart { /* Updated ID */
+    #exerciseRepProgressionChart {
       width: 100%;
       height: 300px;
     }
 
-    /* NEW: Volume Over Time Modal */
+    /* Volume Over Time Modal */
     #volumeOverlay {
-      z-index: 1003; /* Higher than all other overlays */
+      z-index: 1003; /* Higher than all other overlays so far */
     }
     #volumeModal {
       width: 600px;
@@ -573,7 +608,19 @@
       height: 400px;
     }
 
-    /* NEW: Custom Alert Overlay */
+    /* ORM Progress Modal */
+    #ormProgressOverlay {
+      z-index: 1004; /* Highest so far */
+    }
+    #exerciseOrmProgressModal {
+      width: 500px;
+    }
+    #exerciseOrmProgressChart {
+      width: 100%;
+      height: 300px;
+    }
+
+    /* Custom Alert Overlay */
     .custom-alert-modal {
       background: #2D2D2D;
       padding: 1.5rem;
@@ -584,8 +631,8 @@
       flex-direction: column;
       gap: 1rem;
       text-align: center;
-      justify-content: center; /* Added for centering */
-      align-items: center; /* Added for centering */
+      justify-content: center;
+      align-items: center;
     }
     .custom-alert-modal p {
       font-size: 1rem;
@@ -618,7 +665,7 @@
       gap: 1rem;
     }
 
-    /* NEW: Loading Overlay */
+    /* Loading Overlay */
     .loading-overlay {
       display: none;
       position: fixed;
@@ -627,7 +674,7 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0,0,0,0.6);
-      z-index: 1002; /* Higher than all other overlays */
+      z-index: 1002; /* Adjust as needed */
       justify-content: center;
       align-items: center;
     }
@@ -660,10 +707,11 @@
           <button class="arrow-button" onclick="nextMonth()" title="Next Month">▼</button>
         </div>
         <div class="data-buttons">
-          <!-- Updated Save Button with 💾 Emoji and Tooltip -->
+          <!-- Save Button -->
           <button class="arrow-button" id="saveDataBtn" title="Save Data">💾</button>
-          <!-- Updated Load Button with 📁 Emoji and Tooltip -->
+          <!-- Load Button -->
           <button class="arrow-button" id="loadDataBtn" title="Load Data">📁</button>
+          <!-- Import Hevy Button -->
           <button class="arrow-button" id="hevyImportBtn" title="Import Hevy">
             <img src="https://play-lh.googleusercontent.com/_HgX2ELOeBOIS6H-99ymHkNcEOlqoEncbt0x-D1MSgXx0ao8sTd7GRe16u-v70EgaAI"
                  alt="Hevy" style="width:18px;height:18px;">
@@ -672,10 +720,11 @@
           <button class="arrow-button" id="populateCalendarBtn" title="Populate Calendar" disabled style="opacity: 0.5; border: 2px solid #555;">
             📅
           </button>
-          <!-- Updated Stats Button with Tooltip -->
+          <!-- Stats Button -->
           <button class="arrow-button" id="statsBtn" title="View Statistics">📉</button>
+          <!-- Clear Calendar Button -->
           <button class="arrow-button" id="clearCalendarBtn" title="Clear Calendar">🗋</button>
-          <!-- NEW: Help Button -->
+          <!-- Help Button -->
           <button class="arrow-button" id="helpBtn" title="Help">❔</button>
         </div>
       </div>
@@ -716,7 +765,6 @@
           <option value="Back">Back</option>
           <option value="Legs">Legs</option>
           <option value="Cardio">Cardio</option>
-          <!-- None Workout Type -->
           <option value="None">None</option>
         </select>
       </div>
@@ -807,7 +855,7 @@
           <option value="PublicHoliday">🟡 Public Holiday</option>
         </select>
       </div>
-      <!-- Work Time Row – Dropdown -->
+      <!-- Work Time Row -->
       <div class="modal-row" id="multiWorkTimeRow" style="display: none;">
         <label>Work Time (HHMM)</label>
         <select id="multiWorkTimeSelect"></select>
@@ -832,7 +880,6 @@
           <option value="Back">Back</option>
           <option value="Legs">Legs</option>
           <option value="Cardio">Cardio</option>
-          <!-- NEW: None Workout Type -->
           <option value="None">None</option>
         </select>
       </div>
@@ -872,7 +919,6 @@
   <div class="overlay" id="hevyOverlay">
     <div class="modal" id="hevyModal">
       <h2>Hevy Workout Summary</h2>
-      <!-- We place both the details and the chart side-by-side -->
       <div class="hevy-modal-content">
         <div id="hevyModalWorkoutDetails"></div>
         <div id="hevyProgressChartContainer">
@@ -899,7 +945,20 @@
     </div>
   </div>
 
-  <!-- Exercise Progress Modal -->
+  <!-- Exercise Volume Over Time Overlay -->
+  <div class="overlay" id="exerciseVolumeOverlay">
+    <div class="modal" id="exerciseVolumeModal">
+      <h2>Exercise Volume Over Time</h2>
+      <div class="modal-row" style="height:300px;">
+        <canvas id="exerciseVolumeChart"></canvas>
+      </div>
+      <div class="modal-buttons">
+        <button id="exerciseVolumeCloseBtn" title="Close Exercise Volume Chart">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exercise Weight Progression Modal -->
   <div class="overlay" id="exerciseProgressOverlay">
     <div class="modal" id="exerciseWeightProgressionModal">
       <div class="modal-date" id="exerciseWeightProgressionModalDate"></div>
@@ -927,15 +986,25 @@
     </div>
   </div>
 
+  <!-- ORM Progress Modal -->
+  <div class="overlay" id="ormProgressOverlay">
+    <div class="modal" id="exerciseOrmProgressModal">
+      <h2>Exercise: ORM Progression</h2>
+      <div class="modal-row" style="height:300px;">
+        <canvas id="exerciseOrmProgressChart"></canvas>
+      </div>
+      <div class="modal-buttons">
+        <button id="ormProgressCloseBtn" title="Close ORM Progression">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Custom Alert Overlay -->
   <div class="overlay" id="customAlertOverlay">
     <div class="custom-alert-modal" id="customAlertModal">
       <p id="customAlertMessage"></p>
       <input type="text" id="customAlertInput" style="display: none;" placeholder="">
-      <div class="confirm-buttons" id="customConfirmButtons" style="display: none;">
-        <button id="customYesBtn" title="Confirm">Yes</button>
-        <button id="customNoBtn" title="Cancel">No</button>
-      </div>
+      <div class="confirm-buttons" id="customConfirmButtons" style="display: none;"></div>
       <div class="default-button" id="customDefaultButton" style="display: block;">
         <button onclick="closeCustomAlert()" title="OK">OK</button>
       </div>
@@ -952,9 +1021,9 @@
 
   <script>
     /*
-      =====================================
-      =           1) Data & Config        =
-      =====================================
+      =======================================
+      =      1) Data, Constants, Config     =
+      =======================================
     */
     const monthNames = [
       "January","February","March","April","May","June",
@@ -975,10 +1044,19 @@
     const selectedDates = new Set();
     let isDragging = false;
 
+    // For charts
+    let weightChart = null;
+    let hevyProgressChart = null;
+    let exerciseWeightProgressionChart = null;
+    let exerciseRepProgressionChart = null;
+    let volumeChart = null;
+    let exerciseVolumeChart = null;
+    let exerciseOrmProgressChart = null;
+
     /*
-      =====================================
-      =        2) Helper Functions        =
-      =====================================
+      =======================================
+      =       2) Helper Functions           =
+      =======================================
     */
     function getDateKey(dateObj) {
       const y = dateObj.getFullYear();
@@ -1028,7 +1106,7 @@
       if(!calendarData[dateKey]) {
         calendarData[dateKey] = {
           shiftClass: "off-bg",
-          gym: "None", // Changed from "Rest" to "None"
+          gym: "None",
           gymTime: "",
           workTime: "",
           completed: false,
@@ -1080,7 +1158,7 @@
 
       let currentShiftEnd = new Date(currentShiftDate.getTime() + 10 * 3600000);
 
-      // Find next day that has a valid workTime
+      // Next day that has a valid workTime
       let nextDate = new Date(parseDateKey(dateKey).getTime());
       nextDate.setDate(nextDate.getDate() + 1);
       let nextWorkShiftDate = null;
@@ -1102,7 +1180,7 @@
       let nextPrepTime = new Date(nextWorkShiftDate.getTime() - 3600000); 
       let gapHours = (nextPrepTime - currentShiftEnd) / 3600000;
 
-      // Subtract 8 hours sleep required
+      // Subtract 8 hours sleep
       gapHours -= 8;
 
       return Math.max(0, Math.floor(gapHours));
@@ -1132,11 +1210,8 @@
       const minutes = totalMinutes % 60;
       return `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}`;
     }
-
-    // NEW: Function to get default data for a given date based on defaultCycleData
     function getDefaultDataForDate(dateKey){
       if(!defaultCycleData.pattern.length || !defaultCycleData.startDate){
-        // No default cycle defined, default to off
         return {
           shiftClass: "off-bg",
           gym: "None",
@@ -1152,14 +1227,141 @@
       const currentDate = parseDateKey(dateKey);
       const diffDays = Math.floor((currentDate - startDate) / MS_IN_DAY);
       const patternLength = defaultCycleData.pattern.length;
-      const patternIndex = ((diffDays % patternLength) + patternLength) % patternLength; // Handles negative diffs
+      const patternIndex = ((diffDays % patternLength) + patternLength) % patternLength; 
       return defaultCycleData.pattern[patternIndex];
     }
+    function escapeHtml(str) {
+      return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
 
+    // --- NEW HELPER: Compute 1RM using Brzycki/Epley ---
+    function computeOrm(weightKg, reps) {
+      if(reps <= 0 || weightKg <= 0) return 0;
+      // Use Brzycki if reps <= 10, else Epley
+      if(reps <= 10) {
+        // Brzycki formula
+        return weightKg / (1.0278 - 0.0278 * reps);
+      } else {
+        // Epley formula
+        return weightKg * (1 + (reps / 30));
+      }
+    }
+
+    // --- NEW HELPERS: Return the max so far (before date) for weight, volume, ORM ---
+    function getMaxWeightForExerciseBeforeDate(exerciseName, dateKey) {
+      const targetDate = parseDateKey(dateKey);
+      let maxWeight = 0;
+      for(const k of Object.keys(calendarData)) {
+        const d = parseDateKey(k);
+        if(d < targetDate) {
+          const dayObj = calendarData[k];
+          if(dayObj.hevyWorkouts) {
+            dayObj.hevyWorkouts.forEach(workout => {
+              workout.exercises.forEach(ex => {
+                if(ex.title === exerciseName) {
+                  ex.sets.forEach(s => {
+                    if(s.weight_kg > maxWeight) maxWeight = s.weight_kg;
+                  });
+                }
+              });
+            });
+          }
+        }
+      }
+      return maxWeight;
+    }
+
+    function getMaxVolumeForExerciseBeforeDate(exerciseName, dateKey) {
+      const targetDate = parseDateKey(dateKey);
+      let maxVolume = 0;
+      for(const k of Object.keys(calendarData)) {
+        const d = parseDateKey(k);
+        if(d < targetDate) {
+          let dayVolume = 0;
+          const dayObj = calendarData[k];
+          if(dayObj.hevyWorkouts) {
+            dayObj.hevyWorkouts.forEach(workout => {
+              workout.exercises.forEach(ex => {
+                if(ex.title === exerciseName) {
+                  ex.sets.forEach(s => {
+                    dayVolume += (s.weight_kg * s.reps);
+                  });
+                }
+              });
+            });
+          }
+          if(dayVolume > maxVolume) {
+            maxVolume = dayVolume;
+          }
+        }
+      }
+      return maxVolume;
+    }
+
+    function getMaxOrmForExerciseBeforeDate(exerciseName, dateKey) {
+      const targetDate = parseDateKey(dateKey);
+      let maxOrm = 0;
+      for(const k of Object.keys(calendarData)) {
+        const d = parseDateKey(k);
+        if(d < targetDate) {
+          const dayObj = calendarData[k];
+          if(dayObj.hevyWorkouts) {
+            dayObj.hevyWorkouts.forEach(workout => {
+              workout.exercises.forEach(ex => {
+                if(ex.title === exerciseName) {
+                  ex.sets.forEach(s => {
+                    const thisOrm = computeOrm(s.weight_kg, s.reps);
+                    if(thisOrm > maxOrm) {
+                      maxOrm = thisOrm;
+                    }
+                  });
+                }
+              });
+            });
+          }
+        }
+      }
+      return maxOrm;
+    }
+	
+	function getBestWeightAndRepsBeforeDate(exerciseName, dateKey) {
+	  let bestWeight = 0;
+	  let bestRepsForWeight = 0;
+
+	  const targetDate = parseDateKey(dateKey);
+
+	  for (const k of Object.keys(calendarData)) {
+		const d = parseDateKey(k);
+		if (d < targetDate) {
+		  const dayObj = calendarData[k];
+		  if (dayObj.hevyWorkouts) {
+			dayObj.hevyWorkouts.forEach(workout => {
+			  workout.exercises.forEach(ex => {
+				if (ex.title === exerciseName) {
+				  ex.sets.forEach(s => {
+					// Check if we found a bigger weight
+					if (s.weight_kg > bestWeight) {
+					  bestWeight = s.weight_kg;
+					  bestRepsForWeight = s.reps;
+					}
+					// If the weight is exactly our best but the reps are higher, update
+					else if (s.weight_kg === bestWeight && s.reps > bestRepsForWeight) {
+					  bestRepsForWeight = s.reps;
+					}
+				  });
+				}
+			  });
+			});
+		  }
+		}
+	  }
+
+	  return { bestWeight, bestRepsForWeight };
+	}
     /*
-      =====================================
-      =         3) Calendar Render        =
-      =====================================
+      =======================================
+      =       3) Calendar Rendering         =
+      =======================================
     */
     function renderCalendar(year, month) {
       document.getElementById("monthLabel").textContent = `${monthNames[month]} ${year}`;
@@ -1240,7 +1442,7 @@
       const cell = document.createElement("div");
       cell.classList.add("day-cell");
 
-      // Apply shift color or custom color
+      // Shift color or custom
       if(dayData.workTime && !isOffDayShift(dayData.shiftClass)) {
         if(dayData.shiftClass === "custom-shift" && workTimeColors[dayData.workTime]) {
           cell.style.backgroundColor = workTimeColors[dayData.workTime];
@@ -1346,11 +1548,11 @@
       const wDiv = document.createElement("div");
       wDiv.classList.add("workout-info");
       if(dayData.gym === "Rest") {
-        wDiv.textContent = "😴"; // Added emoji for 'Rest'
-        wDiv.style.opacity = "1.0"; // Set opacity to 100%
+        wDiv.textContent = "😴";
+        wDiv.style.opacity = "1.0";
       }
       else if(dayData.gym === "None") {
-        wDiv.textContent = ""; // No text for 'None'
+        wDiv.textContent = "";
       }
       else {
         wDiv.innerHTML = `${dayData.gym}: ${formatTimeForDisplay(dayData.gymTime || "")}`;
@@ -1376,8 +1578,6 @@
 
       return cell;
     }
-
-    // Helper to append free time text
     function appendFreeTime(cell, freeTimeValue, isTodayOffShift) {
       const freeTimeDiv = document.createElement("div");
       freeTimeDiv.classList.add("free-time-text");
@@ -1390,9 +1590,9 @@
     }
 
     /*
-      =====================================
-      =     4) Single vs. Multi Popup     =
-      =====================================
+      =======================================
+      =    4) Single vs Multi Popup Flow    =
+      =======================================
     */
     function openCustomizationPopup() {
       if(selectedDates.size === 0){
@@ -1408,7 +1608,6 @@
 
     // 4a) Single-Cell Modal
     let currentSingleDayKey = null;
-    // Removed singleModalDefaultMap to prevent modifying defaultCycleData
 
     function populateWorkTimeSelect(selectId, selectedValue){
       const selectElem = document.getElementById(selectId);
@@ -1439,12 +1638,12 @@
       currentSingleDayKey = dKey;
       const dayData = getDayData(dKey);
 
-      // Set the date
+      // Date
       const dateObj = parseDateKey(currentSingleDayKey);
       const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}`;
       document.getElementById("singleModalDate").textContent = formattedDate;
 
-      // Populate the Shift Preset based on current dayData
+      // Shift Preset
       document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(swatch => {
         if(swatch.id === `swatch-single-${dayData.shiftClass}`){
           swatch.classList.add("active");
@@ -1452,18 +1651,15 @@
           swatch.classList.remove("active");
         }
       });
-
-      // Shift label based on dayData
       const preset = colorOptions.find(opt => opt.className === dayData.shiftClass);
       document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "Custom Shift";
 
-      // Set form values based on current dayData
+      // Form values
       document.getElementById("singleWorkoutTypeSelect").value = dayData.gym || "None";
       document.getElementById("singleGymTimeInput").value = dayData.gymTime || "";
       populateWorkTimeSelect("singleWorkTimeSelect", dayData.workTime);
       document.getElementById("singleWeightInput").value = dayData.weight || "";
 
-      // Work time disabled if off day
       if(isOffDayShift(dayData.shiftClass)) {
         document.getElementById("singleWorkTimeSelect").disabled = true;
       } else {
@@ -1488,13 +1684,12 @@
       if(!defaultData) return;
 
       if(fieldName === "shiftClass"){
-        document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(swatch => swatch.classList.remove("active"));
+        document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
         const sw = document.getElementById("swatch-single-" + defaultData.shiftClass);
         if(sw) sw.classList.add("active");
         const preset = colorOptions.find(o => o.className === defaultData.shiftClass);
-        document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "Custom Shift";
+        document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "(none)";
 
-        // Update work time state based on shift class
         if(isOffDayShift(defaultData.shiftClass)) {
           document.getElementById("singleWorkTimeSelect").disabled = true;
         } else {
@@ -1663,11 +1858,6 @@
         return;
       }
 
-      if(key === "populateCalendar"){
-        // Removed Populate Calendar option
-        return;
-      }
-
       let newValue;
       if(key === "shiftClass"){
         const swatch = document.querySelector("#multiColorSwatchesContainer .swatch.active");
@@ -1705,7 +1895,6 @@
         }
       }
 
-      // Apply updates to all selected days
       selectedDates.forEach(dKey => {
         const updated = {};
 
@@ -1761,7 +1950,7 @@
       closeMultiModal();
       renderCalendar(currentYear, currentMonth);
 
-      // Pulse highlight on updated cells
+      // Pulse highlight
       setTimeout(() => {
         selectedDates.forEach(dKey => {
           const cellElement = document.querySelector(`[data-date-key="${dKey}"]`);
@@ -1796,9 +1985,9 @@
     }
 
     /*
-      =====================================
-      =         5) Counters             =
-      =====================================
+      =======================================
+      =          5) Counters (Stats)        =
+      =======================================
     */
     function updateCounters() {
       let completedCount = 0;
@@ -1836,9 +2025,9 @@
     }
 
     /*
-      =====================================
-      =         6) Navigation            =
-      =====================================
+      =======================================
+      =         6) Navigation               =
+      =======================================
     */
     function prevMonth() {
       currentMonth--;
@@ -1868,9 +2057,9 @@
     }
 
     /*
-      =====================================
-      =        7) Shift Preset UI         =
-      =====================================
+      =======================================
+      =   7) Shift Preset & Color Swatches  =
+      =======================================
     */
     const colorOptions = [
       { className: "morning-bg",   label: "Day Shift" },
@@ -1896,14 +2085,12 @@
       "PublicHoliday": "#FFD700"
     };
     const presetWorkTimeMapping = {
-      "morning-bg": "0600",  
-      "late-day-bg": "0900",  
-      "afternoon-bg": "1400", 
-      "evening-bg": "1900",  
+      "morning-bg": "0600",
+      "late-day-bg": "0900",
+      "afternoon-bg": "1400",
+      "evening-bg": "1900",
       "night-bg": "2100"
     };
-
-    // Multi-Value placeholder mapping
     const multiPlaceholderMap = {
       shiftClass: "Use swatches below",
       gym: "Select Workout Type",
@@ -1914,8 +2101,6 @@
       alertText: "e.g. My special event"
     };
 
-    const workoutTypes = ["Push", "Pull", "Rest", "Upper", "Lower", "Chest", "Arms", "Shoulders", "Back", "Legs", "Cardio", "None"]; // Added "None"
-
     function buildColorSwatches() {
       function buildSet(containerId, prefix, labelTextId) {
         const container = document.getElementById(containerId);
@@ -1924,8 +2109,6 @@
           div.id = `swatch-${prefix}-${opt.className}`;
           div.className = `swatch ${opt.className}`;
           div.title = opt.label;
-          // Remove inline background color to fix AL color swatch issue
-          // div.style.backgroundColor = workTimeColors[presetWorkTimeMapping[opt.className]] || "#444";
           div.addEventListener("mouseover", () => {
             document.getElementById(labelTextId).textContent = opt.label;
           });
@@ -1965,9 +2148,9 @@
     }
 
     /*
-      =====================================
-      =      8) Data Backup (Load/Save)   =
-      =====================================
+      =======================================
+      =   8) Data Backup (Load/Save JSON)   =
+      =======================================
     */
     function saveData() {
       const dataToSave = {
@@ -2003,7 +2186,6 @@
             defaultCycleData = importedData.defaultCycle;
             localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
           } else {
-            // If defaultCycle is missing, initialize it based on current calendarData
             defaultCycleData = {
               pattern: [],
               startDate: null
@@ -2023,13 +2205,12 @@
     }
 
     /*
-      =====================================
-      =    9) Import Hevy Data from API   =
-      =====================================
+      =======================================
+      =    9) Import Hevy Data from API     =
+      =======================================
     */
     async function importHevyData(userApiKey) {
       try {
-        // Show loading overlay
         document.getElementById("loadingOverlay").classList.add("active");
 
         const countResponse = await fetch("https://api.hevyapp.com/v1/workouts/count", {
@@ -2061,67 +2242,58 @@
             allWorkouts = allWorkouts.concat(data.workouts);
           }
         }
-        // Merge Hevy workouts data into calendarData for 2025
+
         let importedCount = 0;
         allWorkouts.forEach(workout => {
-		  let dateKey = null;
+          let dateKey = null;
 
-		  // Check if title is in "xx/xx/2025" format
-		  if (workout.title && /^(\d{1,2})\/(\d{1,2})\/2025$/.test(workout.title)) {
-			const parts = workout.title.split("/");
-			const dayNum = parseInt(parts[0], 10);
-			const monthNum = parseInt(parts[1], 10);
-			const yearNum = parseInt(parts[2], 10);
-			if(yearNum === 2025){
-			  dateKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
-			}
-		  }
+          // Check if title is in "dd/mm/2025" format
+          if (workout.title && /^(\d{1,2})\/(\d{1,2})\/2025$/.test(workout.title)) {
+            const parts = workout.title.split("/");
+            const dayNum = parseInt(parts[0], 10);
+            const monthNum = parseInt(parts[1], 10);
+            const yearNum = parseInt(parts[2], 10);
+            if(yearNum === 2025){
+              dateKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
+            }
+          }
+          // If title format is off, use start_time
+          if(!dateKey && workout.start_time){
+            const startTime = new Date(workout.start_time);
+            if(startTime.getFullYear() === 2025){
+              dateKey = getDateKey(startTime);
+            }
+          }
 
-		  // If title format is incorrect, use start_time
-		  if(!dateKey && workout.start_time){
-			const startTime = new Date(workout.start_time);
-			if(startTime.getFullYear() === 2025){
-			  dateKey = getDateKey(startTime);
-			}
-		  }
-
-		  if(dateKey && dateKey.startsWith("2025-")){
-			const dayData = getDayData(dateKey);
-			if (!dayData.hevyWorkouts) {
-			  dayData.hevyWorkouts = [];
-			}
-			// Check duplicates by id
-			const duplicate = dayData.hevyWorkouts.some(existing => existing.id === workout.id);
-			if (!duplicate) {
-			  dayData.hevyWorkouts.push(workout);
-			  dayData.completed = true; // Automatically mark day as completed
-			  setDayData(dateKey, dayData);
-			  importedCount++;
-			}
-		  }
-		});
+          if(dateKey && dateKey.startsWith("2025-")){
+            const dayData = getDayData(dateKey);
+            if (!dayData.hevyWorkouts) {
+              dayData.hevyWorkouts = [];
+            }
+            const duplicate = dayData.hevyWorkouts.some(existing => existing.id === workout.id);
+            if (!duplicate) {
+              dayData.hevyWorkouts.push(workout);
+              dayData.completed = true; 
+              setDayData(dateKey, dayData);
+              importedCount++;
+            }
+          }
+        });
         showCustomAlert(`Imported ${importedCount} new Hevy workouts into calendar.`);
         renderCalendar(currentYear, currentMonth);
       } catch(err) {
         console.error(err);
         showCustomAlert("An error occurred while importing Hevy data: " + err.message);
       } finally {
-        // Hide loading overlay
         document.getElementById("loadingOverlay").classList.remove("active");
       }
     }
 
     /*
-      =====================================
-      =    10) Stats Modal & Charts      =
-      =====================================
+      =======================================
+      = 10) Stats Modal & 'WeightChart'     =
+      =======================================
     */
-    let weightChart = null;    // For the stats modal
-    let hevyProgressChart = null;  // For the Hevy set progression chart
-    let exerciseWeightProgressionChart = null; // Renamed from exerciseProgressChart
-    let exerciseRepProgressionChart = null; // Renamed from repProgressChart
-    let volumeChart = null; // For the Volume Over Time chart
-
     function openStatsModal() {
       document.getElementById("statsOverlay").classList.add("active");
       buildWeightChart();
@@ -2144,10 +2316,7 @@
         }
         return;
       }
-      const dataPoints = weightKeys.map(k => ({
-        x: k,
-        y: parseFloat(calendarData[k].weight)
-      }));
+      const dataPoints = weightKeys.map(k => ({ x: k, y: parseFloat(calendarData[k].weight) }));
       const labels = weightKeys.map(k => {
         const d = parseDateKey(k);
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -2155,7 +2324,7 @@
       const weights = dataPoints.map(dp => dp.y);
       const minWeight = Math.min(...weights);
       const maxWeight = Math.max(...weights);
-      const suggestedMin = minWeight - 1 >= 0 ? minWeight -1 : 0;
+      const suggestedMin = Math.max(0, minWeight - 1);
       const suggestedMax = maxWeight + 1;
 
       if(weightChart){
@@ -2163,6 +2332,13 @@
         weightChart = null;
       }
       const ctx = document.getElementById('weightChart').getContext('2d');
+
+      // We highlight "today" if it's in data
+      const todayKey = getDateKey(new Date());
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, todayKey, '#77DD77', 'red', 4, 8
+      );
+
       weightChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -2174,7 +2350,9 @@
             backgroundColor: 'rgba(119,221,119,0.2)',
             fill: true,
             tension: 0.2,
-            pointRadius: 4,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
             pointHoverRadius: 6
           }]
         },
@@ -2195,22 +2373,41 @@
               grid: { color: '#555' } 
             }
           },
-          plugins: { legend: { labels: { color: '#eee' } } }
+          plugins: {
+            legend: { labels: { color: '#eee' } }
+          }
         }
       });
     }
+    function buildHighlightArrays(dataPoints, highlightDateKey, normalColor, highlightColor, normalRadius=4, highlightRadius=6) {
+      const bgColors = [];
+      const borderColors = [];
+      const pointRadii = [];
+
+      dataPoints.forEach(dp => {
+        if(dp.x === highlightDateKey) {
+          bgColors.push(highlightColor);
+          borderColors.push("#fff");
+          pointRadii.push(highlightRadius);
+        } else {
+          bgColors.push(normalColor);
+          borderColors.push(normalColor);
+          pointRadii.push(normalRadius);
+        }
+      });
+
+      return { bgColors, borderColors, pointRadii };
+    }
 
     /*
-      =====================================
-      =   11) Hevy Workout Summary Modal  =
-      =====================================
+      ========================================
+      = 11) Hevy Workout Summary Modal       =
+      ========================================
     */
     function openHevyModal(dateKey) {
       document.getElementById("hevyOverlay").classList.add("active");
       const dayData = getDayData(dateKey);
       renderHevyWorkoutsToContainer(dayData.hevyWorkouts, "hevyModalWorkoutDetails", dateKey);
-
-      // Clear any existing chart in the progression area
       destroyHevyProgressChart();
       document.getElementById("hevyProgressChartContainer").style.display = "none";
     }
@@ -2218,101 +2415,6 @@
       document.getElementById("hevyOverlay").classList.remove("active");
       destroyHevyProgressChart();
     }
-
-    let currentlySelectedSet = null; // track the last clicked set (for toggling)
-
-    function renderHevyWorkoutsToContainer(workouts, containerId, dateKey) {
-      const container = document.getElementById(containerId);
-      if (!workouts || workouts.length === 0) {
-        container.innerHTML = "<p>No Hevy workout data for this day.</p>";
-        return;
-      }
-
-      let html = "";
-      let totalWeight = 0; // Initialize total weight
-      workouts.forEach(workout => {
-        html += `<div class="hevy-workout">`;
-        html += `<div class="hevy-workout-title">${workout.title}</div>`;
-
-        workout.exercises.forEach(exercise => {
-          html += `<div class="hevy-exercise">`;
-          html += `<div class="hevy-exercise-title">${exercise.title}</div>`;
-          html += `<div class="hevy-sets">`;
-
-          exercise.sets.forEach(set => {
-            const setWeight = set.weight_kg * set.reps;
-            totalWeight += setWeight;
-            // We'll store custom data attributes for quick retrieval
-            html += `
-              <div class="hevy-set"
-                   data-exercise="${escapeHtml(exercise.title)}"
-                   data-reps="${set.reps}"
-                   data-weight="${set.weight_kg}">
-                <span class="hevy-set-weight">${set.weight_kg}kg</span> × <span class="hevy-set-reps">${set.reps}</span>
-                ${set.rpe ? `<br>RPE: ${set.rpe}` : ""}
-              </div>
-            `;
-          });
-          html += `</div></div>`;
-        });
-        html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
-        html += `</div>`;
-      });
-
-      container.innerHTML = html;
-
-      // Attach click listeners for each weight span
-      container.querySelectorAll(".hevy-set-weight").forEach(weightEl => {
-        weightEl.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const exerciseName = weightEl.parentElement.getAttribute("data-exercise");
-          const weight = Number(weightEl.parentElement.getAttribute("data-weight"));
-          openRepProgressModal(exerciseName, weight);
-        });
-      });
-
-      // Attach click listeners for each reps span
-      container.querySelectorAll(".hevy-set-reps").forEach(repsEl => {
-        repsEl.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const exerciseName = repsEl.parentElement.getAttribute("data-exercise");
-          const reps = parseInt(repsEl.parentElement.getAttribute("data-reps"), 10);
-          openExerciseProgressModal(exerciseName, reps);
-        });
-      });
-
-      // If user clicks anywhere else in the container, remove the chart
-      container.addEventListener("click", (e) => {
-        if (!e.target.classList.contains("hevy-set-weight") && !e.target.classList.contains("hevy-set-reps")) {
-          // They clicked outside a set
-          destroyExerciseProgressChart();
-          document.getElementById("exerciseProgressOverlay").classList.remove("active");
-          destroyRepProgressChart();
-          document.getElementById("repProgressOverlay").classList.remove("active");
-          currentlySelectedSet = null;
-        }
-      });
-
-      // Attach click listener to hevy-total to open Volume chart
-      const hevyTotalDiv = container.querySelector(".hevy-total");
-      if(hevyTotalDiv){
-        hevyTotalDiv.addEventListener("click", () => {
-          const associatedDateKey = hevyTotalDiv.getAttribute("data-date-key");
-          openVolumeModal(associatedDateKey);
-        });
-      }
-    }
-
-    // Escape HTML utility to avoid injection or weird chars
-    function escapeHtml(str) {
-      return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    /*
-      ===============================================
-      =  12) Exercise Weight Progress Modal & Chart =
-      ===============================================
-    */
     function destroyHevyProgressChart() {
       if(hevyProgressChart) {
         hevyProgressChart.destroy();
@@ -2320,42 +2422,229 @@
       }
     }
 
-    // NEW: Exercise Progress Chart Functions
+    /*
+      ================================================
+      = 12) Rendering Hevy Workouts + PR Logic       =
+      ================================================
+    */
+	function renderHevyWorkoutsToContainer(workouts, containerId, dateKey) {
+	  const container = document.getElementById(containerId);
+	  if (!workouts || workouts.length === 0) {
+		container.innerHTML = "<p>No Hevy workout data for this day.</p>";
+		return;
+	  }
+
+	  let html = "";
+
+	  workouts.forEach(workout => {
+		html += `<div class="hevy-workout">`;
+		html += `<div class="hevy-workout-title">${escapeHtml(workout.title)}</div>`;
+
+		workout.exercises.forEach(exercise => {
+		  // Get the single best (weight, reps) from all days before dateKey
+		  const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(exercise.title, dateKey);
+
+		  // We'll also check if the user achieved new volume/ORM PR, same as before:
+		  const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(exercise.title, dateKey);
+		  const prevMaxOrm    = getMaxOrmForExerciseBeforeDate(exercise.title, dateKey);
+
+		  // compute day-level volume & highest set weight & highest ORM
+		  let exerciseVolume = 0;
+		  let highestOrmForThisExercise = 0;
+		  exercise.sets.forEach(s => {
+			const setVolume = s.weight_kg * s.reps;
+			exerciseVolume += setVolume;
+
+			const setOrm = computeOrm(s.weight_kg, s.reps);
+			if (setOrm > highestOrmForThisExercise) {
+			  highestOrmForThisExercise = setOrm;
+			}
+		  });
+
+		  // Is today's volume a PR?
+		  const isVolumePR = exerciseVolume > prevMaxVolume;
+		  // Is today's ORM a PR?
+		  const isOrmPR    = highestOrmForThisExercise > prevMaxOrm;
+
+		  const candidates = [];
+		  exercise.sets.forEach((s, i) => {
+			// Condition for being "new weight PR"
+			if (
+			  s.weight_kg > bestWeight ||
+			  (s.weight_kg === bestWeight && s.reps > bestRepsForWeight)
+			) {
+			  candidates.push({ index: i, weight: s.weight_kg, reps: s.reps });
+			}
+		  });
+
+		  let highlightSetIndex = -1;
+		  if (candidates.length > 0) {
+			// 1) Find the largest weight among candidates
+			const maxWeight = Math.max(...candidates.map(c => c.weight));
+			// 2) Filter only those with that maxWeight
+			const topWeightSets = candidates.filter(c => c.weight === maxWeight);
+			// 3) Among them, find the highest reps
+			const bestReps = Math.max(...topWeightSets.map(c => c.reps));
+			// 4) highlight the first that hits that bestReps
+			const highlight = topWeightSets.find(c => c.reps === bestReps);
+			highlightSetIndex = highlight.index;
+		  }
+
+		  // Now build HTML for this exercise
+		  html += `<div class="hevy-exercise">`;
+		  html += `<div class="hevy-exercise-title">${escapeHtml(exercise.title)}</div>`;
+
+		  // Each set
+		  html += `<div class="hevy-sets">`;
+		  exercise.sets.forEach((set, i) => {
+			let setClasses = "hevy-set";
+			let prSpan = "";
+			if (i === highlightSetIndex) {
+			  setClasses += " pr-border"; // gold border
+			  prSpan = ` <span style="color:gold">PR</span>`; // show "PR" in gold
+			}
+
+			html += `
+			  <div class="${setClasses}"
+				   data-exercise="${escapeHtml(exercise.title)}"
+				   data-reps="${set.reps}"
+				   data-weight="${set.weight_kg}">
+				<span class="hevy-set-weight">${set.weight_kg}kg</span>
+				x
+				<span class="hevy-set-reps">${set.reps}</span>
+				${prSpan}
+				${set.rpe ? `<br>RPE: ${set.rpe}` : ""}
+			  </div>
+			`;
+		  });
+		  html += `</div>`; // end .hevy-sets
+
+		  // Volume line
+		  let volumeText = `Volume: ${exerciseVolume.toLocaleString()}kg`;
+		  if (isVolumePR) {
+			volumeText += ` <span style="color:gold">PR</span>`;
+		  }
+		  html += `
+			<div class="hevy-exercise-volume"
+				 data-exercise="${escapeHtml(exercise.title)}"
+				 data-date-key="${dateKey}">
+			  ${volumeText}
+			</div>
+		  `;
+
+		  // One Rep Max line
+		  let ormText = "One Rep Max: N/A";
+		  if (highestOrmForThisExercise > 0) {
+			ormText = `One Rep Max: ${highestOrmForThisExercise.toFixed(1)}kg`;
+			if (isOrmPR) {
+			  ormText += ` <span style="color:gold">PR</span>`;
+			}
+		  }
+		  html += `
+			<div class="hevy-orm"
+				 data-exercise="${escapeHtml(exercise.title)}"
+				 data-date-key="${dateKey}">
+			  ${ormText}
+			</div>
+		  `;
+
+		  html += `</div>`; // end .hevy-exercise
+		});
+
+		// Summaries across entire workout (total volume)
+		let totalWeight = 0;
+		workout.exercises.forEach(ex => {
+		  ex.sets.forEach(s => {
+			totalWeight += (s.weight_kg * s.reps);
+		  });
+		});
+		html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
+
+		html += `</div>`; // end .hevy-workout
+	  });
+
+	  container.innerHTML = html;
+
+	  // Attach click handlers (same as before)
+	  container.onclick = (e) => {
+		// (1) volume for an exercise
+		const volumeEl = e.target.closest(".hevy-exercise-volume");
+		if (volumeEl) {
+		  e.stopPropagation();
+		  const exerciseName = volumeEl.getAttribute("data-exercise");
+		  const dKey = volumeEl.getAttribute("data-date-key");
+		  openExerciseVolumeModal(exerciseName, dKey);
+		  return;
+		}
+
+		// (2) user clicked weight or reps
+		if (e.target.classList.contains("hevy-set-weight") ||
+			e.target.classList.contains("hevy-set-reps")) {
+		  e.stopPropagation();
+		  const setParent = e.target.closest(".hevy-set");
+		  const exerciseName = setParent.getAttribute("data-exercise");
+		  const weight = Number(setParent.getAttribute("data-weight"));
+		  const reps = parseInt(setParent.getAttribute("data-reps"), 10);
+
+		  if (e.target.classList.contains("hevy-set-weight")) {
+			// open rep progression modal (fixed weight)
+			openRepProgressModal(exerciseName, weight, dateKey);
+		  } else {
+			// open weight progression modal (fixed reps)
+			openExerciseProgressModal(exerciseName, reps, dateKey);
+		  }
+		  return;
+		}
+
+		// (3) total volume
+		const totalEl = e.target.closest(".hevy-total");
+		if (totalEl) {
+		  e.stopPropagation();
+		  const associatedDateKey = totalEl.getAttribute("data-date-key");
+		  openVolumeModal(associatedDateKey);
+		  return;
+		}
+
+		// (4) One Rep Max
+		const ormEl = e.target.closest(".hevy-orm");
+		if (ormEl) {
+		  e.stopPropagation();
+		  const exerciseName = ormEl.getAttribute("data-exercise");
+		  const dKey = ormEl.getAttribute("data-date-key");
+		  openOrmProgressModal(exerciseName, dKey);
+		  return;
+		}
+	  };
+	}
+
+    /*
+      ================================================
+      = 13) Exercise Weight Progress Modal & Chart   =
+      ================================================
+    */
     function destroyExerciseProgressChart() {
       if(exerciseWeightProgressionChart) {
         exerciseWeightProgressionChart.destroy();
         exerciseWeightProgressionChart = null;
       }
     }
-
-    function openExerciseProgressModal(exerciseName, repCount) {
-      // Set modal title
-      document.querySelector("#exerciseWeightProgressionModal h2").textContent = `Weight progress at ${repCount} reps`;
-
-      // Show the modal
+    function openExerciseProgressModal(exerciseName, repCount, dateKey) {
+      document.querySelector("#exerciseWeightProgressionModal h2").textContent =
+        `Weight progress at ${repCount} reps`;
       document.getElementById("exerciseProgressOverlay").classList.add("active");
-
-      // Build the chart
-      buildExerciseProgressChart(exerciseName, repCount);
+      buildExerciseProgressChart(exerciseName, repCount, dateKey);
     }
-
     function closeExerciseProgressModal() {
       document.getElementById("exerciseProgressOverlay").classList.remove("active");
       destroyExerciseProgressChart();
-      currentlySelectedSet = null;
     }
-
-    function buildExerciseProgressChart(exerciseName, repCount) {
-      // Gather all days in 2025 that contain matching exercise + repCount
+    function buildExerciseProgressChart(exerciseName, repCount, highlightDateKey) {
       const dateKeys = Object.keys(calendarData).sort();
-      const dataMap = {}; 
-      // dataMap[ dateKey ] = maxWeight for that exerciseName / repCount on that date
-
+      const dataMap = {};
       dateKeys.forEach(k => {
         const dayObj = calendarData[k];
         if(dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
           let maxWeightForThatDay = 0;
-          // check all exercises
           dayObj.hevyWorkouts.forEach(w => {
             w.exercises.forEach(ex => {
               if(ex.title === exerciseName) {
@@ -2375,20 +2664,15 @@
         }
       });
 
-      // Convert to arrays for chart
       const chartKeys = Object.keys(dataMap).sort();
       if(chartKeys.length < 1) {
-        // no data
         destroyExerciseProgressChart();
         document.getElementById("exerciseProgressOverlay").classList.remove("active");
         showCustomAlert("No progression data found for that set.");
         return;
       }
 
-      const dataPoints = chartKeys.map(k => ({
-        x: k,
-        y: dataMap[k]
-      }));
+      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
       const labels = chartKeys.map(k => {
         const d = parseDateKey(k);
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -2396,13 +2680,16 @@
       const weights = dataPoints.map(dp => dp.y);
       const minWeight = Math.min(...weights);
       const maxWeight = Math.max(...weights);
-      const suggestedMin = minWeight - 1 >= 0 ? minWeight -1 : 0;
+      const suggestedMin = Math.max(0, minWeight - 1);
       const suggestedMax = maxWeight + 1;
 
-      // Destroy any existing chart first
       destroyExerciseProgressChart();
-
       const ctx = document.getElementById('exerciseWeightProgressionChart').getContext('2d');
+
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, highlightDateKey, 'rgba(119,221,119,1)', 'red', 4, 8
+      );
+
       exerciseWeightProgressionChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -2414,7 +2701,9 @@
             backgroundColor: 'rgba(119,221,119,0.2)',
             fill: true,
             tension: 0.2,
-            pointRadius: 4,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
             pointHoverRadius: 6
           }]
         },
@@ -2422,28 +2711,30 @@
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { 
-              title: { display: true, text: 'Date' }, 
-              ticks: { color: '#ccc' }, 
+            x: {
+              title: { display: true, text: 'Date' },
+              ticks: { color: '#ccc' },
               grid: { color: '#555' }
             },
-            y: { 
-              suggestedMin, 
-              suggestedMax, 
-              title: { display: true, text: 'Weight (kg)' }, 
-              ticks: { color: '#ccc' }, 
-              grid: { color: '#555' } 
+            y: {
+              suggestedMin,
+              suggestedMax,
+              title: { display: true, text: 'Weight (kg)' },
+              ticks: { color: '#ccc' },
+              grid: { color: '#555' }
             }
           },
-          plugins: { legend: { labels: { color: '#eee' } } }
+          plugins: {
+            legend: { labels: { color: '#eee' } }
+          }
         }
       });
     }
 
     /*
-      ==============================================
-      =   13) Exercise Rep Progress Modal & Chart  =
-      ==============================================
+      ================================================
+      = 14) Exercise Rep Progress Modal & Chart      =
+      ================================================
     */
     function destroyRepProgressChart() {
       if(exerciseRepProgressionChart) {
@@ -2451,40 +2742,28 @@
         exerciseRepProgressionChart = null;
       }
     }
-
-    function openRepProgressModal(exerciseName, weight) {
-      // Set modal title
-      document.querySelector("#exerciseRepProgressionModal h2").textContent = `Rep progress at ${weight}kg`;
-
-      // Show the modal
+    function openRepProgressModal(exerciseName, weight, dateKey) {
+      document.querySelector("#exerciseRepProgressionModal h2").textContent =
+        `Rep progress at ${weight}kg`;
       document.getElementById("repProgressOverlay").classList.add("active");
-
-      // Build the chart
-      buildRepProgressChart(exerciseName, weight);
+      buildRepProgressChart(exerciseName, weight, dateKey);
     }
-
     function closeRepProgressModal() {
       document.getElementById("repProgressOverlay").classList.remove("active");
       destroyRepProgressChart();
-      currentlySelectedSet = null;
     }
-
-    function buildRepProgressChart(exerciseName, weight) {
-      // Gather all days in 2025 that contain matching exercise + weight
+    function buildRepProgressChart(exerciseName, weight, highlightDateKey) {
       const dateKeys = Object.keys(calendarData).sort();
-      const dataMap = {}; 
-      // dataMap[ dateKey ] = repCount for that exerciseName / weight on that date
-
+      const dataMap = {};
       dateKeys.forEach(k => {
         const dayObj = calendarData[k];
         if(dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
           let maxRepForThatDay = 0;
-          // check all exercises
           dayObj.hevyWorkouts.forEach(w => {
             w.exercises.forEach(ex => {
               if(ex.title === exerciseName) {
                 ex.sets.forEach(s => {
-                  if(Number(s.weight_kg) === Number(weight)) { // Ensuring both are numbers
+                  if(Number(s.weight_kg) === Number(weight)) {
                     if(s.reps > maxRepForThatDay){
                       maxRepForThatDay = s.reps;
                     }
@@ -2499,20 +2778,15 @@
         }
       });
 
-      // Convert to arrays for chart
       const chartKeys = Object.keys(dataMap).sort();
       if(chartKeys.length < 1) {
-        // no data
         destroyRepProgressChart();
         document.getElementById("repProgressOverlay").classList.remove("active");
         showCustomAlert("No rep progression data found for that set.");
         return;
       }
 
-      const dataPoints = chartKeys.map(k => ({
-        x: k,
-        y: dataMap[k]
-      }));
+      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
       const labels = chartKeys.map(k => {
         const d = parseDateKey(k);
         return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -2520,13 +2794,16 @@
       const reps = dataPoints.map(dp => dp.y);
       const minRep = Math.min(...reps);
       const maxRep = Math.max(...reps);
-      const suggestedMin = minRep - 1 >= 0 ? minRep -1 : 0;
+      const suggestedMin = Math.max(0, minRep - 1);
       const suggestedMax = maxRep + 1;
 
-      // Destroy any existing chart first
       destroyRepProgressChart();
-
       const ctx = document.getElementById('exerciseRepProgressionChart').getContext('2d');
+
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, highlightDateKey, 'rgba(255,165,0,1)', 'red', 4, 8
+      );
+
       exerciseRepProgressionChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -2534,11 +2811,13 @@
           datasets: [{
             label: `Repetitions: ${exerciseName} (${weight}kg)`,
             data: dataPoints.map(dp => dp.y),
-            borderColor: '#FFA500', // Orange
-            backgroundColor: 'rgba(255,165,0,0.2)', // Semi-transparent orange
+            borderColor: '#FFA500',
+            backgroundColor: 'rgba(255,165,0,0.2)',
             fill: true,
             tension: 0.2,
-            pointRadius: 4,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
             pointHoverRadius: 6
           }]
         },
@@ -2565,14 +2844,576 @@
     }
 
     /*
-      =====================================
-      =    14) DOM Loaded & Event Setup   =
-      =====================================
+      =======================================
+      = 15) Volume Over Time (Day-Level)    =
+      =======================================
+    */
+    function openVolumeModal(dateKey) {
+      document.getElementById("volumeOverlay").classList.add("active");
+      buildVolumeChart(dateKey);
+    }
+    function closeVolumeModal() {
+      document.getElementById("volumeOverlay").classList.remove("active");
+      if(volumeChart){
+        volumeChart.destroy();
+        volumeChart = null;
+      }
+    }
+    function buildVolumeChart(highlightDateKey) {
+      const dateKeys = Object.keys(calendarData)
+        .filter(k => calendarData[k].hevyWorkouts && calendarData[k].hevyWorkouts.length > 0)
+        .sort();
+
+      const dataPoints = dateKeys.map(k => {
+        const day = calendarData[k];
+        let volume = 0;
+        day.hevyWorkouts.forEach(w => {
+          w.exercises.forEach(ex => {
+            ex.sets.forEach(set => {
+              volume += set.weight_kg * set.reps;
+            });
+          });
+        });
+        return { x: k, y: volume };
+      });
+
+      if(dataPoints.length < 1){
+        showCustomAlert("No volume data found.");
+        return;
+      }
+      const labels = dataPoints.map(dp => {
+        const d = parseDateKey(dp.x);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+
+      const volumes = dataPoints.map(dp => dp.y);
+      const minVolume = Math.min(...volumes);
+      const maxVolume = Math.max(...volumes);
+      const suggestedMin = Math.max(0, minVolume - 10);
+      const suggestedMax = maxVolume + 10;
+
+      if(volumeChart){
+        volumeChart.destroy();
+        volumeChart = null;
+      }
+      const ctx = document.getElementById('volumeChart').getContext('2d');
+
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, highlightDateKey, 'rgba(255,165,0,1)', 'red', 2, 6
+      );
+
+      volumeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Volume (kg)',
+            data: dataPoints.map(dp => dp.y),
+            borderColor: '#FFA500',
+            backgroundColor: 'rgba(255,165,0,0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
+            pointHoverRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { 
+              title: { display: true, text: 'Date' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' }
+            },
+            y: { 
+              suggestedMin, 
+              suggestedMax, 
+              title: { display: true, text: 'Volume (kg)' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' } 
+            }
+          },
+          plugins: { legend: { labels: { color: '#eee' } } }
+        }
+      });
+    }
+
+    /*
+      =======================================
+      = 16) Per-Exercise Volume Chart       =
+      =======================================
+    */
+    function openExerciseVolumeModal(exerciseName, dateKey) {
+      document.getElementById("exerciseVolumeOverlay").classList.add("active");
+      buildExerciseVolumeProgressionChart(exerciseName, dateKey);
+    }
+    function closeExerciseVolumeModal() {
+      document.getElementById("exerciseVolumeOverlay").classList.remove("active");
+      destroyExerciseVolumeChart();
+    }
+    function destroyExerciseVolumeChart() {
+      if(exerciseVolumeChart) {
+        exerciseVolumeChart.destroy();
+        exerciseVolumeChart = null;
+      }
+    }
+    function buildExerciseVolumeProgressionChart(exerciseName, highlightDateKey) {
+      const dateKeys = Object.keys(calendarData).sort();
+      const dataMap = {}; 
+
+      dateKeys.forEach(k => {
+        const dayObj = calendarData[k];
+        if(dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+          let exerciseVolume = 0;
+          dayObj.hevyWorkouts.forEach(workout => {
+            workout.exercises.forEach(ex => {
+              if(ex.title === exerciseName) {
+                ex.sets.forEach(s => {
+                  exerciseVolume += (s.weight_kg * s.reps);
+                });
+              }
+            });
+          });
+          if(exerciseVolume > 0) {
+            dataMap[k] = exerciseVolume;
+          }
+        }
+      });
+
+      const chartKeys = Object.keys(dataMap).sort();
+      if(chartKeys.length < 1) {
+        destroyExerciseVolumeChart();
+        document.getElementById("exerciseVolumeOverlay").classList.remove("active");
+        showCustomAlert(`No volume data found for '${exerciseName}'.`);
+        return;
+      }
+
+      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+      const labels = chartKeys.map(k => {
+        const d = parseDateKey(k);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+
+      const volumes = dataPoints.map(dp => dp.y);
+      const minV = Math.min(...volumes);
+      const maxV = Math.max(...volumes);
+      const range = maxV - minV;
+      const pad = range * 0.1;
+      const suggestedMin = (minV - pad < 0) ? 0 : (minV - pad);
+      const suggestedMax = maxV + pad;
+
+      destroyExerciseVolumeChart();
+      const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, highlightDateKey, 'rgba(77,221,255,1)', 'red', 4, 8
+      );
+
+      exerciseVolumeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `Volume: ${exerciseName}`,
+            data: dataPoints.map(dp => dp.y),
+            borderColor: '#4DDCFF',
+            backgroundColor: 'rgba(77,221,255,0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { 
+              title: { display: true, text: 'Date' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' }
+            },
+            y: { 
+              suggestedMin, 
+              suggestedMax, 
+              title: { display: true, text: 'Exercise Volume (kg)' }, 
+              ticks: { color: '#ccc' }, 
+              grid: { color: '#555' } 
+            }
+          },
+          plugins: { legend: { labels: { color: '#eee' } } }
+        }
+      });
+    }
+
+    /*
+      =======================================
+      = 17) ORM Progress Over Time Chart    =
+      =======================================
+    */
+    function openOrmProgressModal(exerciseName, dateKey) {
+      document.getElementById("ormProgressOverlay").classList.add("active");
+      buildExerciseOrmProgressChart(exerciseName, dateKey);
+    }
+    function closeOrmProgressModal() {
+      document.getElementById("ormProgressOverlay").classList.remove("active");
+      destroyOrmProgressChart();
+    }
+    function destroyOrmProgressChart() {
+      if(exerciseOrmProgressChart) {
+        exerciseOrmProgressChart.destroy();
+        exerciseOrmProgressChart = null;
+      }
+    }
+    function buildExerciseOrmProgressChart(exerciseName, highlightDateKey) {
+      const dateKeys = Object.keys(calendarData).sort();
+      const dataMap = {};
+
+      dateKeys.forEach(k => {
+        let dayMaxOrm = 0;
+        const dayObj = calendarData[k];
+        if(dayObj.hevyWorkouts) {
+          dayObj.hevyWorkouts.forEach(workout => {
+            workout.exercises.forEach(ex => {
+              if(ex.title === exerciseName) {
+                ex.sets.forEach(s => {
+                  const setOrm = computeOrm(s.weight_kg, s.reps);
+                  if(setOrm > dayMaxOrm) {
+                    dayMaxOrm = setOrm;
+                  }
+                });
+              }
+            });
+          });
+        }
+        if(dayMaxOrm > 0) {
+          dataMap[k] = dayMaxOrm;
+        }
+      });
+
+      const chartKeys = Object.keys(dataMap).sort();
+      if(chartKeys.length < 1) {
+        destroyOrmProgressChart();
+        document.getElementById("ormProgressOverlay").classList.remove("active");
+        showCustomAlert(`No ORM data found for '${exerciseName}'.`);
+        return;
+      }
+
+      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+      const labels = chartKeys.map(k => {
+        const d = parseDateKey(k);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+
+      const orms = dataPoints.map(dp => dp.y);
+      const minOrm = Math.min(...orms);
+      const maxOrm = Math.max(...orms);
+      const range = maxOrm - minOrm;
+      const pad = range * 0.1;
+      const suggestedMin = (minOrm - pad < 0) ? 0 : (minOrm - pad);
+      const suggestedMax = maxOrm + pad;
+
+      destroyOrmProgressChart();
+      const ctx = document.getElementById('exerciseOrmProgressChart').getContext('2d');
+
+      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+        dataPoints, highlightDateKey, 'rgba(255,255,0,1)', 'red', 4, 8
+      );
+
+      exerciseOrmProgressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: `ORM: ${exerciseName}`,
+            data: dataPoints.map(dp => dp.y),
+            borderColor: '#FFFF00',
+            backgroundColor: 'rgba(255,255,0,0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: pointRadii,
+            pointBackgroundColor: bgColors,
+            pointBorderColor: borderColors,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'Date' },
+              ticks: { color: '#ccc' },
+              grid: { color: '#555' }
+            },
+            y: {
+              suggestedMin,
+              suggestedMax,
+              title: { display: true, text: 'Estimated 1RM (kg)' },
+              ticks: { color: '#ccc' },
+              grid: { color: '#555' }
+            }
+          },
+          plugins: {
+            legend: { labels: { color: '#eee' } }
+          }
+        }
+      });
+    }
+
+    /*
+      =======================================
+      = 18) Populate Calendar Button        =
+      =======================================
+    */
+    function populateEntireCalendar() {
+      const cycleDataArray = Array.from(selectedDates).sort();
+      if(cycleDataArray.length === 0){
+        showCustomAlert("No cycle selected.");
+        return;
+      }
+
+      const sortedCycle = cycleDataArray.map(k => parseDateKey(k)).sort((a,b) => a - b);
+      const sortedCycleKeys = sortedCycle.map(d => getDateKey(d));
+      const cyclePattern = sortedCycleKeys.map(k => ({ ...getDayData(k) }));
+      const patternLength = cyclePattern.length;
+      const startDate = new Date(sortedCycle[0].getTime());
+
+      const firstOfYear = new Date(2025, 0, 1);
+      const lastOfYear = new Date(2025, 11, 31);
+
+      // Backwards
+      let currentDate = new Date(startDate.getTime());
+      let cycleIndex = cyclePattern.length;
+      while(currentDate > firstOfYear){
+        currentDate.setDate(currentDate.getDate() -1);
+        cycleIndex = (cycleIndex -1 + patternLength) % patternLength;
+        const dateKey = getDateKey(currentDate);
+        const cycleData = cyclePattern[cycleIndex];
+        calendarData[dateKey] = {
+          shiftClass: cycleData.shiftClass,
+          gym: cycleData.gym,
+          gymTime: cycleData.gymTime,
+          workTime: cycleData.workTime,
+          completed: cycleData.completed,
+          weight: cycleData.weight,
+          alert: cycleData.alert,
+          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
+        };
+      }
+
+      // Forwards
+      currentDate = new Date(startDate.getTime());
+      cycleIndex = 0;
+      while(currentDate <= lastOfYear){
+        const dateKey = getDateKey(currentDate);
+        const cycleData = cyclePattern[cycleIndex % cyclePattern.length];
+        calendarData[dateKey] = {
+          shiftClass: cycleData.shiftClass,
+          gym: cycleData.gym,
+          gymTime: cycleData.gymTime,
+          workTime: cycleData.workTime,
+          completed: cycleData.completed,
+          weight: cycleData.weight,
+          alert: cycleData.alert,
+          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
+        };
+        cycleIndex++;
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      defaultCycleData = {
+        pattern: [...cyclePattern],
+        startDate: getDateKey(sortedCycle[0])
+      };
+      localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+      localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+
+      selectedDates.clear();
+      renderCalendar(currentYear, currentMonth);
+      showCustomAlert("Calendar has been successfully populated with your custom cycle.");
+    }
+    function updatePopulateCalendarButtonState() {
+      const btn = document.getElementById("populateCalendarBtn");
+      if(selectedDates.size >=2){
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.style.border = "2px solid gold";
+      }
+      else{
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        btn.style.border = "2px solid #555";
+      }
+    }
+
+    /*
+      =======================================
+      =  19)  Clear Calendar Function       =
+      =======================================
+    */
+    function clearCalendar() {
+      showCustomConfirm("Are you sure you want to clear the entire calendar? This will remove all your data and set all days to 'None'. This action cannot be undone.", () => {
+        const startDate = new Date(2025, 0, 1);
+        const endDate = new Date(2025, 11, 31);
+        const totalDays = Math.floor((endDate - startDate) / MS_IN_DAY) + 1;
+
+        for(let i = 0; i < totalDays; i++){
+          const currentDate = new Date(startDate.getTime() + i * MS_IN_DAY);
+          const dateKey = getDateKey(currentDate);
+          calendarData[dateKey] = {
+            shiftClass: "off-bg",
+            gym: "None",
+            gymTime: "",
+            workTime: "",
+            completed: false,
+            weight: null,
+            alert: null,
+            hevyWorkouts: []
+          };
+        }
+
+        localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+        defaultCycleData = { pattern: [], startDate: null };
+        localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+
+        selectedDates.clear();
+        renderCalendar(currentYear, currentMonth);
+        showCustomAlert("Calendar has been cleared. All days are now set to 'None'.");
+      });
+    }
+
+    /*
+      =======================================
+      =  20)  Custom Alert/Prompt/Confirm   =
+      =======================================
+    */
+    function showCustomAlert(message) {
+      const overlay = document.getElementById("customAlertOverlay");
+      const messageElem = document.getElementById("customAlertMessage");
+      const inputElem = document.getElementById("customAlertInput");
+      const confirmButtons = document.getElementById("customConfirmButtons");
+      const defaultButton = document.getElementById("customDefaultButton");
+
+      messageElem.textContent = message;
+      inputElem.style.display = "none";
+      confirmButtons.style.display = "none";
+      defaultButton.style.display = "block";
+
+      overlay.classList.add("active");
+    }
+    function showCustomConfirm(message, onConfirm) {
+      const overlay = document.getElementById("customAlertOverlay");
+      const messageElem = document.getElementById("customAlertMessage");
+      const inputElem = document.getElementById("customAlertInput");
+      const confirmButtons = document.getElementById("customConfirmButtons");
+      const defaultButton = document.getElementById("customDefaultButton");
+
+      messageElem.textContent = message;
+      inputElem.style.display = "none";
+      confirmButtons.style.display = "flex";
+      defaultButton.style.display = "none";
+
+      // Remove old buttons if any
+      const existingYes = document.getElementById("customYesBtn");
+      const existingNo = document.getElementById("customNoBtn");
+      if(existingYes) existingYes.remove();
+      if(existingNo) existingNo.remove();
+
+      const yesButton = document.createElement("button");
+      yesButton.id = "customYesBtn";
+      yesButton.textContent = "Yes";
+      yesButton.onclick = () => {
+        overlay.classList.remove("active");
+        onConfirm();
+      };
+
+      const noButton = document.createElement("button");
+      noButton.id = "customNoBtn";
+      noButton.textContent = "No";
+      noButton.onclick = () => {
+        overlay.classList.remove("active");
+      };
+
+      confirmButtons.appendChild(yesButton);
+      confirmButtons.appendChild(noButton);
+      overlay.classList.add("active");
+    }
+    function showCustomPrompt(message, placeholder, callback) {
+      const overlay = document.getElementById("customAlertOverlay");
+      const messageElem = document.getElementById("customAlertMessage");
+      const inputElem = document.getElementById("customAlertInput");
+      const confirmButtons = document.getElementById("customConfirmButtons");
+      const defaultButton = document.getElementById("customDefaultButton");
+
+      messageElem.textContent = message;
+      inputElem.style.display = "block";
+      inputElem.placeholder = placeholder || "";
+      confirmButtons.style.display = "flex";
+      defaultButton.style.display = "none";
+
+      // Remove old buttons if any
+      const existingYes = document.getElementById("customYesBtn");
+      const existingNo = document.getElementById("customNoBtn");
+      if(existingYes) existingYes.remove();
+      if(existingNo) existingNo.remove();
+
+      const yesButton = document.createElement("button");
+      yesButton.id = "customYesBtn";
+      yesButton.textContent = "OK";
+      yesButton.onclick = () => {
+        const inputVal = inputElem.value.trim();
+        overlay.classList.remove("active");
+        callback(inputVal);
+      };
+
+      const noButton = document.createElement("button");
+      noButton.id = "customNoBtn";
+      noButton.textContent = "Cancel";
+      noButton.onclick = () => {
+        overlay.classList.remove("active");
+      };
+
+      confirmButtons.appendChild(yesButton);
+      confirmButtons.appendChild(noButton);
+
+      inputElem.value = "";
+      overlay.classList.add("active");
+    }
+    function closeCustomAlert() {
+      const overlay = document.getElementById("customAlertOverlay");
+      const messageElem = document.getElementById("customAlertMessage");
+      const inputElem = document.getElementById("customAlertInput");
+      const confirmButtons = document.getElementById("customConfirmButtons");
+      const defaultButton = document.getElementById("customDefaultButton");
+
+      const yesBtn = document.getElementById("customYesBtn");
+      const noBtn = document.getElementById("customNoBtn");
+      if(yesBtn) yesBtn.remove();
+      if(noBtn) noBtn.remove();
+
+      messageElem.textContent = "";
+      inputElem.style.display = "none";
+      confirmButtons.style.display = "none";
+      defaultButton.style.display = "block";
+
+      overlay.classList.remove("active");
+    }
+
+    /*
+      =======================================
+      = 21) DOM Loaded: Event Setup         =
+      =======================================
     */
     window.addEventListener("DOMContentLoaded", () => {
       buildColorSwatches();
 
-      // Single modal events
+      // Single modal
       document.getElementById("singleSaveBtn").addEventListener("click", saveSingleModal);
       document.getElementById("singleRevertBtn").addEventListener("click", revertSingleModal);
       document.getElementById("singleCancelBtn").addEventListener("click", closeSingleModal);
@@ -2580,17 +3421,17 @@
         btn.addEventListener("click", () => { resetSingleField(btn.getAttribute("data-field")); });
       });
 
-      // Multi modal events
+      // Multi modal
       document.getElementById("multiKeySelect").addEventListener("change", handleMultiKeyChange);
       document.getElementById("multiSaveBtn").addEventListener("click", saveMultiModal);
       document.getElementById("multiRevertBtn").addEventListener("click", revertMultiModal);
       document.getElementById("multiCancelBtn").addEventListener("click", closeMultiModal);
 
-      // Stats modal events
+      // Stats
       document.getElementById("statsBtn").addEventListener("click", openStatsModal);
       document.getElementById("statsCloseBtn").addEventListener("click", closeStatsModal);
 
-      // Backup load/save
+      // Backup
       document.getElementById("saveDataBtn").addEventListener("click", saveData);
       document.getElementById("loadDataBtn").addEventListener("click", () => {
         document.getElementById("importFileInput").click();
@@ -2605,7 +3446,7 @@
         event.target.value = "";
       });
 
-      // Hevy import with custom prompt
+      // Hevy import
       document.getElementById("hevyImportBtn").addEventListener("click", () => {
         showCustomPrompt("Enter your Hevy API key:", "API Key", (apiKey) => {
           if(apiKey){
@@ -2616,9 +3457,9 @@
         });
       });
 
-      // NEW: Populate Calendar Button Event
+      // Populate calendar
       document.getElementById("populateCalendarBtn").addEventListener("click", () => {
-        showCustomConfirm("Populate the calendar with the selected cycle? This will overwrite existing data for the selected days.", () => {
+        showCustomConfirm("Populate the calendar with the selected cycle? This will overwrite existing data for those days.", () => {
           populateEntireCalendar();
         });
       });
@@ -2626,32 +3467,34 @@
       // Hevy summary modal
       document.getElementById("hevyCloseBtn").addEventListener("click", closeHevyModal);
 
-      // Volume chart modal close button
+      // Volume chart modal
       document.getElementById("volumeCloseBtn").addEventListener("click", closeVolumeModal);
 
-      // Exercise Progress modal close button
-      document.getElementById("exerciseProgressCloseBtn").addEventListener("click", closeExerciseProgressModal);
+      // Exercise volume chart modal
+      document.getElementById("exerciseVolumeCloseBtn").addEventListener("click", closeExerciseVolumeModal);
 
-      // Rep Progress modal close button
+      // Exercise progress modals
+      document.getElementById("exerciseProgressCloseBtn").addEventListener("click", closeExerciseProgressModal);
       document.getElementById("repProgressCloseBtn").addEventListener("click", closeRepProgressModal);
 
-      // NEW: Clear Calendar button event
+      // ORM progress modal
+      document.getElementById("ormProgressCloseBtn").addEventListener("click", closeOrmProgressModal);
+
+      // Clear Calendar
       document.getElementById("clearCalendarBtn").addEventListener("click", clearCalendar);
 
-      // NEW: Help Button Event (currently no function)
+      // Help
       document.getElementById("helpBtn").addEventListener("click", () => {
         showCustomAlert("Help feature is coming soon!");
       });
 
-      // Calendar cell selection logic
+      // Calendar cell selection
       document.addEventListener("mousedown", (e) => {
-        // If an overlay is open, ignore selection
+        // If overlay or a button is clicked, skip
         if(document.querySelector(".overlay.active")) return;
-
-        // If clicking on a button, ignore to prevent interfering with button functionality
         if(e.target.closest("button")) return;
 
-        // Middle mouse click -> open Hevy summary
+        // Middle mouse => open Hevy
         if (e.button === 1) {
           e.preventDefault();
           const dayCell = e.target.closest(".day-cell");
@@ -2664,7 +3507,6 @@
           return;
         }
 
-        // Left click or otherwise
         if(e.target.closest(".refresh-emoji") || e.target.closest(".completed-badge")) return;
         e.preventDefault();
 
@@ -2721,384 +3563,8 @@
         document.addEventListener("mouseup", mouseUpHandler);
       });
 
-      // Finally, render the starting month
       renderCalendar(currentYear, currentMonth);
     });
-
-    /*
-      ==============================
-      =    Clear Calendar Function =
-      ==============================
-    */
-    function clearCalendar() {
-      showCustomConfirm("Are you sure you want to clear the entire calendar? This will remove all your data and set all days to 'None'. This action cannot be undone.", () => { // Updated message
-        // Define start and end dates for 2025
-        const startDate = new Date(2025, 0, 1);
-        const endDate = new Date(2025, 11, 31);
-        const totalDays = Math.floor((endDate - startDate) / MS_IN_DAY) + 1;
-
-        for(let i = 0; i < totalDays; i++){
-          const currentDate = new Date(startDate.getTime() + i * MS_IN_DAY);
-          const dateKey = getDateKey(currentDate);
-          calendarData[dateKey] = {
-            shiftClass: "off-bg",
-            gym: "None", // Changed from "Rest" to "None"
-            gymTime: "",
-            workTime: "",
-            completed: false,
-            weight: null,
-            alert: null,
-            hevyWorkouts: []
-          };
-        }
-
-        // Save the cleared data to localStorage
-        localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
-        defaultCycleData = {
-          pattern: [],
-          startDate: null
-        };
-        localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData)); // NEW: Update Default Cycle State
-
-        // Clear any selected dates
-        selectedDates.clear();
-
-        // Re-render the calendar
-        renderCalendar(currentYear, currentMonth);
-
-        showCustomAlert("Calendar has been cleared. All days are now set to 'None'."); // Updated message
-      });
-    }
-
-    /*
-      =====================================
-      =     15) Populate Calendar Function  =
-      =====================================
-    */
-    function populateEntireCalendar() {
-      // Get the selected cycle
-      const cycleDataArray = Array.from(selectedDates).sort();
-      if(cycleDataArray.length === 0){
-        showCustomAlert("No cycle selected.");
-        return;
-      }
-
-      // Sort selected dates in chronological order
-      const sortedCycle = cycleDataArray.map(k => parseDateKey(k)).sort((a,b) => a - b);
-
-      // Convert back to date keys
-      const sortedCycleKeys = sortedCycle.map(d => getDateKey(d));
-
-      // Determine the cycle pattern
-      const cyclePattern = sortedCycleKeys.map(k => ({ ...getDayData(k) }));
-      const patternLength = cyclePattern.length;
-
-      // Determine the starting point (earliest selected date)
-      const startDate = new Date(sortedCycle[0].getTime());
-
-      // Define the start and end dates
-      const firstOfYear = new Date(2025, 0, 1);
-      const lastOfYear = new Date(2025, 11, 31);
-
-      // Apply cyclePattern backwards from startDate to firstOfYear
-      let currentDate = new Date(startDate.getTime());
-      let cycleIndex = cyclePattern.length; // FIX: Initialize to cyclePattern.length
-
-      while(currentDate > firstOfYear){
-        currentDate.setDate(currentDate.getDate() -1);
-        cycleIndex = (cycleIndex -1 + patternLength) % patternLength; // Apply cycle correctly
-        const dateKey = getDateKey(currentDate);
-        const cycleData = cyclePattern[cycleIndex];
-        calendarData[dateKey] = {
-          shiftClass: cycleData.shiftClass,
-          gym: cycleData.gym,
-          gymTime: cycleData.gymTime,
-          workTime: cycleData.workTime,
-          completed: cycleData.completed,
-          weight: cycleData.weight,
-          alert: cycleData.alert,
-          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
-        };
-      }
-
-      // Apply cyclePattern forwards from startDate to end of year
-      currentDate = new Date(startDate.getTime());
-      cycleIndex = 0;
-
-      while(currentDate <= lastOfYear){
-        const dateKey = getDateKey(currentDate);
-        const cycleData = cyclePattern[cycleIndex % cyclePattern.length];
-        calendarData[dateKey] = {
-          shiftClass: cycleData.shiftClass,
-          gym: cycleData.gym,
-          gymTime: cycleData.gymTime,
-          workTime: cycleData.workTime,
-          completed: cycleData.completed,
-          weight: cycleData.weight,
-          alert: cycleData.alert,
-          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
-        };
-        cycleIndex++;
-        // Move to next day
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      // Update defaultCycleData
-      defaultCycleData = {
-        pattern: [...cyclePattern],
-        startDate: getDateKey(sortedCycle[0])
-      };
-      localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
-
-      // Save updated calendar to localStorage
-      localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
-
-      // Clear any selected dates
-      selectedDates.clear();
-
-      // Re-render the calendar
-      renderCalendar(currentYear, currentMonth);
-
-      showCustomAlert("Calendar has been successfully populated with your custom cycle.");
-    }
-
-    /*
-      ==============================
-      =  Custom Alert Functions    =
-      ==============================
-    */
-    function showCustomAlert(message) {
-      const overlay = document.getElementById("customAlertOverlay");
-      const messageElem = document.getElementById("customAlertMessage");
-      const inputElem = document.getElementById("customAlertInput");
-      const confirmButtons = document.getElementById("customConfirmButtons");
-      const defaultButton = document.getElementById("customDefaultButton");
-
-      messageElem.textContent = message;
-      inputElem.style.display = "none";
-      confirmButtons.style.display = "none";
-      defaultButton.style.display = "block";
-
-      overlay.classList.add("active");
-    }
-
-    function showCustomConfirm(message, onConfirm) {
-      const overlay = document.getElementById("customAlertOverlay");
-      const messageElem = document.getElementById("customAlertMessage");
-      const inputElem = document.getElementById("customAlertInput");
-      const confirmButtons = document.getElementById("customConfirmButtons");
-      const defaultButton = document.getElementById("customDefaultButton");
-
-      messageElem.textContent = message;
-      inputElem.style.display = "none";
-      confirmButtons.style.display = "flex";
-      defaultButton.style.display = "none";
-
-      // Remove existing Yes and No buttons if any
-      const existingYes = document.getElementById("customYesBtn");
-      const existingNo = document.getElementById("customNoBtn");
-      if(existingYes) existingYes.remove();
-      if(existingNo) existingNo.remove();
-
-      // Create Yes and No buttons
-      const yesButton = document.createElement("button");
-      yesButton.id = "customYesBtn";
-      yesButton.textContent = "Yes";
-      yesButton.onclick = () => {
-        overlay.classList.remove("active");
-        onConfirm();
-      };
-
-      const noButton = document.createElement("button");
-      noButton.id = "customNoBtn";
-      noButton.textContent = "No";
-      noButton.onclick = () => {
-        overlay.classList.remove("active");
-      };
-
-      // Append Yes and No buttons
-      confirmButtons.appendChild(yesButton);
-      confirmButtons.appendChild(noButton);
-
-      overlay.classList.add("active");
-    }
-
-    function showCustomPrompt(message, placeholder, callback) {
-      const overlay = document.getElementById("customAlertOverlay");
-      const messageElem = document.getElementById("customAlertMessage");
-      const inputElem = document.getElementById("customAlertInput");
-      const confirmButtons = document.getElementById("customConfirmButtons");
-      const defaultButton = document.getElementById("customDefaultButton");
-
-      messageElem.textContent = message;
-      inputElem.style.display = "block";
-      inputElem.placeholder = placeholder || "";
-      confirmButtons.style.display = "flex";
-      defaultButton.style.display = "none";
-
-      // Remove existing Yes and No buttons if any
-      const existingYes = document.getElementById("customYesBtn");
-      const existingNo = document.getElementById("customNoBtn");
-      if(existingYes) existingYes.remove();
-      if(existingNo) existingNo.remove();
-
-      // Create Yes and No buttons
-      const yesButton = document.createElement("button");
-      yesButton.id = "customYesBtn";
-      yesButton.textContent = "OK";
-      yesButton.onclick = () => {
-        const inputVal = inputElem.value.trim();
-        overlay.classList.remove("active");
-        callback(inputVal);
-      };
-
-      const noButton = document.createElement("button");
-      noButton.id = "customNoBtn";
-      noButton.textContent = "Cancel";
-      noButton.onclick = () => {
-        overlay.classList.remove("active");
-      };
-
-      // Append Yes and No buttons
-      confirmButtons.appendChild(yesButton);
-      confirmButtons.appendChild(noButton);
-
-      // Clear any existing input
-      inputElem.value = "";
-
-      overlay.classList.add("active");
-    }
-
-    function closeCustomAlert() {
-      const overlay = document.getElementById("customAlertOverlay");
-      const messageElem = document.getElementById("customAlertMessage");
-      const inputElem = document.getElementById("customAlertInput");
-      const confirmButtons = document.getElementById("customConfirmButtons");
-      const defaultButton = document.getElementById("customDefaultButton");
-
-      // Remove Yes and No buttons if they exist
-      const yesBtn = document.getElementById("customYesBtn");
-      const noBtn = document.getElementById("customNoBtn");
-      if(yesBtn) yesBtn.remove();
-      if(noBtn) noBtn.remove();
-
-      messageElem.textContent = "";
-      inputElem.style.display = "none";
-      confirmButtons.style.display = "none";
-      defaultButton.style.display = "block";
-
-      overlay.classList.remove("active");
-    }
-
-    /*
-      =====================================
-      =        NEW: Volume Over Time Chart    =
-      =====================================
-    */
-
-    function openVolumeModal(dateKey) {
-      document.getElementById("volumeOverlay").classList.add("active");
-      buildVolumeChart(dateKey);
-    }
-
-    function closeVolumeModal() {
-      document.getElementById("volumeOverlay").classList.remove("active");
-      if(volumeChart){
-        volumeChart.destroy();
-        volumeChart = null;
-      }
-    }
-
-    function buildVolumeChart(dateKey) {
-      // Collect volume only for days with Hevy workout data
-      const dateKeys = Object.keys(calendarData)
-        .filter(k => calendarData[k].hevyWorkouts && calendarData[k].hevyWorkouts.length > 0)
-        .sort();
-
-      const dataPoints = dateKeys.map(k => {
-        const day = calendarData[k];
-        let volume = 0;
-        day.hevyWorkouts.forEach(w => {
-          w.exercises.forEach(ex => {
-            ex.sets.forEach(set => {
-              volume += set.weight_kg * set.reps;
-            });
-          });
-        });
-        return { x: k, y: volume };
-      });
-
-      const labels = dataPoints.map(dp => {
-        const d = parseDateKey(dp.x);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      });
-
-      const volumes = dataPoints.map(dp => dp.y);
-      const minVolume = Math.min(...volumes);
-      const maxVolume = Math.max(...volumes);
-      const suggestedMin = minVolume - 10 >= 0 ? minVolume - 10 : 0;
-      const suggestedMax = maxVolume + 10;
-
-      if(volumeChart){
-        volumeChart.destroy();
-        volumeChart = null;
-      }
-
-      const ctx = document.getElementById('volumeChart').getContext('2d');
-      volumeChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Volume (kg)',
-            data: dataPoints.map(dp => dp.y),
-            borderColor: '#FFA500',
-            backgroundColor: 'rgba(255,165,0,0.2)',
-            fill: true,
-            tension: 0.2,
-            pointRadius: 2,
-            pointHoverRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { 
-              title: { display: true, text: 'Date' }, 
-              ticks: { color: '#ccc' }, 
-              grid: { color: '#555' }
-            },
-            y: { 
-              suggestedMin, 
-              suggestedMax, 
-              title: { display: true, text: 'Volume (kg)' }, 
-              ticks: { color: '#ccc' }, 
-              grid: { color: '#555' } 
-            }
-          },
-          plugins: { legend: { labels: { color: '#eee' } } }
-        }
-      });
-    }
-    /*
-      =====================================
-      =    16) Populate Calendar Button State =
-      =====================================
-    */
-    function updatePopulateCalendarButtonState() {
-      const btn = document.getElementById("populateCalendarBtn");
-      if(selectedDates.size >=2){
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.style.border = "2px solid gold";
-      }
-      else{
-        btn.disabled = true;
-        btn.style.opacity = "0.5";
-        btn.style.border = "2px solid #555";
-      }
-    }
   </script>
 </body>
 </html>
