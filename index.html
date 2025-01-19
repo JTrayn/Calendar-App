@@ -100,7 +100,7 @@
       vertical-align: middle;
       display: inline-block;
       position: relative;
-      top: -1px; /* Adjust this value as needed to center the icon */
+      top: -1px; /* Adjust as needed to center the icon */
     }
 
     /* Calendar Layout */
@@ -154,7 +154,7 @@
     .night-bg      { background-color: #5C4EA2; }
     .off-bg        { background-color: #3A3A3A; }
     .al-bg         { background-color: #616161; }
-    .custom-shift  { /* Custom dynamic background (if needed) */ }
+    .custom-shift  { /* Custom dynamic background if needed */ }
     .selected {
       outline: 2px solid limegreen !important;
     }
@@ -306,9 +306,13 @@
       z-index: 999;
       justify-content: center;
       align-items: center;
+      /* for the open animation */
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     .overlay.active {
       display: flex;
+      opacity: 1;
     }
     .modal {
       position: relative; /* For positioning modal-date if needed */
@@ -320,6 +324,18 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      transform: translateY(-20px);
+      animation: slideDownFade 0.3s forwards;
+    }
+    @keyframes slideDownFade {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .modal-date {
       position: absolute;
@@ -450,25 +466,38 @@
       border: 2px solid gold;
     }
 
+    /* =========================
+       HEVY WORKOUT STYLING
+       ========================= */
     /* Hevy Workout Blocks */
     .hevy-workout {
       margin-bottom: 1.5rem;
+      background: #393939;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      position: relative;
     }
     .hevy-workout:last-child {
       margin-bottom: 0;
     }
     .hevy-workout-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: white;
-      margin-bottom: 0.5rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
     .hevy-exercise {
       margin-bottom: 1rem;
-      padding: 0.5rem;
       background: #2D2D2D;
-      border-radius: 4px;
+      border-radius: 6px;
+      padding: 0.75rem;
       position: relative;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+    }
+    .hevy-exercise:last-child {
+      margin-bottom: 0;
     }
     .hevy-exercise-title {
       font-weight: bold;
@@ -476,22 +505,30 @@
       margin-bottom: 0.5rem;
       display: flex;
       align-items: center;
+      font-size: 1rem;
     }
     .hevy-sets {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 0.5rem;
+      margin-top: 0.5rem;
     }
     .hevy-set {
-      background: #444;
+      background: linear-gradient(45deg, #444, #555);
       padding: 0.4rem;
-      border-radius: 3px;
+      border-radius: 4px;
       text-align: center;
       font-size: 0.85rem;
-      cursor: pointer; /* We will use a click to show/hide graph */
-      display: inline-block;
+      cursor: pointer;
       position: relative;
       transition: all 0.2s;
+      color: #EEE;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .hevy-set:hover {
+      background: linear-gradient(45deg, #555, #666);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
     }
     .hevy-set-weight, .hevy-set-reps {
       cursor: pointer;
@@ -508,18 +545,21 @@
       color: white;
       cursor: pointer;
       transition: color 0.2s;
+      text-align: center;
     }
     .hevy-total:hover {
-      color: #FFDD77; /* Change to desired hover color */
+      color: #FFDD77;
     }
 
     /* Updated: One Rep Max line */
     .hevy-orm {
-      margin-top: 0.5rem;
-      color: white; /* matching the volume color */
-      font-weight: normal; /* not bold */
+      margin-top: 0.25rem;
+      color: #FFFFFF;
+      font-weight: 400;
       cursor: pointer;
       transition: color 0.2s;
+      text-align: center;
+      font-size: 0.9rem;
     }
     .hevy-orm:hover {
       color: #FFDD77;
@@ -527,10 +567,12 @@
 
     /* Volume Over Time for Each Exercise */
     .hevy-exercise-volume {
-      margin-top: 0.5rem;
-      color: white;
+      margin-top: 1.5rem;
+      color: #FFFFFF;
       cursor: pointer;
       transition: color 0.2s;
+      text-align: center;
+      font-size: 0.9rem;
     }
     .hevy-exercise-volume:hover {
       color: #FFDD77;
@@ -542,18 +584,22 @@
       flex-direction: row;
       gap: 1rem;
       width: 100%;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      justify-content: flex-start;
+      max-height: 450px;
+      overflow-y: hidden;
     }
     #hevyModalWorkoutDetails {
       flex: 1;
       overflow-y: auto;
+      padding-right: 4px; /* to give space for scrollbar */
       max-height: 450px;
     }
     #hevyProgressChartContainer {
       flex: 1;
-      max-width: 300px;
+      max-width: 320px;
       display: none; /* Hidden until user selects a set */
+      overflow: hidden;
     }
     #hevyProgressChart {
       width: 100%;
@@ -633,6 +679,8 @@
       text-align: center;
       justify-content: center;
       align-items: center;
+      transform: translateY(-20px);
+      animation: slideDownFade 0.3s forwards;
     }
     .custom-alert-modal p {
       font-size: 1rem;
@@ -917,7 +965,8 @@
 
   <!-- Hevy Workout Summary Overlay -->
   <div class="overlay" id="hevyOverlay">
-    <div class="modal" id="hevyModal">
+    <!-- Note: we increase width for the Hevy summary to accommodate more content -->
+    <div class="modal" id="hevyModal" style="width: 600px;">
       <h2>Hevy Workout Summary</h2>
       <div class="hevy-modal-content">
         <div id="hevyModalWorkoutDetails"></div>
@@ -1323,41 +1372,42 @@
       }
       return maxOrm;
     }
-	
-	function getBestWeightAndRepsBeforeDate(exerciseName, dateKey) {
-	  let bestWeight = 0;
-	  let bestRepsForWeight = 0;
 
-	  const targetDate = parseDateKey(dateKey);
+    function getBestWeightAndRepsBeforeDate(exerciseName, dateKey) {
+      let bestWeight = 0;
+      let bestRepsForWeight = 0;
 
-	  for (const k of Object.keys(calendarData)) {
-		const d = parseDateKey(k);
-		if (d < targetDate) {
-		  const dayObj = calendarData[k];
-		  if (dayObj.hevyWorkouts) {
-			dayObj.hevyWorkouts.forEach(workout => {
-			  workout.exercises.forEach(ex => {
-				if (ex.title === exerciseName) {
-				  ex.sets.forEach(s => {
-					// Check if we found a bigger weight
-					if (s.weight_kg > bestWeight) {
-					  bestWeight = s.weight_kg;
-					  bestRepsForWeight = s.reps;
-					}
-					// If the weight is exactly our best but the reps are higher, update
-					else if (s.weight_kg === bestWeight && s.reps > bestRepsForWeight) {
-					  bestRepsForWeight = s.reps;
-					}
-				  });
-				}
-			  });
-			});
-		  }
-		}
-	  }
+      const targetDate = parseDateKey(dateKey);
 
-	  return { bestWeight, bestRepsForWeight };
-	}
+      for (const k of Object.keys(calendarData)) {
+        const d = parseDateKey(k);
+        if (d < targetDate) {
+          const dayObj = calendarData[k];
+          if (dayObj.hevyWorkouts) {
+            dayObj.hevyWorkouts.forEach(workout => {
+              workout.exercises.forEach(ex => {
+                if (ex.title === exerciseName) {
+                  ex.sets.forEach(s => {
+                    // Check if we found a bigger weight
+                    if (s.weight_kg > bestWeight) {
+                      bestWeight = s.weight_kg;
+                      bestRepsForWeight = s.reps;
+                    }
+                    // If the weight is exactly our best but the reps are higher, update
+                    else if (s.weight_kg === bestWeight && s.reps > bestRepsForWeight) {
+                      bestRepsForWeight = s.reps;
+                    }
+                  });
+                }
+              });
+            });
+          }
+        }
+      }
+
+      return { bestWeight, bestRepsForWeight };
+    }
+
     /*
       =======================================
       =       3) Calendar Rendering         =
@@ -2291,7 +2341,7 @@
 
     /*
       =======================================
-      = 10) Stats Modal & 'WeightChart'     =
+      = 10) Stats Modal & 'WeightChart'      =
       =======================================
     */
     function openStatsModal() {
@@ -2427,195 +2477,189 @@
       = 12) Rendering Hevy Workouts + PR Logic       =
       ================================================
     */
-	function renderHevyWorkoutsToContainer(workouts, containerId, dateKey) {
-	  const container = document.getElementById(containerId);
-	  if (!workouts || workouts.length === 0) {
-		container.innerHTML = "<p>No Hevy workout data for this day.</p>";
-		return;
-	  }
+    function renderHevyWorkoutsToContainer(workouts, containerId, dateKey) {
+      const container = document.getElementById(containerId);
+      if (!workouts || workouts.length === 0) {
+        container.innerHTML = "<p>No Hevy workout data for this day.</p>";
+        return;
+      }
 
-	  let html = "";
+      let html = "";
 
-	  workouts.forEach(workout => {
-		html += `<div class="hevy-workout">`;
-		html += `<div class="hevy-workout-title">${escapeHtml(workout.title)}</div>`;
+      workouts.forEach(workout => {
+        html += `<div class="hevy-workout">`;
+        html += `<div class="hevy-workout-title">${escapeHtml(workout.title)}</div>`;
 
-		workout.exercises.forEach(exercise => {
-		  // Get the single best (weight, reps) from all days before dateKey
-		  const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(exercise.title, dateKey);
+        workout.exercises.forEach(exercise => {
+          // Get the single best (weight, reps) from all days before dateKey
+          const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(exercise.title, dateKey);
 
-		  // We'll also check if the user achieved new volume/ORM PR, same as before:
-		  const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(exercise.title, dateKey);
-		  const prevMaxOrm    = getMaxOrmForExerciseBeforeDate(exercise.title, dateKey);
+          // We'll also check if the user achieved new volume/ORM PR:
+          const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(exercise.title, dateKey);
+          const prevMaxOrm    = getMaxOrmForExerciseBeforeDate(exercise.title, dateKey);
 
-		  // compute day-level volume & highest set weight & highest ORM
-		  let exerciseVolume = 0;
-		  let highestOrmForThisExercise = 0;
-		  exercise.sets.forEach(s => {
-			const setVolume = s.weight_kg * s.reps;
-			exerciseVolume += setVolume;
+          // compute day-level volume & highest ORM
+          let exerciseVolume = 0;
+          let highestOrmForThisExercise = 0;
+          exercise.sets.forEach(s => {
+            const setVolume = s.weight_kg * s.reps;
+            exerciseVolume += setVolume;
 
-			const setOrm = computeOrm(s.weight_kg, s.reps);
-			if (setOrm > highestOrmForThisExercise) {
-			  highestOrmForThisExercise = setOrm;
-			}
-		  });
+            const setOrm = computeOrm(s.weight_kg, s.reps);
+            if (setOrm > highestOrmForThisExercise) {
+              highestOrmForThisExercise = setOrm;
+            }
+          });
 
-		  // Is today's volume a PR?
-		  const isVolumePR = exerciseVolume > prevMaxVolume;
-		  // Is today's ORM a PR?
-		  const isOrmPR    = highestOrmForThisExercise > prevMaxOrm;
+          // Is today's volume a PR?
+          const isVolumePR = exerciseVolume > prevMaxVolume;
+          // Is today's ORM a PR?
+          const isOrmPR    = highestOrmForThisExercise > prevMaxOrm;
 
-		  const candidates = [];
-		  exercise.sets.forEach((s, i) => {
-			// Condition for being "new weight PR"
-			if (
-			  s.weight_kg > bestWeight ||
-			  (s.weight_kg === bestWeight && s.reps > bestRepsForWeight)
-			) {
-			  candidates.push({ index: i, weight: s.weight_kg, reps: s.reps });
-			}
-		  });
+          // Gather sets that exceed (bestWeight, bestRepsForWeight).
+          const candidates = [];
+          exercise.sets.forEach((s, i) => {
+            if (
+              s.weight_kg > bestWeight ||
+              (s.weight_kg === bestWeight && s.reps > bestRepsForWeight)
+            ) {
+              candidates.push({ index: i, weight: s.weight_kg, reps: s.reps });
+            }
+          });
+          let highlightSetIndex = -1;
+          if (candidates.length > 0) {
+            const maxWeight = Math.max(...candidates.map(c => c.weight));
+            const topWeightSets = candidates.filter(c => c.weight === maxWeight);
+            const bestReps = Math.max(...topWeightSets.map(c => c.reps));
+            const highlight = topWeightSets.find(c => c.reps === bestReps);
+            highlightSetIndex = highlight.index;
+          }
 
-		  let highlightSetIndex = -1;
-		  if (candidates.length > 0) {
-			// 1) Find the largest weight among candidates
-			const maxWeight = Math.max(...candidates.map(c => c.weight));
-			// 2) Filter only those with that maxWeight
-			const topWeightSets = candidates.filter(c => c.weight === maxWeight);
-			// 3) Among them, find the highest reps
-			const bestReps = Math.max(...topWeightSets.map(c => c.reps));
-			// 4) highlight the first that hits that bestReps
-			const highlight = topWeightSets.find(c => c.reps === bestReps);
-			highlightSetIndex = highlight.index;
-		  }
+          html += `<div class="hevy-exercise">`;
+          html += `<div class="hevy-exercise-title">${escapeHtml(exercise.title)}</div>`;
 
-		  // Now build HTML for this exercise
-		  html += `<div class="hevy-exercise">`;
-		  html += `<div class="hevy-exercise-title">${escapeHtml(exercise.title)}</div>`;
+          // Each set
+          html += `<div class="hevy-sets">`;
+          exercise.sets.forEach((set, i) => {
+            let setClasses = "hevy-set";
+            let prSpan = "";
+            if (i === highlightSetIndex) {
+              setClasses += " pr-border";
+              prSpan = ` <span style="color:gold">PR</span>`;
+            }
 
-		  // Each set
-		  html += `<div class="hevy-sets">`;
-		  exercise.sets.forEach((set, i) => {
-			let setClasses = "hevy-set";
-			let prSpan = "";
-			if (i === highlightSetIndex) {
-			  setClasses += " pr-border"; // gold border
-			  prSpan = ` <span style="color:gold">PR</span>`; // show "PR" in gold
-			}
+            html += `
+              <div class="${setClasses}"
+                   data-exercise="${escapeHtml(exercise.title)}"
+                   data-reps="${set.reps}"
+                   data-weight="${set.weight_kg}">
+                <span class="hevy-set-weight">${set.weight_kg}kg</span>
+                x
+                <span class="hevy-set-reps">${set.reps}</span>
+                ${prSpan}
+                ${set.rpe ? `<br>RPE: ${set.rpe}` : ""}
+              </div>
+            `;
+          });
+          html += `</div>`; // end .hevy-sets
 
-			html += `
-			  <div class="${setClasses}"
-				   data-exercise="${escapeHtml(exercise.title)}"
-				   data-reps="${set.reps}"
-				   data-weight="${set.weight_kg}">
-				<span class="hevy-set-weight">${set.weight_kg}kg</span>
-				x
-				<span class="hevy-set-reps">${set.reps}</span>
-				${prSpan}
-				${set.rpe ? `<br>RPE: ${set.rpe}` : ""}
-			  </div>
-			`;
-		  });
-		  html += `</div>`; // end .hevy-sets
+          // Volume line
+          let volumeText = `Volume: ${exerciseVolume.toLocaleString()}kg`;
+          if (isVolumePR) {
+            volumeText += ` <span style="color:gold">PR</span>`;
+          }
+          html += `
+            <div class="hevy-exercise-volume"
+                 data-exercise="${escapeHtml(exercise.title)}"
+                 data-date-key="${dateKey}">
+              ${volumeText}
+            </div>
+          `;
 
-		  // Volume line
-		  let volumeText = `Volume: ${exerciseVolume.toLocaleString()}kg`;
-		  if (isVolumePR) {
-			volumeText += ` <span style="color:gold">PR</span>`;
-		  }
-		  html += `
-			<div class="hevy-exercise-volume"
-				 data-exercise="${escapeHtml(exercise.title)}"
-				 data-date-key="${dateKey}">
-			  ${volumeText}
-			</div>
-		  `;
+          // One Rep Max line
+          let ormText = "One Rep Max: N/A";
+          if (highestOrmForThisExercise > 0) {
+            ormText = `One Rep Max: ${highestOrmForThisExercise.toFixed(1)}kg`;
+            if (isOrmPR) {
+              ormText += ` <span style="color:gold">PR</span>`;
+            }
+          }
+          html += `
+            <div class="hevy-orm"
+                 data-exercise="${escapeHtml(exercise.title)}"
+                 data-date-key="${dateKey}">
+              ${ormText}
+            </div>
+          `;
 
-		  // One Rep Max line
-		  let ormText = "One Rep Max: N/A";
-		  if (highestOrmForThisExercise > 0) {
-			ormText = `One Rep Max: ${highestOrmForThisExercise.toFixed(1)}kg`;
-			if (isOrmPR) {
-			  ormText += ` <span style="color:gold">PR</span>`;
-			}
-		  }
-		  html += `
-			<div class="hevy-orm"
-				 data-exercise="${escapeHtml(exercise.title)}"
-				 data-date-key="${dateKey}">
-			  ${ormText}
-			</div>
-		  `;
+          html += `</div>`; // end .hevy-exercise
+        });
 
-		  html += `</div>`; // end .hevy-exercise
-		});
+        // Summaries across entire workout (total volume)
+        let totalWeight = 0;
+        workout.exercises.forEach(ex => {
+          ex.sets.forEach(s => {
+            totalWeight += (s.weight_kg * s.reps);
+          });
+        });
+        html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
 
-		// Summaries across entire workout (total volume)
-		let totalWeight = 0;
-		workout.exercises.forEach(ex => {
-		  ex.sets.forEach(s => {
-			totalWeight += (s.weight_kg * s.reps);
-		  });
-		});
-		html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
+        html += `</div>`; // end .hevy-workout
+      });
 
-		html += `</div>`; // end .hevy-workout
-	  });
+      container.innerHTML = html;
 
-	  container.innerHTML = html;
+      // Attach click handlers
+      container.onclick = (e) => {
+        // (1) volume for an exercise
+        const volumeEl = e.target.closest(".hevy-exercise-volume");
+        if (volumeEl) {
+          e.stopPropagation();
+          const exerciseName = volumeEl.getAttribute("data-exercise");
+          const dKey = volumeEl.getAttribute("data-date-key");
+          openExerciseVolumeModal(exerciseName, dKey);
+          return;
+        }
 
-	  // Attach click handlers (same as before)
-	  container.onclick = (e) => {
-		// (1) volume for an exercise
-		const volumeEl = e.target.closest(".hevy-exercise-volume");
-		if (volumeEl) {
-		  e.stopPropagation();
-		  const exerciseName = volumeEl.getAttribute("data-exercise");
-		  const dKey = volumeEl.getAttribute("data-date-key");
-		  openExerciseVolumeModal(exerciseName, dKey);
-		  return;
-		}
+        // (2) user clicked weight or reps
+        if (e.target.classList.contains("hevy-set-weight") ||
+            e.target.classList.contains("hevy-set-reps")) {
+          e.stopPropagation();
+          const setParent = e.target.closest(".hevy-set");
+          const exerciseName = setParent.getAttribute("data-exercise");
+          const weight = Number(setParent.getAttribute("data-weight"));
+          const reps = parseInt(setParent.getAttribute("data-reps"), 10);
 
-		// (2) user clicked weight or reps
-		if (e.target.classList.contains("hevy-set-weight") ||
-			e.target.classList.contains("hevy-set-reps")) {
-		  e.stopPropagation();
-		  const setParent = e.target.closest(".hevy-set");
-		  const exerciseName = setParent.getAttribute("data-exercise");
-		  const weight = Number(setParent.getAttribute("data-weight"));
-		  const reps = parseInt(setParent.getAttribute("data-reps"), 10);
+          if (e.target.classList.contains("hevy-set-weight")) {
+            // open rep progression modal (fixed weight)
+            openRepProgressModal(exerciseName, weight, dateKey);
+          } else {
+            // open weight progression modal (fixed reps)
+            openExerciseProgressModal(exerciseName, reps, dateKey);
+          }
+          return;
+        }
 
-		  if (e.target.classList.contains("hevy-set-weight")) {
-			// open rep progression modal (fixed weight)
-			openRepProgressModal(exerciseName, weight, dateKey);
-		  } else {
-			// open weight progression modal (fixed reps)
-			openExerciseProgressModal(exerciseName, reps, dateKey);
-		  }
-		  return;
-		}
+        // (3) total volume
+        const totalEl = e.target.closest(".hevy-total");
+        if (totalEl) {
+          e.stopPropagation();
+          const associatedDateKey = totalEl.getAttribute("data-date-key");
+          openVolumeModal(associatedDateKey);
+          return;
+        }
 
-		// (3) total volume
-		const totalEl = e.target.closest(".hevy-total");
-		if (totalEl) {
-		  e.stopPropagation();
-		  const associatedDateKey = totalEl.getAttribute("data-date-key");
-		  openVolumeModal(associatedDateKey);
-		  return;
-		}
-
-		// (4) One Rep Max
-		const ormEl = e.target.closest(".hevy-orm");
-		if (ormEl) {
-		  e.stopPropagation();
-		  const exerciseName = ormEl.getAttribute("data-exercise");
-		  const dKey = ormEl.getAttribute("data-date-key");
-		  openOrmProgressModal(exerciseName, dKey);
-		  return;
-		}
-	  };
-	}
+        // (4) One Rep Max
+        const ormEl = e.target.closest(".hevy-orm");
+        if (ormEl) {
+          e.stopPropagation();
+          const exerciseName = ormEl.getAttribute("data-exercise");
+          const dKey = ormEl.getAttribute("data-date-key");
+          openOrmProgressModal(exerciseName, dKey);
+          return;
+        }
+      };
+    }
 
     /*
       ================================================
@@ -3254,7 +3298,7 @@
 
     /*
       =======================================
-      =  19)  Clear Calendar Function       =
+      =    Clear Calendar Function          =
       =======================================
     */
     function clearCalendar() {
@@ -3290,7 +3334,7 @@
 
     /*
       =======================================
-      =  20)  Custom Alert/Prompt/Confirm   =
+      =  Custom Alert/Prompt/Confirm        =
       =======================================
     */
     function showCustomAlert(message) {
@@ -3407,7 +3451,7 @@
 
     /*
       =======================================
-      = 21) DOM Loaded: Event Setup         =
+      = 19) DOM Loaded: Event Setup         =
       =======================================
     */
     window.addEventListener("DOMContentLoaded", () => {
