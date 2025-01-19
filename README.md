@@ -45,6 +45,8 @@ This is a Calendar application I created mostly for personal use. It's designed 
     - Select one day at a time or multiple days by dragging with the mouse or holding `CTRL` + click.
 
 11. **Charts / Graphs**
-    - View a graph tracking your weight change over time.
-    - View graphs tracking your weight progress for a given rep range.
-    - View graphs tracking your rep progress for a given weight.
+    - Graph tracking your weight change over time.
+    - Graphs tracking your weight progress for a given rep range.
+    - Graphs tracking your rep progress for a given weight.
+    - Graphs tracking exercise volume and overall workout volume.
+    - Graphs tracking estimated One Rep Max (ORM).
