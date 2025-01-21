@@ -13,6 +13,7 @@ This is a Calendar application I created mostly for personal use. It's designed 
 
 1. **Hevy API Integration: [Hevy](https://www.hevyapp.com/)**
    - Sync your Hevy workout data with the calendar. Data such as exercise type, sets, reps, weight, and volume are all imported.
+   - Middle click with mouse while hovering over day cell to open menu.
 
 2. **Weight Tracking**
    - Input your weight each day. The app tracks your weight over time with a graph.
