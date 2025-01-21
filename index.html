@@ -28,14 +28,20 @@
       justify-content: center;
       align-items: center;
     }
-    .main-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 800px;
-      padding: 1rem;
-    }
+	.main-wrapper {
+	  background: rgba(50, 50, 50, 0.5);  /* semi-transparent dark background */
+	  padding: 1rem;
+	  border-radius: 8px;
+	  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	  max-width: 800px;
+	  width: 1000px;
+	  margin: 20px auto;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  backdrop-filter: blur(2px);
+	  -webkit-backdrop-filter: blur(2px);
+	}
 
     /* Month Bar */
     .month-bar {
@@ -70,9 +76,10 @@
       margin-left: 1.5rem;
       align-items: center;
     }
+	
     .arrow-button {
-      background-color: #333;
-      border: 1px solid #555;
+      background-color: rgba(51, 51, 51, 0.3);
+      border: 0px solid #555;
       color: #EAEAEA;
       cursor: pointer;
       font-size: 1rem;
@@ -108,6 +115,7 @@
       width: 100%;
       max-width: 700px;
     }
+	
     .calendar-header,
     .calendar-grid {
       display: grid;
@@ -939,6 +947,7 @@
           <option value="Birthday">🟣 Birthday</option>
           <option value="Work">🔵 Work</option>
           <option value="PublicHoliday">🟡 Public Holiday</option>
+		  <option value="Deadline">🔴 Deadline</option>
         </select>
       </div>
       <!-- Alert Text -->
@@ -992,6 +1001,7 @@
           <option value="Birthday">🟣 Birthday</option>
           <option value="Work">🔵 Work</option>
           <option value="PublicHoliday">🟡 Public Holiday</option>
+		  <option value="Deadline">🔴 Deadline</option>
         </select>
       </div>
       <!-- Work Time Row -->
@@ -1227,6 +1237,110 @@
       =       2) Helper Functions           =
       =======================================
     */
+	function updateBackgroundForMonth(month) {
+	  // monthNames is already defined in your code.
+	  // Convert the month name to lowercase and append the extension.
+	  const imageFile = monthNames[month].toLowerCase() + '.jpg';
+	  document.body.style.backgroundImage = `url('${imageFile}')`;
+	  document.body.style.backgroundSize = 'cover';
+	  document.body.style.backgroundPosition = 'center center';
+	}
+	
+	function hasAnyPR(dateKey) {
+	  // Grab the day data
+	  const dayObj = getDayData(dateKey);
+	  if (!dayObj.hevyWorkouts || dayObj.hevyWorkouts.length === 0) return false;
+
+	  // For each workout’s exercises, check for:
+	  //  - Set-based PR (exceeding previous best weight/reps)
+	  //  - Volume PR
+	  //  - 1RM PR
+	  for (const workout of dayObj.hevyWorkouts) {
+		for (const ex of workout.exercises) {
+		  // 1) Compare with prior best (weight + reps)
+		  const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(ex.title, dateKey);
+
+		  // 2) Calculate this day’s total volume + highest 1RM for this exercise
+		  let dayVolume = 0;
+		  let highestOrmForThisEx = 0;
+		  ex.sets.forEach(set => {
+			const vol = set.weight_kg * set.reps;
+			dayVolume += vol;
+			const oneRepMax = computeOrm(set.weight_kg, set.reps);
+			if (oneRepMax > highestOrmForThisEx) highestOrmForThisEx = oneRepMax;
+		  });
+
+		  // 3) Compare volume / 1RM with prior best
+		  const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(ex.title, dateKey);
+		  const prevMaxOrm    = getMaxOrmForExerciseBeforeDate(ex.title, dateKey);
+		  if (dayVolume > prevMaxVolume) return true; // Volume PR
+		  if (highestOrmForThisEx > prevMaxOrm) return true; // 1RM PR
+
+		  // 4) Check if any set is a “weight PR” or “weight+reps PR”
+		  for (const set of ex.sets) {
+			// If this set's weight is above the old best weight,
+			// or same weight but more reps, it's a new PR
+			if (
+			  set.weight_kg > bestWeight ||
+			  (set.weight_kg === bestWeight && set.reps > bestRepsForWeight)
+			) {
+			  return true;
+			}
+		  }
+		}
+	  }
+
+	  // If no PR found in all workouts, return false
+	  return false;
+	}
+
+	function hasAnyPR(dateKey) {
+	  // Grab the day data
+	  const dayObj = getDayData(dateKey);
+	  if (!dayObj.hevyWorkouts || dayObj.hevyWorkouts.length === 0) return false;
+
+	  // For each workout’s exercises, check for:
+	  //  - Set-based PR (exceeding previous best weight/reps)
+	  //  - Volume PR
+	  //  - ORM PR
+	  for (const workout of dayObj.hevyWorkouts) {
+		for (const ex of workout.exercises) {
+		  // 1) Compare with prior best (weight)
+		  const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(ex.title, dateKey);
+
+		  // 2) Calculate day’s total volume + highest ORM for this exercise
+		  let dayVolume = 0;
+		  let highestOrmThisEx = 0;
+		  ex.sets.forEach(set => {
+			const vol = set.weight_kg * set.reps;
+			dayVolume += vol;
+			const oneRepMax = computeOrm(set.weight_kg, set.reps);
+			if (oneRepMax > highestOrmThisEx) {
+			  highestOrmThisEx = oneRepMax;
+			}
+		  });
+
+		  // 3) Compare volume, ORM with prior best
+		  const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(ex.title, dateKey);
+		  const prevMaxOrm    = getMaxOrmForExerciseBeforeDate(ex.title, dateKey);
+		  if (dayVolume > prevMaxVolume) return true;          // Volume PR
+		  if (highestOrmThisEx > prevMaxOrm) return true;      // ORM PR
+
+		  // 4) Check if any set is a “weight PR” or “weight+reps PR”
+		  for (const set of ex.sets) {
+			if (
+			  set.weight_kg > bestWeight ||
+			  (set.weight_kg === bestWeight && set.reps > bestRepsForWeight)
+			) {
+			  return true;
+			}
+		  }
+		}
+	  }
+	  // If we never returned true, no PR found
+	  return false;
+	}
+	
 	function getDateRangeBounds(rangeType, referenceDate) {
 	  const refDate = new Date(referenceDate);
 	  let start, end;
@@ -1540,6 +1654,7 @@
     */
     function renderCalendar(year, month) {
       document.getElementById("monthLabel").textContent = `${monthNames[month]} ${year}`;
+	  updateBackgroundForMonth(month);
       const calendar = document.getElementById("calendar");
       calendar.innerHTML = "";
 
@@ -1751,7 +1866,7 @@
         </svg>
       `;
       cell.appendChild(badgeDiv);
-
+	  
       return cell;
     }
     function appendFreeTime(cell, freeTimeValue, isTodayOffShift) {
@@ -2259,7 +2374,8 @@
       "Generic": "#32CD32",
       "Birthday": "#FF69B4",
       "Work": "#1E90FF",
-      "PublicHoliday": "#FFD700"
+      "PublicHoliday": "#FFD700",
+	  "Deadline": "#C41E3A"
     };
     const presetWorkTimeMapping = {
       "morning-bg": "0600",
@@ -3347,109 +3463,168 @@
 	let currentOrmDateKey = null;
 
 	function buildExerciseOrmProgressChart(exerciseName, highlightDateKey) {
-      const selectedRange = document.querySelector('#exerciseOrmProgressModal .date-range-btn.active').getAttribute('data-range');
-      const refDate = parseDateKey(highlightDateKey);
-      const { start, end } = getDateRangeBounds(selectedRange, refDate);
-      
-      const dateKeys = Object.keys(calendarData)
-        .filter(key => {
-          const date = parseDateKey(key);
-          return date >= start && date <= end;
-        })
-        .sort();
-      const dataMap = {};
+	  // Figure out which date range to display
+	  const selectedRange = document.querySelector('#exerciseOrmProgressModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(highlightDateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
 
-      dateKeys.forEach(k => {
-        let dayMaxOrm = 0;
-        const dayObj = calendarData[k];
-        if(dayObj.hevyWorkouts) {
-          dayObj.hevyWorkouts.forEach(workout => {
-            workout.exercises.forEach(ex => {
-              if(ex.title === exerciseName) {
-                ex.sets.forEach(s => {
-                  const setOrm = computeOrm(s.weight_kg, s.reps);
-                  if(setOrm > dayMaxOrm) {
-                    dayMaxOrm = setOrm;
-                  }
-                });
-              }
-            });
-          });
-        }
-        if(dayMaxOrm > 0) {
-          dataMap[k] = dayMaxOrm;
-        }
-      });
+	  // Collect only the date keys that fall within (start..end)
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
 
-      const chartKeys = Object.keys(dataMap).sort();
-      if(chartKeys.length < 1) {
-        destroyOrmProgressChart();
-        document.getElementById("ormProgressOverlay").classList.remove("active");
-        showCustomAlert(`No ORM data found for '${exerciseName}'.`);
-        return;
-      }
+	  // dataMap is now an object that stores { orm, bestWeight, bestReps }
+	  const dataMap = {};
 
-      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
-      const labels = chartKeys.map(k => {
-        const d = parseDateKey(k);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      });
+	  // We'll store the best (weight, reps) that produced the highest ORM each day
+	  dateKeys.forEach(k => {
+		let dayMaxOrm = 0;
+		let bestSet = null; // to store { weight, reps } for that day's best set
 
-      const orms = dataPoints.map(dp => dp.y);
-      const minOrm = Math.min(...orms);
-      const maxOrm = Math.max(...orms);
-      const range = maxOrm - minOrm;
-      const pad = range * 0.1;
-      const suggestedMin = (minOrm - pad < 0) ? 0 : (minOrm - pad);
-      const suggestedMax = maxOrm + pad;
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts) {
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  const setOrm = computeOrm(s.weight_kg, s.reps);
+				  if (setOrm > dayMaxOrm) {
+					dayMaxOrm = setOrm;
+					bestSet = { weight: s.weight_kg, reps: s.reps };
+				  }
+				});
+			  }
+			});
+		  });
+		}
 
-      destroyOrmProgressChart();
-      const ctx = document.getElementById('exerciseOrmProgressChart').getContext('2d');
+		// Only record if the day's best ORM > 0
+		if (dayMaxOrm > 0 && bestSet) {
+		  dataMap[k] = {
+			orm: dayMaxOrm,
+			bestWeight: bestSet.weight,
+			bestReps: bestSet.reps
+		  };
+		}
+	  });
 
-      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, highlightDateKey, 'rgba(255,255,0,1)', '#4DAAFF', 2.5, 5
-      );
+	  // If no data points, exit
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyOrmProgressChart();
+		document.getElementById("ormProgressOverlay").classList.remove("active");
+		showCustomAlert(`No ORM data found for '${exerciseName}'.`);
+		return;
+	  }
 
-      exerciseOrmProgressChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: `ORM: ${exerciseName}`,
-            data: dataPoints.map(dp => dp.y),
-            borderColor: '#FFFF00',
-            backgroundColor: 'rgba(255,255,0,0.2)',
-            fill: true,
-            tension: 0.1,
-            pointRadius: pointRadii,
-            pointBackgroundColor: bgColors,
-            pointBorderColor: borderColors,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              title: { display: true, text: 'Date' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            },
-            y: {
-              suggestedMin,
-              suggestedMax,
-              title: { display: true, text: 'Estimated 1RM (kg)' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            }
-          },
-          plugins: {
-            legend: { labels: { color: '#eee' } }
-          }
-        }
-      });
-    }
+	  // Build arrays for Chart.js
+	  // We'll keep the numeric ORMs in dataPoints,
+	  // and remember that 'chartKeys[index]' can retrieve the metadata from dataMap.
+	  const dataPoints = chartKeys.map(k => dataMap[k].orm);
+
+	  // Build the user-facing labels (display dates)
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', {
+		  month: 'short',
+		  day: 'numeric',
+		  year: 'numeric'
+		});
+	  });
+
+	  // Figure out suggestedMin / suggestedMax for Y-axis
+	  const orms = dataPoints;
+	  const minOrm = Math.min(...orms);
+	  const maxOrm = Math.max(...orms);
+	  const range = maxOrm - minOrm;
+	  const pad = range * 0.1;
+	  const suggestedMin = (minOrm - pad < 0) ? 0 : (minOrm - pad);
+	  const suggestedMax = maxOrm + pad;
+
+	  // destroy old chart if it exists
+	  destroyOrmProgressChart();
+
+	  // get canvas context
+	  const ctx = document.getElementById('exerciseOrmProgressChart').getContext('2d');
+
+	  // build highlight arrays for the chart
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		chartKeys.map(k => ({ x: k, y: dataMap[k].orm })), // pass array of { x, y }
+		highlightDateKey,
+		'rgba(255,255,0,1)',
+		'#4DAAFF',
+		2.5,
+		5
+	  );
+
+	  // Provide a custom tooltip callback to show weight x reps
+	  exerciseOrmProgressChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `ORM: ${exerciseName}`,
+			data: dataPoints, // numeric ORM values
+			borderColor: '#FFFF00',
+			backgroundColor: 'rgba(255,255,0,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Estimated 1RM (kg)' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: {
+			  labels: { color: '#eee' }
+			},
+			tooltip: {
+			  callbacks: {
+				// Top line in tooltip
+				title: function(tooltipItems) {
+				  // Typically tooltipItems is array of points; we use the first
+				  return tooltipItems[0].label; // e.g. "Jan 10, 2025"
+				},
+				// Second line(s) in tooltip
+				label: function(context) {
+				  // The dataIndex points to whichever day we hovered
+				  const i = context.dataIndex;
+				  const dateKey = chartKeys[i]; // e.g. "2025-01-10"
+				  const info = dataMap[dateKey]; // { orm, bestWeight, bestReps }
+
+				  // Build lines
+				  const ormText = `ORM: ${info.orm.toFixed(1)}kg`;
+				  const setText = `(${info.bestWeight}kg x ${info.bestReps})`;
+				  // Return an array => multiple lines in the tooltip
+				  return [ormText, setText];
+				}
+			  }
+			}
+		  }
+		}
+	  });
+	}
 
     /*
       =======================================
