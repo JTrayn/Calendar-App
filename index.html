@@ -2616,6 +2616,10 @@
 
 	  // 6) Otherwise, render the normal workout summary
 	  renderHevyWorkoutsToContainer(dayData.hevyWorkouts, "hevyModalWorkoutDetails", dateKey);
+	  // Scroll the modal’s content to the top
+	  document.getElementById("hevyModal").scrollTop = 0;
+	  // Optionally also scroll the "details" area:
+	  document.getElementById("hevyModalWorkoutDetails").scrollTop = 0;
 	}
     function closeHevyModal() {
       document.getElementById("hevyOverlay").classList.remove("active");
@@ -3892,7 +3896,28 @@
         document.addEventListener("mousemove", mouseMoveHandler);
         document.addEventListener("mouseup", mouseUpHandler);
       });
+	  
+	  document.addEventListener("keydown", (e) => {
+	  // Check if user pressed 'h' or 'H'
+	  if (e.key === "h" || e.key === "H") {
+		// Ensure no overlays are currently active (optional check)
+		const isOverlayOpen = document.querySelector(".overlay.active");
+		if (isOverlayOpen) {
+		  // If you want to disable 'H' usage while a modal is open, just return here
+		  // return;
+		}
 
+		// Only proceed if exactly one date is selected
+		if (selectedDates.size === 1) {
+		  const [dateKey] = [...selectedDates];
+		  openHevyModal(dateKey);
+		} else {
+		  showCustomAlert(
+			"You must have exactly one day cell selected to open the Hevy summary with the H key."
+		  );
+		}
+	  }
+	});
       // Finally, initial render:
       renderCalendar(currentYear, currentMonth);
     });
