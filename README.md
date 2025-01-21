@@ -1,9 +1,10 @@
 # Calendar App with Hevy API Integration
 
-![calendar8](https://github.com/user-attachments/assets/e585a899-2724-4f34-ae36-a734d0d4890c)
+![image6](https://github.com/user-attachments/assets/0049d1fb-3a8e-4f5f-b74f-75ccf688542f)
 ![image5](https://github.com/user-attachments/assets/98fd16bc-d985-4622-ae57-30ce5fc62201)
 ![image4](https://github.com/user-attachments/assets/61daf0c1-084a-4d30-8095-3df274c6e6c9)
 ![image3](https://github.com/user-attachments/assets/01e582e4-0fab-4b2e-8ced-eb65740268e7)
+
 
 
 
