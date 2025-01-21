@@ -3897,14 +3897,14 @@
         document.addEventListener("mouseup", mouseUpHandler);
       });
 	  
-	  document.addEventListener("keydown", (e) => {
+	document.addEventListener("keydown", (e) => {
 	  // Check if user pressed 'h' or 'H'
 	  if (e.key === "h" || e.key === "H") {
-		// Ensure no overlays are currently active (optional check)
-		const isOverlayOpen = document.querySelector(".overlay.active");
-		if (isOverlayOpen) {
-		  // If you want to disable 'H' usage while a modal is open, just return here
-		  // return;
+		// Check if any overlay (modal) is active
+		const anyOverlayActive = document.querySelector(".overlay.active");
+		if (anyOverlayActive) {
+		  // If a modal is already open, do nothing
+		  return;
 		}
 
 		// Only proceed if exactly one date is selected
@@ -3912,9 +3912,7 @@
 		  const [dateKey] = [...selectedDates];
 		  openHevyModal(dateKey);
 		} else {
-		  showCustomAlert(
-			"You must have exactly one day cell selected to open the Hevy summary with the H key."
-		  );
+		  showCustomAlert("You must have exactly one day cell selected to open the Hevy summary with the H key.");
 		}
 	  }
 	});
