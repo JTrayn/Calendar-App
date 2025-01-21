@@ -1238,8 +1238,9 @@
       =======================================
     */
 	function updateBackgroundForMonth(month) {
-	  // Now the image files are inside the "images" folder.
-	  const imageFile = 'images/' + monthNames[month].toLowerCase() + '.jpg';
+	  // monthNames is already defined in your code.
+	  // Convert the month name to lowercase and append the extension.
+	  const imageFile = monthNames[month].toLowerCase() + '.jpg';
 	  document.body.style.backgroundImage = `url('${imageFile}')`;
 	  document.body.style.backgroundSize = 'cover';
 	  document.body.style.backgroundPosition = 'center center';
