@@ -1243,6 +1243,15 @@
       =       2) Helper Functions           =
       =======================================
     */
+	// 1) Preload images
+	const monthImagesToPreload = monthNames.map((month) => {
+		return month.toLowerCase() + '.jpg';
+	});
+	monthImagesToPreload.forEach((imgSrc) => {
+		const img = new Image();
+		img.src = imgSrc;
+	});
+	
 	function updateBackgroundForMonth(month) {
 	  // monthNames is already defined in your code.
 	  // Convert the month name to lowercase and append the extension.
