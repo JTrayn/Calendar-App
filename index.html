@@ -6,7 +6,7 @@
 
   <!-- Include Chart.js from a CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
@@ -126,7 +126,7 @@
       text-align: center;
       font-weight: bold;
       padding: 0.5rem 0;
-      border-bottom: 1px solid #444;
+      border-bottom: 1px solid rgba(68, 68, 68, 0.5);
       font-size: 0.85rem;
     }
     .calendar-grid {
@@ -160,8 +160,14 @@
     .afternoon-bg  { background-color: #7AB6D9; }
     .evening-bg    { background-color: #4F7EAA; }
     .night-bg      { background-color: #5C4EA2; }
-    .off-bg        { background-color: #3A3A3A; }
-    .al-bg         { background-color: #616161; }
+    .off-bg        { 
+		background-color: #3A3A3A;
+		opacity: 0.8;
+	}
+    .al-bg         { 
+		background-color: #616161;
+		opacity: 0.9;
+	}
     .custom-shift  { /* Custom dynamic background if needed */ }
     .selected {
       outline: 2px solid limegreen !important;
@@ -431,7 +437,7 @@
 
     /* Stats Counters Text */
     .counter-value {
-      color: #77DD77;
+      color: white;
       font-weight: bold;
     }
     .stats-summary {
@@ -442,7 +448,7 @@
     }
     .stat-item {
       font-size: 1.1rem;
-      color: #77DD77;
+      color: white;
       margin-bottom: 0.5rem;
     }
     #weightChart, #exerciseWeightProgressionChart, #exerciseRepProgressionChart, #volumeChart {
