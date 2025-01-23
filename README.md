@@ -1,12 +1,11 @@
 # Calendar App with Hevy API Integration
 
 ![image6](https://github.com/user-attachments/assets/0049d1fb-3a8e-4f5f-b74f-75ccf688542f)
-![image5](https://github.com/user-attachments/assets/98fd16bc-d985-4622-ae57-30ce5fc62201)
+![ui1](https://github.com/user-attachments/assets/0373043b-2755-4b6c-a1d2-1e49912383da)
+![ui2](https://github.com/user-attachments/assets/44b37bdc-5b48-4258-9b7c-27c86b66a16f)
+![ui3](https://github.com/user-attachments/assets/82e943ee-54f9-4c19-ae38-eb58a1acd97d)
 ![image4](https://github.com/user-attachments/assets/61daf0c1-084a-4d30-8095-3df274c6e6c9)
 ![image3](https://github.com/user-attachments/assets/01e582e4-0fab-4b2e-8ced-eb65740268e7)
-
-
-
 
 This is a Calendar application I created mostly for personal use. It's designed to cater to my abnormal work shifts, as well as to track my workouts and weight.
 
