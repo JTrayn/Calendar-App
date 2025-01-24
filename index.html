@@ -10,26 +10,34 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: #1E1E1E;
-      color: #EAEAEA;
-      font-family: 'Montserrat', sans-serif;
-      user-select: none; /* Prevent text selection on entire page */
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+	/* =========================================
+	   1) IMPORTS & FONT / BASE RESET
+	   ========================================= */
+	@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+	* {
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	}
+	html, body {
+	  height: 100%;
+	  width: 100%;
+	  background: #1E1E1E;
+	  color: #EAEAEA;
+	  font-family: 'Montserrat', sans-serif;
+	  user-select: none;
+	}
+
+	/* =========================================
+	   2) BODY LAYOUT & MAIN WRAPPER
+	   ========================================= */
+	body {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
 	.main-wrapper {
-	  background: rgba(50, 50, 50, 0.5);  /* semi-transparent dark background */
+	  background: rgba(50, 50, 50, 0.5);
 	  padding: 1rem;
 	  border-radius: 8px;
 	  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
@@ -42,494 +50,741 @@
 	  backdrop-filter: blur(2px);
 	  -webkit-backdrop-filter: blur(2px);
 	}
-	
-    /* Month Bar */
-    .month-bar {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-bottom: 1rem;
-      width: 100%;
-      justify-content: center;
-    }
-    .month-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      padding: 0.2rem 0.5rem;
-      width: 200px;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .arrow-buttons {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-left: 2rem;
-    }
-    .month-nav-buttons {
-      display: inline-flex;
-      gap: 0.5rem;
-    }
-    .data-buttons {
-      display: inline-flex;
-      gap: 0.5rem;
-      margin-left: 1.5rem;
-      align-items: center;
-    }
-	
-    .arrow-button {
-      background-color: rgba(51, 51, 51, 0.3);
-      border: 0px solid #555;
-      color: #EAEAEA;
-      cursor: pointer;
-      font-size: 1rem;
-      min-width: 2rem;
-      height: 2rem;
-      border-radius: 4px;
-      text-align: center;
-      line-height: 2rem;
-      padding: 0 0.5rem;
-      transition: background-color 0.2s, border 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .arrow-button:hover {
-      background-color: #444;
-    }
-    .arrow-button:disabled {
-      background-color: #555;
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
 
-    .arrow-button img {
-      vertical-align: middle;
-      display: inline-block;
-      position: relative;
-      top: -1px; /* Adjust as needed to center the icon */
-    }
-
-    /* Calendar Layout */
-    .calendar-container {
-      width: 100%;
-      max-width: 700px;
-    }
-	
-    .calendar-header,
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 0.3rem;
-    }
-    .calendar-header div {
-      text-align: center;
-      font-weight: bold;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(68, 68, 68, 0.5);
-      font-size: 0.85rem;
-    }
-    .calendar-grid {
-      margin-top: 0.5rem;
-    }
-
-    /* Day Cell */
-    .day-cell {
-      aspect-ratio: 1 / 1;
-      border-radius: 2px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-      padding: 0.5rem;
-    }
-    .day-cell:hover {
-      outline: 2px solid #888;
-    }
-    .faded {
-      opacity: 0.15;
-      pointer-events: none;
-    }
-    .morning-bg    { background-color: #FFAD66; }
-    .late-day-bg   { background-color: #CC8A52; }
-    .afternoon-bg  { background-color: #7AB6D9; }
-    .evening-bg    { background-color: #4F7EAA; }
-    .night-bg      { background-color: #5C4EA2; }
-    .off-bg        { 
-		background-color: #3A3A3A;
-		opacity: 0.8;
+	/* =========================================
+	   3) MONTH BAR & NAVIGATION BUTTONS
+	   ========================================= */
+	.month-bar {
+	  display: flex;
+	  flex-direction: row;
+	  align-items: center;
+	  margin-bottom: 1rem;
+	  width: 100%;
+	  justify-content: center;
 	}
-    .al-bg         { 
-		background-color: #616161;
-		opacity: 0.9;
+	.month-title {
+	  font-size: 1.1rem;
+	  font-weight: 700;
+	  padding: 0.2rem 0.5rem;
+	  width: 200px;
+	  text-align: center;
+	  white-space: nowrap;
 	}
-    .custom-shift  { /* Custom dynamic background if needed */ }
-    .selected {
-      outline: 2px solid limegreen !important;
-    }
-    .today {
-      outline: 3px solid #FFD700;
-    }
+	.arrow-buttons {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	  margin-left: 2rem;
+	}
+	.month-nav-buttons {
+	  display: inline-flex;
+	  gap: 0.5rem;
+	}
+	.data-buttons {
+	  display: inline-flex;
+	  gap: 0.5rem;
+	  margin-left: 1.5rem;
+	  align-items: center;
+	}
+	.arrow-button {
+	  background-color: rgba(51, 51, 51, 0.3);
+	  border: 0px solid #555;
+	  color: #EAEAEA;
+	  cursor: pointer;
+	  font-size: 1rem;
+	  min-width: 2rem;
+	  height: 2rem;
+	  border-radius: 4px;
+	  text-align: center;
+	  line-height: 2rem;
+	  padding: 0 0.5rem;
+	  transition: background-color 0.2s, border 0.2s;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	.arrow-button:hover {
+	  background-color: #444;
+	}
+	.arrow-button:disabled {
+	  background-color: #555;
+	  cursor: not-allowed;
+	  opacity: 0.5;
+	}
+	.arrow-button img {
+	  vertical-align: middle;
+	  display: inline-block;
+	  position: relative;
+	  top: -1px;
+	}
 
-    /* Date & Icons */
-    .date-num {
-      position: absolute;
-      top: 4px;
-      left: 6px;
-      font-weight: bold;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.8);
-      white-space: nowrap;
-      pointer-events: none;
-    }
-    .refresh-emoji {
-      position: absolute;
-      top: 4px;
-      right: 6px;
-      font-size: 1rem;
-      z-index: 3;
-      cursor: pointer;
-      opacity: 0.15;
-      transition: opacity 0.2s;
-    }
-    .refresh-emoji:hover {
-      opacity: 1.0;
-    }
+	/* =========================================
+	   4) CALENDAR LAYOUT
+	   ========================================= */
+	.calendar-container {
+	  width: 100%;
+	  max-width: 700px;
+	}
+	.calendar-header,
+	.calendar-grid {
+	  display: grid;
+	  grid-template-columns: repeat(7, 1fr);
+	  gap: 0.3rem;
+	}
+	.calendar-header div {
+	  text-align: center;
+	  font-weight: bold;
+	  padding: 0.5rem 0;
+	  border-bottom: 1px solid rgba(68, 68, 68, 0.5);
+	  font-size: 0.85rem;
+	}
+	.calendar-grid {
+	  margin-top: 0.5rem;
+	}
 
-    /* Extra info overlays */
-    .weight-display {
-      position: absolute;
-      top: 42%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 0.9rem;
-      text-align: center;
-      white-space: nowrap;
-      color: #FFF;
-      font-weight: bold;
-      pointer-events: none;
-    }
-    .shift-time-text {
-      position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1rem;
-      font-weight: bold;
-      white-space: nowrap;
-      color: rgba(0, 0, 0, 0.3);
-      pointer-events: none;
-    }
-    .free-time-text {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 0.65rem;
-      font-weight: bold;
-      white-space: nowrap;
-      color: rgba(0, 0, 0, 0.3);
-      pointer-events: none;
-    }
-    .workout-info {
-      position: absolute;
-      bottom: 4px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 0.75rem;
-      line-height: 1.1;
-      color: #FFF;
-      opacity: 0.75;
-      pointer-events: none;
-    }
+	/* =========================================
+	   5) DAY CELL STYLES
+	   ========================================= */
+	.day-cell {
+	  aspect-ratio: 1 / 1;
+	  border-radius: 2px;
+	  position: relative;
+	  overflow: hidden;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: center;
+	  font-size: 0.8rem;
+	  cursor: pointer;
+	  transition: all 0.2s ease-in-out;
+	  padding: 0.5rem;
+	}
+	.day-cell:hover {
+	  outline: 2px solid #888;
+	}
+	.faded {
+	  opacity: 0.15;
+	  pointer-events: none;
+	}
+	.morning-bg { background-color: #FFAD66;}
+	.late-day-bg { background-color: #CC8A52;}
+	.afternoon-bg { background-color: #7AB6D9;}
+	.evening-bg { background-color: #4F7EAA;}
+	.night-bg { background-color: #5C4EA2;}
+	.off-bg {
+	  background-color: #3A3A3A;
+	  opacity: 0.8;
+	}
+	.al-bg {
+	  background-color: #616161;
+	  opacity: 0.9;
+	}
+	.custom-shift {}
+	.selected {
+	  outline: 2px solid limegreen !important;
+	}
+	.today {
+	  outline: 3px solid #FFD700;
+	}
 
-    /* Completed Badge */
-    .completed-badge {
-      position: absolute;
-      bottom: 4px;
-      right: 4px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background-color: #28a745;
-      color: #fff;
-      font-size: 1rem;
-      text-align: center;
-      line-height: 24px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.5);
-      cursor: pointer;
-      user-select: none;
-      transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-      opacity: 0;
-    }
-    .day-cell:hover .completed-badge:not(.enabled) {
-      opacity: 0.3;
-    }
-    .day-cell.completed .completed-badge.enabled {
-      opacity: 1.0;
-    }
-    .completed-badge:hover {
-      transform: scale(1.1);
-      opacity: 1.0;
-    }
+	/* =========================================
+	   6) DAY CELL CONTENT (ICONS, TEXT, ETC.)
+	   ========================================= */
+	.date-num {
+	  position: absolute;
+	  top: 4px;
+	  left: 6px;
+	  font-weight: bold;
+	  font-size: 0.75rem;
+	  color: rgba(255,255,255,0.8);
+	  white-space: nowrap;
+	  pointer-events: none;
+	}
+	.refresh-emoji {
+	  position: absolute;
+	  top: 4px;
+	  right: 6px;
+	  font-size: 1rem;
+	  z-index: 3;
+	  cursor: pointer;
+	  opacity: 0.15;
+	  transition: opacity 0.2s;
+	}
+	.refresh-emoji:hover {
+	  opacity: 1.0;
+	}
+	.weight-display {
+	  position: absolute;
+	  top: 42%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	  font-size: 0.9rem;
+	  text-align: center;
+	  white-space: nowrap;
+	  color: #FFF;
+	  font-weight: bold;
+	  pointer-events: none;
+	}
+	.shift-time-text {
+	  position: absolute;
+	  top: 60%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	  font-size: 1rem;
+	  font-weight: bold;
+	  white-space: nowrap;
+	  color: rgba(0, 0, 0, 0.3);
+	  pointer-events: none;
+	}
+	.free-time-text {
+	  position: absolute;
+	  top: 10%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	  font-size: 0.65rem;
+	  font-weight: bold;
+	  white-space: nowrap;
+	  color: rgba(0, 0, 0, 0.3);
+	  pointer-events: none;
+	}
+	.workout-info {
+	  position: absolute;
+	  bottom: 4px;
+	  left: 0;
+	  right: 0;
+	  text-align: center;
+	  font-size: 0.75rem;
+	  line-height: 1.1;
+	  color: #FFF;
+	  opacity: 0.75;
+	  pointer-events: none;
+	}
 
-    /* Alert Feature */
-    .alert-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 50%;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .alert-text {
-      position: absolute;
-      top: 1.2rem;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-      width: 80%;
-      text-align: center;
-      font-size: 0.65rem;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      z-index: 3;
-      pointer-events: none;
-    }
+	/* =========================================
+	   7) COMPLETED BADGE
+	   ========================================= */
+	.completed-badge {
+	  position: absolute;
+	  bottom: 4px;
+	  right: 4px;
+	  width: 24px;
+	  height: 24px;
+	  border-radius: 50%;
+	  background-color: #28a745;
+	  color: #fff;
+	  font-size: 1rem;
+	  text-align: center;
+	  line-height: 24px;
+	  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	  cursor: pointer;
+	  user-select: none;
+	  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+	  opacity: 0;
+	}
+	.day-cell:hover .completed-badge:not(.enabled) {
+	  opacity: 0.3;
+	}
+	.day-cell.completed .completed-badge.enabled {
+	  opacity: 1.0;
+	}
+	.completed-badge:hover {
+	  transform: scale(1.1);
+	  opacity: 1.0;
+	}
 
-    /* Overlays and Modals */
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      z-index: 999;
-      justify-content: center;
-      align-items: center;
-      /* for the open animation */
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .overlay.active {
-      display: flex;
-      opacity: 1;
-    }
-    .modal {
-      position: relative; /* For positioning modal-date if needed */
-      background: #2D2D2D;
-      padding: 1.5rem;
-      border-radius: 6px;
-      width: 420px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      transform: translateY(-20px);
-      animation: slideDownFade 0.3s forwards;
-    }
-	.modal-subtitle {
+	/* =========================================
+	   8) ALERT OVERLAY & TEXT
+	   ========================================= */
+	.alert-overlay {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  right: 0;
+	  height: 50%;
+	  z-index: 2;
+	  pointer-events: none;
+	}
+	.alert-text {
+	  position: absolute;
+	  top: 1.2rem;
+	  left: 0;
+	  right: 0;
+	  margin: 0 auto;
+	  width: 80%;
+	  text-align: center;
+	  font-size: 0.65rem;
+	  font-weight: bold;
+	  color: #fff;
+	  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  z-index: 3;
+	  pointer-events: none;
+	}
+
+	/* =========================================
+	   9) MODAL OVERLAYS: BASE STYLES
+	   ========================================= */
+	.overlay {
+	  display: none;
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	  background-color: rgba(0,0,0,0.6);
+	  z-index: 999;
+	  justify-content: center;
+	  align-items: center;
+	  opacity: 0;
+	  transition: opacity 0.3s ease;
+	}
+	.overlay.active {
+	  display: flex;
+	  opacity: 1;
+	}
+	.modal {
+	  position: relative;
+	  background: #2D2D2D;
+	  padding: 1.5rem;
+	  border-radius: 6px;
+	  width: 420px;
+	  box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.3rem;
+	  transform: translateY(-20px);
+	  animation: slideDownFade 0.3s forwards;
+	}
+	@keyframes slideDownFade {
+	  0% {
+		opacity: 0;
+		transform: translateY(-20px);
+	  }
+	  100% {
+		opacity: 1;
+		transform: translateY(0);
+	  }
+	}
+	.modal h2 {
+	  font-size: 1.2rem;
+	  margin-bottom: 0.5rem;
+	  text-align: center;
+	}
+	.modal-buttons {
+	  display: flex;
+	  justify-content: space-between;
+	  gap: 1rem;
+	  margin-top: 0.5rem;
+	}
+	.modal-buttons button {
+	  flex: 1;
+	  cursor: pointer;
+	  padding: 0.5rem;
+	  font-size: 0.9rem;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  background: #444;
+	  color: #EAEAEA;
+	  transition: background-color 0.2s;
+	}
+	.modal-buttons button:hover {
+	  background: #555;
+	}
+
+	/* =========================================
+	   10) SINGLE-CELL EDIT MODAL (#singleModal)
+	   ========================================= */
+	#singleOverlay .modal#singleModal {
+	  width: 420px;
+	  padding: 1rem;
+	  max-height: 80vh; /* Increased to restore taller appearance */
+	  overflow-y: auto;
+	  display: flex;
+	  flex-direction: column;
+	}
+	#singleModal h2 {
+	  font-size: 1.1rem;
+	  color: #EAEAEA;
+	  margin-bottom: 0rem;
+	  text-align: center;
+	  padding-bottom: 0.4rem;
+	  border-bottom: 1px solid #444;
+	}
+	#singleModal .modal-date {
+	  position: static;
+	  margin-top: 0.5rem;
+	  margin-bottom: 0.5rem;
+	  text-align: center;
+	  font-size: 0.9rem;
+	  color: #888;
+	}
+	#singleModal .modal-subtitle {
 	  text-align: center;
 	  color: #888;
 	  font-size: 0.9rem;
 	  margin: -1rem 0 0rem 0;
 	}
-    @keyframes slideDownFade {
-      0% {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    .modal-date {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-    .modal h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-    .modal-row {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    .modal-row label {
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .reset-emoji {
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-      font-size: 1rem;
-    }
-    .reset-emoji:hover {
-      opacity: 1.0;
-    }
-    .modal-row select, 
-    .modal-row input[type=text] {
-      width: 100%;
-      padding: 0.3rem;
-      border: 1px solid #555;
-      background: #444;
-      color: #EAEAEA;
-      border-radius: 4px;
-      font-size: 0.85rem;
-    }
-    .modal-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
-    .modal-buttons button {
-      flex: 1;
-      cursor: pointer;
-      padding: 0.5rem;
-      font-size: 0.9rem;
-      border: 1px solid #555;
-      border-radius: 4px;
-      background: #444;
-      color: #EAEAEA;
-      transition: background-color 0.2s;
-    }
-    .modal-buttons button:hover {
-      background: #555;
-    }
-    .color-swatches {
-      display: flex;
-      flex-wrap: nowrap;
-      gap: 0.5rem;
-      overflow-x: auto;
-    }
-    .swatch {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 2px solid transparent;
-      flex: 0 0 auto;
-    }
-    .swatch.active {
-      border-color: limegreen;
-    }
-    .shift-label-text {
-      color: #f0f0f0;
-      font-weight: bold;
-    }
+	#singleModal .modal-row {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.25rem;
+	  background: #393939;
+	  padding: 0.5rem;
+	  border-radius: 6px;
+	  margin-bottom: 0.35rem;
+	  transition: background-color 0.2s;
+	}
+	#singleModal .modal-row:hover {
+	  background: #424242;
+	}
+	#singleModal .modal-row label {
+	  font-size: 0.9rem;
+	  display: flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	  justify-content: space-between;
+	}
+	#singleModal .reset-emoji {
+	  cursor: pointer;
+	  opacity: 0.5;
+	  transition: all 0.2s;
+	  font-size: 1rem;
+	  padding: 4px;
+	  border-radius: 4px;
+	}
+	#singleModal .reset-emoji:hover {
+	  opacity: 1;
+	  transform: rotate(180deg);
+	}
+	#singleModal select,
+	#singleModal input[type="text"] {
+	  width: 100%;
+	  padding: 0.35rem;
+	  background: #2D2D2D;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  color: #EAEAEA;
+	  font-size: 0.8rem;
+	  transition: all 0.2s;
+	  height: 28px;
+	}
+	#singleModal select:hover,
+	#singleModal input[type="text"]:hover {
+	  border-color: #666;
+	}
+	#singleModal select:focus,
+	#singleModal input[type="text"]:focus {
+	  border-color: #4DAAFF;
+	  outline: none;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.2);
+	}
+	#singleModal .color-swatches {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+	  gap: 0.5rem;
+	  margin-top: 0.5rem;
+	}
+	#singleModal .swatch {
+	  aspect-ratio: 1;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  border: 2px solid transparent;
+	  transition: all 0.2s;
+	}
+	#singleModal .swatch:hover {
+	  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	}
+	#singleModal .swatch.active {
+	  border-color: #4DAAFF;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.3);
+	}
+	#singleModal .shift-label-text {
+	  color: #4DAAFF;
+	  font-weight: 500;
+	  font-size: 0.85rem;
+	}
+	#singleModal .modal-buttons {
+	  display: grid;
+	  grid-template-columns: 1fr auto 1fr;
+	  gap: 0.5rem;
+	  padding-top: 0.5rem;
+	  border-top: 1px solid #444;
+	  margin-top: auto;
+	  position: sticky;
+	  bottom: 0;
+	  background: #2D2D2D;
+	}
+	#singleModal #singleSaveBtn {
+	  background: #4DAAFF;
+	  color: white;
+	}
+	#singleModal #singleSaveBtn:hover {
+	  background: #82c3ff;
+	}
+	#singleModal #singleRevertBtn {
+	  background: #555;
+	  color: #EEE;
+	  font-size: 1.2rem;
+	  padding: 0.4rem 1rem;
+	}
+	#singleModal #singleRevertBtn:hover {
+	  background: #666;
+	}
+	#singleModal #singleCancelBtn {
+	  background: #444;
+	  color: #EEE;
+	}
+	#singleModal #singleCancelBtn:hover {
+	  background: #555;
+	}
+	#singleModal select:disabled,
+	#singleModal input[type="text"]:disabled {
+	  background: #333;
+	  border-color: #444;
+	  color: #666;
+	  cursor: not-allowed;
+	}
+	#singleModal #singleAlertTypeSelect option {
+	  padding: 0.5rem;
+	  background: #2D2D2D;
+	}
+	#singleColorSwatchesContainer .swatch.off-bg {
+	  background-color: #2D2D2D;
+	}
+	#singleRevertBtn .rotate-emoji {
+	  display: inline-block;
+	  transition: transform 0.2s;
+	}
+	#singleRevertBtn:hover .rotate-emoji {
+	  transform: rotate(180deg);
+	}
 
-    /* Stats Counters Text */
-    .counter-value {
-      color: white;
-      font-weight: bold;
-    }
-    .stats-summary {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-    .stat-item {
-      font-size: 1.1rem;
-      color: white;
-      margin-bottom: 0.5rem;
-    }
-    #weightChart, #exerciseWeightProgressionChart, #exerciseRepProgressionChart, #volumeChart {
-      width: 100%;
-      height: 250px;
-    }
+	/* =========================================
+	   11) MULTI-CELL EDIT MODAL (#multiModal)
+	   ========================================= */
+	#multiOverlay .modal#multiModal {
+	  background: #2D2D2D;
+	  border-radius: 8px;
+	  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	  width: 380px;
+	  padding: 1rem;
+	  max-height: 50vh;
+	  overflow-y: auto;
+	  display: flex;
+	  flex-direction: column;
+	}
+	#multiModal h2 {
+	  font-size: 1.1rem;
+	  color: #EAEAEA;
+	  margin-bottom: 0.5rem;
+	  text-align: center;
+	  padding-bottom: 0.4rem;
+	  border-bottom: 1px solid #444;
+	}
+	#multiModal .modal-row {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.25rem;
+	  background: #393939;
+	  padding: 0.5rem;
+	  border-radius: 6px;
+	  margin-bottom: 0.35rem;
+	  transition: background-color 0.2s;
+	}
+	#multiModal .modal-row:hover {
+	  background: #424242;
+	}
+	#multiModal .modal-row label {
+	  font-size: 0.9rem;
+	  display: flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	}
+	#multiModal select,
+	#multiModal input[type="text"] {
+	  width: 100%;
+	  padding: 0.35rem;
+	  background: #2D2D2D;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  color: #EAEAEA;
+	  font-size: 0.8rem;
+	  transition: all 0.2s;
+	  height: 28px;
+	}
+	#multiModal select:hover,
+	#multiModal input[type="text"]:hover {
+	  border-color: #666;
+	}
+	#multiModal select:focus,
+	#multiModal input[type="text"]:focus {
+	  border-color: #4DAAFF;
+	  outline: none;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.2);
+	}
+	#multiModal .color-swatches {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+	  gap: 0.5rem;
+	  margin-top: 0.5rem;
+	}
+	#multiModal .swatch {
+	  aspect-ratio: 1;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  border: 2px solid transparent;
+	  transition: all 0.2s;
+	}
+	#multiModal .swatch:hover {
+	  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	}
+	#multiModal .swatch.active {
+	  border-color: #4DAAFF;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.3);
+	}
+	#multiColorSwatchesContainer .swatch.off-bg {
+	  background-color: #2D2D2D;
+	}
+	#multiModal .shift-label-text {
+	  color: #4DAAFF;
+	  font-weight: 500;
+	  font-size: 0.85rem;
+	}
+	#multiModal .modal-buttons {
+	  display: grid;
+	  grid-template-columns: 1fr auto 1fr;
+	  gap: 0.5rem;
+	  padding-top: 0.5rem;
+	  border-top: 1px solid #444;
+	  margin-top: auto;
+	  position: sticky;
+	  bottom: 0;
+	  background: #2D2D2D;
+	}
+	#multiModal #multiSaveBtn {
+	  background: #4DAAFF;
+	  color: white;
+	}
+	#multiModal #multiSaveBtn:hover {
+	  background: #82c3ff;
+	}
+	#multiModal #multiRevertBtn {
+	  background: #555;
+	  color: #EEE;
+	  font-size: 1.2rem;
+	  padding: 0.4rem 1rem;
+	}
+	#multiModal #multiRevertBtn:hover {
+	  background: #666;
+	}
+	#multiModal #multiCancelBtn {
+	  background: #444;
+	  color: #EEE;
+	}
+	#multiModal #multiCancelBtn:hover {
+	  background: #555;
+	}
+	#multiRevertBtn .rotate-emoji {
+	  display: inline-block;
+	  transition: transform 0.2s;
+	}
+	#multiRevertBtn:hover .rotate-emoji {
+	  transform: rotate(180deg);
+	}
 
-    /* Pulse Animation (generic) */
-    @keyframes pulseEffect {
-      0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.5);
-      }
-      50% {
-        transform: scale(1.03);
-        box-shadow: 0 0 8px 4px rgba(255, 255, 0, 0.25);
-      }
-      100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
-      }
-    }
-    .cell-pulse {
-      animation: pulseEffect 0.8s ease-out;
-    }
+	/* =========================================
+	   12) STATS OVERLAY & WEIGHT CHART
+	   ========================================= */
+	#statsOverlay .modal#statsModal {
+	  width: 420px;
+	}
+	#statsModal h2 {
+	  font-size: 1.2rem;
+	  text-align: center;
+	  margin-bottom: 0.5rem;
+	}
+	.stats-summary {
+	  display: flex;
+	  flex-direction: column;
+	  align-items: flex-start;
+	  margin-bottom: 1rem;
+	}
+	.stat-item {
+	  font-size: 1.1rem;
+	  color: white;
+	  margin-bottom: 0.5rem;
+	}
+	.counter-value {
+	  color: white;
+	  font-weight: bold;
+	}
+	#weightChart {
+	  width: 100%;
+	  height: 250px;
+	}
+	#statsCloseBtn {
+	  cursor: pointer;
+	}
 
-	/* ==============================================
-	   UPDATED PR STYLING: Subtle Alternation
-	   between Two Gold Shades + Stronger Glow
-	   ============================================== */
+	/* =========================================
+	   13) PULSE ANIMATION (GENERIC)
+	   ========================================= */
+	@keyframes pulseEffect {
+	  0% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(255, 255, 0, 0.5);
+	  }
+	  50% {
+		transform: scale(1.03);
+		box-shadow: 0 0 8px 4px rgba(255, 255, 0, 0.25);
+	  }
+	  100% {
+		transform: scale(1);
+		box-shadow: 0 0 0 0 rgba(255, 255, 0, 0);
+	  }
+	}
+	.cell-pulse {
+	  animation: pulseEffect 0.8s ease-out;
+	}
 
-	/* 1) TEXT shimmer: subtle gold → lighter gold → gold */
+	/* =========================================
+	   14) UPDATED PR STYLING (SHIMMER & GLOW)
+	   ========================================= */
 	.pr-text {
 	  position: relative;
 	  display: inline-block;
-	  
-	  /* Here we use #FFD86F (a stronger gold) at 0% & 100%,
-		 and #FFE8A6 (a lighter gold) at 50% */
 	  background: linear-gradient(
 		90deg,
-		#FFD86F 0%,    /* stronger gold */
-		#FFE8A6 50%,   /* lighter gold */
+		#FFD86F 0%,
+		#FFE8A6 50%,
 		#FFD86F 100%
 	  );
 	  background-size: 200% 200%;
 	  background-position: 0% 50%;
-
 	  -webkit-background-clip: text;
 	  -webkit-text-fill-color: transparent;
 	  background-clip: text;
-	  color: transparent; /* fallback */
-
-	  /* Slightly stronger glow behind the text */
+	  color: transparent;
 	  text-shadow:
 		0 0 6px rgba(255, 216, 111, 0.6),
 		0 0 2px rgba(255, 216, 111, 0.4);
-
-	  /* Animate the background for that “shimmer” sweep */
 	  animation: textShimmer 3s infinite ease-in-out;
 	}
-
 	@keyframes textShimmer {
-	  0%   { background-position: 0% 50%; }
-	  50%  { background-position: 100% 50%; }
-	  100% { background-position: 0% 50%; }
+	  0% { background-position: 0% 50%;}
+	  50% { background-position: 100% 50%;}
+	  100% { background-position: 0% 50%;}
 	}
-
-	/* 2) BORDER shimmer: gentle “light sweep” around edges */
 	.pr-border {
 	  position: relative;
-	  /* Use the stronger gold as the solid border color */
 	  border: 2px solid #FFD86F;
 	  overflow: visible;
 	}
-
+	.hevy-set.pr-border {
+		background: #000000;
+	}
 	.pr-border::after {
 	  content: "";
 	  position: absolute;
@@ -537,43 +792,37 @@
 	  left: -2px;
 	  right: -2px;
 	  bottom: -2px;
-	  
-	  /* We do a similar gradient but in RGBA for a subtle shimmer glow */
 	  background: linear-gradient(
 		60deg,
-		rgba(255, 216, 111, 0.05) 0%,  /* translucent stronger gold */
-		rgba(255, 232, 166, 0.2) 50%, /* translucent lighter gold */
-		rgba(255, 216, 111, 0.05) 100%
+		rgba(255, 216, 111, 0.1) 0%,
+		rgba(255, 232, 166, 0.3) 50%,
+		rgba(255, 216, 111, 0.1) 100%
 	  );
 	  background-size: 200% 200%;
 	  background-position: 0% 50%;
-	  
 	  border-radius: 4px;
 	  pointer-events: none;
 	  z-index: 0;
-
 	  animation: borderShimmer 3s infinite ease-in-out;
 	}
-
 	@keyframes borderShimmer {
-	  0%   { background-position: 0% 50%; }
-	  50%  { background-position: 100% 50%; }
-	  100% { background-position: 0% 50%; }
+	  0% { background-position: 0% 50%;}
+	  50% { background-position: 100% 50%;}
+	  100% { background-position: 0% 50%;}
 	}
 
-    /* =========================
-       HEVY WORKOUT STYLING
-       ========================= */
-    /* Hevy Workout Blocks */
+	/* =========================================
+	   15) HEVY WORKOUT STYLING
+	   ========================================= */
 	.hevy-workout {
 	  margin-bottom: 2rem;
 	  border-bottom: 1px solid #444;
 	  padding-bottom: 1.5rem;
 	}
-    .hevy-workout:last-child {
-      margin-bottom: 0;
+	.hevy-workout:last-child {
+	  margin-bottom: 0;
 	  border-bottom: none;
-    }
+	}
 	.hevy-workout-title {
 	  color: #FFDD77;
 	  font-size: 1.2rem;
@@ -586,22 +835,31 @@
 	  padding: 1.2rem;
 	  margin-bottom: 1rem;
 	  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+	  transition: all 0.2s;
 	}
-    .hevy-exercise:last-child {
-      margin-bottom: 0;
-    }
-    .hevy-exercise-title {
-      font-weight: bold;
-      color: #4DAAFF;
-      display: flex;
-      align-items: center;
-      font-size: 1rem;
+	.hevy-exercise:last-child {
+	  margin-bottom: 0;
+	}
+	.hevy-exercise:hover {
+	  transform: translateY(-2px);
+	  background: #333;
+	  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+	}
+	.hevy-exercise-title {
+	  font-weight: bold;
+	  color: #4DAAFF;
+	  display: flex;
+	  align-items: center;
 	  font-size: 1.1rem;
-	  font-weight: 600;
 	  margin-bottom: 1rem;
 	  padding-bottom: 0.5rem;
 	  border-bottom: 1px solid #444;
-    }
+	  transition: color 0.2s;
+	  cursor: pointer;
+	}
+	.hevy-exercise-title:hover {
+	  color: #FFDD77;
+	}
 	.hevy-sets {
 	  display: grid;
 	  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -613,21 +871,19 @@
 	  padding: 0.75rem;
 	  border-radius: 6px;
 	  text-align: center;
-	  transition: all 0.2s;
 	  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	  transition: all 0.2s;
 	}
-	.hevy-set.pr-border {
-		background: #141414;
+	.hevy-set:hover {
+	  background: #333;
+	  transform: translateY(-2px);
+	  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 	}
-    .hevy-set:hover {
-      background: #333;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-    }
-    .hevy-set-weight, .hevy-set-reps {
-      cursor: pointer;
-      transition: color 0.2s;
-    }
+	.hevy-set-weight,
+	.hevy-set-reps {
+	  cursor: pointer;
+	  transition: color 0.2s;
+	}
 	.hevy-total {
 	  text-align: center;
 	  color: #EAEAEA;
@@ -640,283 +896,266 @@
 	  cursor: pointer;
 	  transition: transform 0.2s;
 	}
-	/* Modal size adjustments */
-	#hevyModal {
-	  width: 600px;
-	  max-height: 80vh;
+	.hevy-total:hover {
+	  color: #FFDD77;
+	  transform: translateY(-2px);
 	}
-
-	#hevyModalWorkoutDetails {
-	  max-height: calc(80vh - 120px);
-	  overflow-y: auto;
-	  padding-right: 10px;
-	}
-
-	/* Scrollbar styling for both modals */
-	#hevyModalWorkoutDetails::-webkit-scrollbar,
-	#exerciseSummaryContent::-webkit-scrollbar {
-	  width: 8px;
-	}
-
-	#hevyModalWorkoutDetails::-webkit-scrollbar-track,
-	#exerciseSummaryContent::-webkit-scrollbar-track {
-	  background: #2D2D2D;
-	  border-radius: 4px;
-	}
-
-	#hevyModalWorkoutDetails::-webkit-scrollbar-thumb,
-	#exerciseSummaryContent::-webkit-scrollbar-thumb {
-	  background: #555;
-	  border-radius: 4px;
-	}
-
-	#hevyModalWorkoutDetails::-webkit-scrollbar-thumb:hover,
-	#exerciseSummaryContent::-webkit-scrollbar-thumb:hover {
-	  background: #666;
-	}
-
-	/* Update modal header styling to match */
-	#hevyModal h2,
-	#exerciseSummaryModal h2 {
-	  font-size: 1.3rem;
-	  color: #EAEAEA;
-	  margin-bottom: 1.5rem;
+	.hevy-orm {
+	  margin-top: 0.25rem;
+	  color: #FFFFFF;
+	  font-weight: 400;
+	  cursor: pointer;
+	  transition: color 0.2s;
 	  text-align: center;
-	  padding-bottom: 0.5rem;
-	  border-bottom: 1px solid #444;
+	  font-size: 0.9rem;
+	}
+	.hevy-orm:hover {
+	  color: #FFDD77;
+	}
+	.hevy-exercise-volume {
+	  margin-top: 1.5rem;
+	  color: #FFFFFF;
+	  cursor: pointer;
+	  transition: color 0.2s;
+	  text-align: center;
+	  font-size: 0.9rem;
+	}
+	.hevy-exercise-volume:hover {
+	  color: #FFDD77;
 	}
 
-	/* No workout message styling */
+	/* =========================================
+	   16) HEVY WORKOUT MODAL (#hevyModal)
+	   ========================================= */
+	#hevyOverlay .modal#hevyModal {
+	  width: 500px;
+	}
+	#hevyModal.no-workout {
+	  width: 350px;
+	  text-align: center;
+	  padding: 1rem;
+	}
+	.hevy-modal-content {
+	  display: flex;
+	  flex-direction: row;
+	  gap: 1rem;
+	  width: 100%;
+	  align-items: flex-start;
+	  justify-content: flex-start;
+	  max-height: 450px;
+	  overflow-y: hidden;
+	}
+	#hevyModalWorkoutDetails {
+	  flex: 1;
+	  overflow-y: auto;
+	  padding-right: 4px;
+	  max-height: 450px;
+	}
+	#hevyProgressChartContainer {
+	  flex: 1;
+	  max-width: 320px;
+	  display: none;
+	  overflow: hidden;
+	}
+	#hevyProgressChart {
+	  width: 100%;
+	  height: 300px;
+	}
 	#hevyModalWorkoutDetails p {
 	  text-align: center;
 	  color: #888;
 	  font-style: italic;
 	  padding: 2rem;
 	}
-
-	.hevy-exercise-volume,
-	.hevy-orm {
-	  color: #EAEAEA;
-	  padding: 0.5rem 0;
-	  cursor: pointer;
-	  transition: color 0.2s;
+	/* Centered date with line above it (like before) */
+	#hevyModal .modal-subtitle {
+	  text-align: center;
+	  color: #888;
 	  font-size: 0.9rem;
+	  margin-top: 0.5rem;
+	  margin-bottom: 1.5rem;
+	  border-top: 1px solid #444;
+	  padding-top: 0.5rem;
 	}
-    .hevy-total:hover {
-      color: #FFDD77;
-	  transform: translateY(-2px);
-    }
 
-    /* Updated: One Rep Max line */
-    .hevy-orm {
-      margin-top: 0.25rem;
-      color: #FFFFFF;
-      font-weight: 400;
-      cursor: pointer;
-      transition: color 0.2s;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-    .hevy-orm:hover {
-      color: #FFDD77;
-    }
-
-    /* Volume Over Time for Each Exercise */
-    .hevy-exercise-volume {
-      margin-top: 1.5rem;
-      color: #FFFFFF;
-      cursor: pointer;
-      transition: color 0.2s;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-    .hevy-exercise-volume:hover {
-      color: #FFDD77;
-    }
-
-    /* Hevy Modal Layout */
-    .hevy-modal-content {
-      display: flex;
-      flex-direction: row;
-      gap: 1rem;
-      width: 100%;
-      align-items: flex-start;
-      justify-content: flex-start;
-      max-height: 450px;
-      overflow-y: hidden;
-    }
-    #hevyModalWorkoutDetails {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px; /* to give space for scrollbar */
-      max-height: 450px;
-    }
-    #hevyProgressChartContainer {
-      flex: 1;
-      max-width: 320px;
-      display: none; /* Hidden unless you want to show a chart in the same modal */
-      overflow: hidden;
-    }
-    #hevyProgressChart {
-      width: 100%;
-      height: 300px;
-    }
-
-    /* Exercise Volume Over Time Modal */
-    #exerciseVolumeOverlay {
-      z-index: 1000; /* Higher than hevyOverlay */
-    }
-    #exerciseVolumeModal {
-      width: 500px;
-    }
-    #exerciseVolumeChart {
-      width: 100%;
-      height: 300px;
-    }
-    /* Hide the date element inside #exerciseProgressOverlay only */
-    #exerciseProgressOverlay .modal-date {
-      display: none;
-    }
-
-    /* Combined Weight & Rep Progression Modal */
-    #exerciseProgressOverlay {
-      z-index: 1001; /* Higher than exerciseVolumeOverlay */
-    }
-    #exerciseProgressionModal {
-      width: 500px; /* Make a bit wider to fit two charts */
-    }
-    #exerciseWeightProgressionChart,
-    #exerciseRepProgressionChart {
-      width: 100%;
-      height: 250px; /* adjust as you like */
-    }
-
-    /* Volume Over Time Modal */
-    #volumeOverlay {
-      z-index: 1003; /* Higher than all other overlays so far */
-    }
-    #volumeModal {
-      width: 600px;
-    }
-    #volumeChart {
-      width: 100%;
-      height: 400px;
-    }
-	/* Date Range Buttons */
-    .date-range-btn {
-      background: #444;
-      border: 1px solid #555;
-      color: #EAEAEA;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .date-range-btn:hover {
-      background: #555;
-    }
-    .date-range-btn.active {
-      background: #4DAAFF;
-      border-color: #4DAAFF;
-      color: #FFF;
-    }
-	
-    /* ORM Progress Modal */
-    #ormProgressOverlay {
-      z-index: 1004; /* Highest so far */
-    }
-    #exerciseOrmProgressModal {
-      width: 500px;
-    }
-    #exerciseOrmProgressChart {
-      width: 100%;
-      height: 300px;
-    }
-
-    /* Custom Alert Overlay */
-    .custom-alert-modal {
-      background: #2D2D2D;
-      padding: 1.5rem;
-      border-radius: 6px;
-      width: 300px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      transform: translateY(-20px);
-      animation: slideDownFade 0.3s forwards;
-    }
-    .custom-alert-modal p {
-      font-size: 1rem;
-      color: #EAEAEA;
-    }
-    .custom-alert-modal input[type="text"] {
-      padding: 0.5rem;
-      border: 1px solid #555;
-      border-radius: 4px;
-      background: #444;
-      color: #EAEAEA;
-      font-size: 1rem;
-    }
-    .custom-alert-modal button {
-      padding: 0.5rem;
-      font-size: 0.9rem;
-      border: 1px solid #555;
-      border-radius: 4px;
-      background: #444;
-      color: #EAEAEA;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      flex: 1;
-    }
-    .custom-alert-modal button:hover {
-      background: #555;
-    }
-    .custom-alert-modal .confirm-buttons {
-      display: flex;
-      gap: 1rem;
-    }
-
-    /* Loading Overlay */
-    .loading-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.6);
-      z-index: 1002; /* Adjust as needed */
-      justify-content: center;
-      align-items: center;
-    }
-    .loading-overlay.active {
-      display: flex;
-    }
-    .spinner {
-      border: 6px solid rgba(255, 255, 255, 0.3);
-      border-top: 6px solid #fff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-	#hevyModal.no-workout {
-	  width: 350px;        /* or whatever smaller width you prefer */
-	  text-align: center;   /* centers the text inside the modal */
-	  padding: 1rem;        /* optional: if you want less or more padding */
+	/* =========================================
+	   17) EXERCISE VOLUME OVER TIME MODAL
+		   (#exerciseVolumeOverlay)
+	   ========================================= */
+	#exerciseVolumeOverlay {
+	  z-index: 1000;
 	}
-	#hevyModal {
-		width: 500px;
+	#exerciseVolumeModal {
+	  width: 500px;
 	}
-	/* Exercise Summary Modal */
+	#exerciseVolumeChart {
+	  width: 100%;
+	  height: 300px;
+	}
+	#exerciseVolumeModal .modal-date {
+	  display: none;
+	}
+	.date-range-btn {
+	  background: #444;
+	  border: 1px solid #555;
+	  color: #EAEAEA;
+	  padding: 0.4rem 0.8rem;
+	  border-radius: 4px;
+	  cursor: pointer;
+	  transition: all 0.2s;
+	}
+	.date-range-btn:hover {
+	  background: #555;
+	}
+	.date-range-btn.active {
+	  background: #4DAAFF;
+	  border-color: #4DAAFF;
+	  color: #FFF;
+	}
+
+	/* =========================================
+	   18) WEIGHT & REP PROGRESSION MODAL
+		   (#exerciseProgressOverlay)
+	   ========================================= */
+	#exerciseProgressOverlay {
+	  z-index: 1001;
+	}
+	#exerciseProgressionModal {
+	  width: 500px;
+	}
+	#exerciseWeightProgressionChart,
+	#exerciseRepProgressionChart {
+	  width: 100%;
+	  height: 250px;
+	}
+
+	/* =========================================
+	   19) VOLUME OVER TIME (DAY-LEVEL) MODAL
+		   (#volumeOverlay)
+	   ========================================= */
+	#volumeOverlay {
+	  z-index: 1003;
+	}
+	#volumeModal {
+	  width: 600px;
+	}
+	#volumeChart {
+	  width: 100%;
+	  height: 400px;
+	}
+	#volumeModalDate {}
+
+	/* =========================================
+	   20) ORM PROGRESSION MODAL
+		   (#ormProgressOverlay)
+	   ========================================= */
+	#ormProgressOverlay {
+	  z-index: 1004;
+	}
+	#exerciseOrmProgressModal {
+	  width: 500px;
+	}
+	#exerciseOrmProgressChart {
+	  width: 100%;
+	  height: 300px;
+	}
+
+	/* =========================================
+	   21) CUSTOM ALERT OVERLAY & MODAL
+	   ========================================= */
+	#customAlertOverlay {
+	  z-index: 999;
+	}
+	.custom-alert-modal {
+	  background: #2D2D2D;
+	  padding: 1.5rem;
+	  border-radius: 6px;
+	  width: 300px;
+	  box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+	  display: flex;
+	  flex-direction: column;
+	  gap: 1rem;
+	  text-align: center;
+	  justify-content: center;
+	  align-items: center;
+	  transform: translateY(-20px);
+	  animation: slideDownFade 0.3s forwards;
+	}
+	.custom-alert-modal p {
+	  font-size: 1rem;
+	  color: #EAEAEA;
+	}
+	#customAlertInput {
+	  padding: 0.5rem;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  background: #444;
+	  color: #EAEAEA;
+	  font-size: 1rem;
+	}
+	.custom-alert-modal button {
+	  padding: 0.5rem;
+	  font-size: 0.9rem;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  background: #444;
+	  color: #EAEAEA;
+	  cursor: pointer;
+	  transition: background-color 0.2s;
+	  flex: 1;
+	}
+	.custom-alert-modal button:hover {
+	  background: #555;
+	}
+	.custom-alert-modal .confirm-buttons {
+	  display: flex;
+	  gap: 1rem;
+	}
+	.default-button {
+	  display: block;
+	}
+	#customDefaultButton button {
+	  width: 100%;
+	  margin-top: 0.5rem;
+	}
+
+	/* =========================================
+	   22) LOADING OVERLAY & SPINNER
+	   ========================================= */
+	.loading-overlay {
+	  display: none;
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	  background-color: rgba(0,0,0,0.6);
+	  z-index: 1002;
+	  justify-content: center;
+	  align-items: center;
+	}
+	.loading-overlay.active {
+	  display: flex;
+	}
+	.spinner {
+	  border: 6px solid rgba(255, 255, 255, 0.3);
+	  border-top: 6px solid #fff;
+	  border-radius: 50%;
+	  width: 50px;
+	  height: 50px;
+	  animation: spin 1s linear infinite;
+	}
+	@keyframes spin {
+	  0% { transform: rotate(0deg);}
+	  100% { transform: rotate(360deg);}
+	}
+
+	/* =========================================
+	   23) EXERCISE SUMMARY MODAL
+	   ========================================= */
+	#exerciseSummaryOverlay .modal#exerciseSummaryModal {
+	  width: 500px;
+	}
 	.exercise-summary-header {
 	  margin-bottom: 1.5rem;
 	  padding-bottom: 0.5rem;
@@ -950,10 +1189,7 @@
 	.key-stat-value {
 	  font-size: 1.3rem;
 	  font-weight: bold;
-	  color: #FFDD77;  /* Changed from #FFD700 to match hover color */
-	}
-	#exerciseSummaryModal {
-	  width: 500px;
+	  color: #FFDD77;
 	}
 	.exercise-stat-block {
 	  background: #2D2D2D;
@@ -967,20 +1203,23 @@
 	  color: #fff;
 	  margin-bottom: 0.5rem;
 	}
-	.rep-ranges-grid {
-	  display: grid;
-	  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-	  gap: 0.5rem;
+	.rep-range-list {
+	  background: #393939;
+	  border-radius: 6px;
+	  padding: 1rem;
 	}
-	.rep-range-item {
-	  background: linear-gradient(45deg, #444, #555);
-	  padding: 0.75rem;
-	  border-radius: 4px;
-	  text-align: center;
-	  transition: transform 0.2s;
+	.rep-range-row {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  padding: 0.5rem;
+	  border-bottom: 1px solid #444;
 	}
-	.rep-range-item:hover {
-	  transform: translateY(-2px);
+	.rep-range-row:last-child {
+	  border-bottom: none;
+	}
+	.rep-range-row:hover {
+	  background: #505050;
 	}
 	.rep-range {
 	  font-size: 1.1rem;
@@ -994,24 +1233,6 @@
 	}
 	.rep-range-weight {
 	  color: #FFDD77;
-	}
-	.rep-range-list {
-	  background: #393939;
-	  border-radius: 6px;
-	  padding: 1rem;
-	}
-	.rep-range-row {
-	  display: flex;
-	  justify-content: space-between;
-	  align-items: center;
-	  padding: 0.5rem;
-	  border-bottom: 1px solid #444;
-	}
-	.rep-range-row:hover{
-		background: #505050;
-	}
-	.rep-range-row:last-child {
-	  border-bottom: none;
 	}
 	#exerciseSummaryContent {
 	  max-height: 70vh;
@@ -1036,28 +1257,109 @@
 	  background: #555;
 	  transform: translateY(-1px);
 	}
-	.hevy-exercise-title:hover {
-	  color: #FFDD77;
-	}
 	@keyframes glowPulse {
-	  0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-	  50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
-	  100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+	  0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);}
+	  50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);}
+	  100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);}
 	}
 	.glowing-orm {
 	  animation: glowPulse 2s infinite;
 	}
-	/* EXERCISE FREQUENCY MODAL */
+
+	/* =========================================
+	   24) EXERCISE FREQUENCY MODAL
+	   ========================================= */
 	#exerciseFrequencyModal {
 	  width: 800px;
 	}
-	/* TOTAL VOLUME DISTRIBUTION MODAL */
+	#exerciseFrequencyChart {
+	  width: 100%;
+	  height: 400px;
+	}
+
+	/* =========================================
+	   25) TOTAL VOLUME DISTRIBUTION MODAL
+	   ========================================= */
 	#totalVolumeDistributionModal {
 	  width: 800px;
 	}
-	  
+	#totalVolumeDistributionChart {
+	  width: 100%;
+	  height: 400px;
+	}
+	#totalVolumeDistributionModal {
+	  background: linear-gradient(140deg, #2D2D2D, #333333 70%);
+	  border: 1px solid #444;
+	  border-radius: 10px;
+	  position: relative;
+	  padding: 1.5rem;
+	  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+	  color: #EAEAEA;
+	}
+	#totalVolumeDistributionModal .modal-row {
+	  background: rgba(0, 0, 0, 0.2);
+	  border-radius: 8px;
+	  margin-bottom: 1rem;
+	  padding: 1rem;
+	}
+	#grandTotalWeight {
+	  font-size: 1rem;
+	  text-align: center;
+	  color: #FFDD77;
+	  margin-bottom: 0.75rem;
+	  font-weight: 600;
+	}
+
+	/* =========================================
+	   26) CUSTOM SCROLLBARS FOR MODALS
+	   ========================================= */
+	#hevyModalWorkoutDetails::-webkit-scrollbar,
+	#exerciseSummaryContent::-webkit-scrollbar {
+	  width: 8px;
+	}
+	#hevyModalWorkoutDetails::-webkit-scrollbar-track,
+	#exerciseSummaryContent::-webkit-scrollbar-track {
+	  background: #2D2D2D;
+	  border-radius: 4px;
+	}
+	#hevyModalWorkoutDetails::-webkit-scrollbar-thumb,
+	#exerciseSummaryContent::-webkit-scrollbar-thumb {
+	  background: #555;
+	  border-radius: 4px;
+	}
+	#hevyModalWorkoutDetails::-webkit-scrollbar-thumb:hover,
+	#exerciseSummaryContent::-webkit-scrollbar-thumb:hover {
+	  background: #666;
+	}
+	#singleModal,
+	#multiModal {
+	  max-height: 90vh;
+	  overflow-y: auto;
+	}
+	#singleModal::-webkit-scrollbar,
+	#multiModal::-webkit-scrollbar {
+	  width: 10px;
+	  height: 10px;
+	}
+	#singleModal::-webkit-scrollbar-track,
+	#multiModal::-webkit-scrollbar-track {
+	  background: #2D2D2D;
+	  border-radius: 4px;
+	}
+	#singleModal::-webkit-scrollbar-thumb,
+	#multiModal::-webkit-scrollbar-thumb {
+	  background: #555;
+	  border-radius: 4px;
+	  border: 2px solid #2D2D2D;
+	}
+	#singleModal::-webkit-scrollbar-thumb:hover,
+	#multiModal::-webkit-scrollbar-thumb:hover {
+	  background: #666;
+	}
+	
   </style>
 </head>
+
 <body>
   <div class="main-wrapper">
     <!-- Month/Navigation/Buttons Bar -->
@@ -1099,8 +1401,8 @@
   <!-- Single-Cell Edit Overlay -->
   <div class="overlay" id="singleOverlay">
     <div class="modal" id="singleModal">
-      <div class="modal-date" id="singleModalDate">2 January</div>
-      <h2>Edit Cell</h2>
+        <h2>Edit Cell</h2>
+		<div class="modal-date" id="singleModalDate">2 January</div>
       <!-- SHIFT Presets -->
       <div class="modal-row">
         <label>
@@ -1175,7 +1477,9 @@
 
       <div class="modal-buttons">
         <button id="singleSaveBtn" title="Save Changes">Save</button>
-        <button id="singleRevertBtn" style="font-size:1.5rem;" title="Revert Changes">⟳</button>
+        <button id="singleRevertBtn" style="font-size:1.5rem;" title="Revert Changes">
+			<span class="rotate-emoji">⟳</span>
+		</button>
         <button id="singleCancelBtn" title="Cancel">Cancel</button>
       </div>
     </div>
@@ -1249,7 +1553,9 @@
       </div>
       <div class="modal-buttons">
         <button id="multiSaveBtn" title="Save Changes">Save</button>
-        <button id="multiRevertBtn" style="font-size:1.5rem;" title="Revert Changes">⟳</button>
+        <button id="multiRevertBtn" style="font-size:1.5rem;" title="Revert Changes">
+			<span class="rotate-emoji">⟳</span>
+		</button>
         <button id="multiCancelBtn" title="Cancel">Cancel</button>
       </div>
     </div>
@@ -1450,6 +1756,8 @@
 		</div>
 	  </div>
 	</div>
+	
+
   <script>
     /*
       =======================================
@@ -2916,7 +3224,7 @@
       // We highlight "today" if it's in data
       const todayKey = getDateKey(new Date());
       const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, todayKey, '#77DD77', '#4DAAFF', 2.5, 5
+        dataPoints, todayKey, '#4DAAFF', '#FFDD77', 2.5, 5
       );
 
       weightChart = new Chart(ctx, {
@@ -2926,8 +3234,8 @@
           datasets: [{
             label: 'Weight (kg)',
             data: dataPoints.map(dp => dp.y),
-            borderColor: '#77DD77',
-            backgroundColor: 'rgba(119,221,119,0.2)',
+            borderColor: '#4DAAFF',
+            backgroundColor: 'rgba(77, 169, 255,0.2)',
             fill: true,
             tension: 0.1,
             pointRadius: pointRadii,
@@ -3335,7 +3643,7 @@
       const ctx = document.getElementById('exerciseWeightProgressionChart').getContext('2d');
 
       const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, highlightDateKey, 'rgba(119,221,119,1)', '#4DAAFF', 2.5, 5
+        dataPoints, highlightDateKey, '#4DAAFF', '#FFDD77', 2.5, 5
       );
 
       exerciseWeightProgressionChart = new Chart(ctx, {
@@ -3345,8 +3653,8 @@
           datasets: [{
             label: `${exerciseName} (${repCount} reps)`,
             data: dataPoints.map(dp => dp.y),
-            borderColor: '#77DD77',
-            backgroundColor: 'rgba(119,221,119,0.2)',
+            borderColor: '#4DAAFF',
+            backgroundColor: 'rgba(77, 169, 255,0.2)',
             fill: true,
             tension: 0.1,
             pointRadius: pointRadii,
@@ -3461,7 +3769,7 @@
       const ctx = document.getElementById('exerciseRepProgressionChart').getContext('2d');
 
       const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, highlightDateKey, 'rgba(255,165,0,1)', '#4DAAFF', 2.5, 5
+        dataPoints, highlightDateKey, '#FFDD77', '#4DAAFF', 2.5, 5
       );
 
       exerciseRepProgressionChart = new Chart(ctx, {
@@ -3471,8 +3779,8 @@
           datasets: [{
             label: `Repetitions: ${exerciseName} (${weight}kg)`,
             data: dataPoints.map(dp => dp.y),
-            borderColor: '#FFA500',
-            backgroundColor: 'rgba(255,165,0,0.2)',
+            borderColor: '#FFDD77',
+            backgroundColor: 'rgba(255, 221, 119,0.2)',
             fill: true,
             tension: 0.1,
             pointRadius: pointRadii,
@@ -3614,8 +3922,8 @@
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
 		dataPoints, // array of { x, y }
 		highlightDateKey, 
-		'rgba(255,165,0,1)', // normal color
-		'#4DAAFF',           // highlight color
+		'#4DAAFF', // normal color
+		'#FFDD77',           // highlight color
 		2.5,                 // normal radius
 		5                    // highlight radius
 	  );
@@ -3627,8 +3935,8 @@
 		  datasets: [{
 			label: 'Volume (kg)',
 			data: volumes, // or dataPoints.map(dp => dp.y)
-			borderColor: '#FFA500',
-			backgroundColor: 'rgba(255,165,0,0.2)',
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
 			fill: true,
 			tension: 0.1,
 			pointRadius: pointRadii,
@@ -3764,8 +4072,8 @@
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
 		dataPoints, 
 		highlightDateKey,
-		'rgba(77,221,255,1)', // normal color
-		'#4DAAFF',           // highlight color
+		'#4DAAFF', // normal color
+		'#FFDD77',           // highlight color
 		2.5,
 		5
 	  );
@@ -3777,8 +4085,8 @@
 		  datasets: [{
 			label: `Volume: ${exerciseName}`,
 			data: volumes,
-			borderColor: '#4DDCFF',
-			backgroundColor: 'rgba(77,221,255,0.2)',
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
 			fill: true,
 			tension: 0.1,
 			pointRadius: pointRadii,
@@ -3933,8 +4241,8 @@
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
 		chartKeys.map(k => ({ x: k, y: dataMap[k].orm })), // pass array of { x, y }
 		highlightDateKey,
-		'rgba(255,255,0,1)',
 		'#4DAAFF',
+		'#FFDD77',
 		2.5,
 		5
 	  );
@@ -3947,8 +4255,8 @@
 		  datasets: [{
 			label: `ORM: ${exerciseName}`,
 			data: dataPoints, // numeric ORM values
-			borderColor: '#FFFF00',
-			backgroundColor: 'rgba(255,255,0,0.2)',
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
 			fill: true,
 			tension: 0.1,
 			pointRadius: pointRadii,
@@ -4573,48 +4881,94 @@
       = 21) Total Volume Distribution Modal   =
       =========================================
     */
-	function openTotalVolumeDistributionModal() {
+	
+	let lastDistributionData = null; // store the main data vs. "others" data for re-draws
+
+	function openTotalVolumeDistributionModal(selectedExercise = null) {
+	  // 1) Show the overlay
 	  document.getElementById("totalVolumeDistributionOverlay").classList.add("active");
 	  
-	  const volumeData = getExerciseVolumeTotals();
+	  // 2) Gather volume data for all exercises
+	  const volumeData = getExerciseVolumeTotals(); 
+	  // e.g. volumeData: [{ name: "Bench Press", volume: 12345 }, { name: "Squat", volume: 23456 }, ...]
+
+	  // (Optional) Sort descending, so largest is first
+	  volumeData.sort((a, b) => b.volume - a.volume);
 	  
-	  // Prepare data for Chart.js
+	  // 3) Compute total volume across all exercises
+	  const grandTotal = volumeData.reduce((sum, item) => sum + item.volume, 0);
+
+	  // 4) Show total weight in the modal
+	  const distributionModal = document.getElementById("totalVolumeDistributionModal");
+	  let totalWeightElem = distributionModal.querySelector("#grandTotalWeight");
+	  if (!totalWeightElem) {
+		totalWeightElem = document.createElement("div");
+		totalWeightElem.id = "grandTotalWeight";
+		totalWeightElem.style.cssText = `
+		  font-size: 1rem;
+		  text-align: center;
+		  color: #FFDD77;
+		  margin-bottom: 0.75rem;
+		  font-weight: 600;
+		`;
+		distributionModal.insertBefore(totalWeightElem, distributionModal.querySelector(".modal-row"));
+	  }
+	  totalWeightElem.textContent = `Total Weight Lifted: ${grandTotal.toLocaleString()} kg`;
+
+	  // 5) Prepare labels and data arrays
 	  const labels = volumeData.map(d => d.name);
 	  const data = volumeData.map(d => d.volume);
-	  const colors = volumeData.map((_, index) => {
-		// Generate colors evenly spread around the color wheel
-		const hue = (index * 360 / volumeData.length) % 360;
-		return `hsl(${hue}, 70%, 50%)`;
-	  });
+
+	  // 6) Build color array from the 24 shift-time colors
+	  const shiftColorKeys = Object.keys(workTimeColors).sort();  // ["0000","0100",...,"2300"]
+	  const shiftColorVals = shiftColorKeys.map(k => workTimeColors[k]); // array of hex codes
+	  const colorCount = shiftColorVals.length;
 	  
+	  const backgroundColors = labels.map((_, i) => {
+		return shiftColorVals[i % colorCount];
+	  });
+
+	  // 7) Determine slice offsets to pop out the selected exercise
+	  const offsetArray = new Array(labels.length).fill(0);
+	  if (selectedExercise) {
+		const highlightIndex = labels.findIndex(label => label === selectedExercise);
+		if (highlightIndex >= 0) {
+		  offsetArray[highlightIndex] = 30; // bigger offset for that slice
+		}
+	  }
+
+	  // 8) Destroy old chart if needed
 	  if (totalVolumeDistributionChart) {
 		totalVolumeDistributionChart.destroy();
+		totalVolumeDistributionChart = null;
 	  }
 	  
-	  const ctx = document.getElementById('totalVolumeDistributionChart').getContext('2d');
+	  // 9) Build the new Donut chart
+	  const ctx = document.getElementById("totalVolumeDistributionChart").getContext("2d");
 	  totalVolumeDistributionChart = new Chart(ctx, {
-		type: 'pie',
+		type: "doughnut",
 		data: {
 		  labels: labels,
 		  datasets: [{
 			data: data,
-			backgroundColor: colors,
-			borderColor: '#2D2D2D',
-			borderWidth: 2
+			backgroundColor: backgroundColors,
+			borderWidth: 2,   // remove outline
+			spacing: 2,       // smaller gap between slices
+			offset: offsetArray
 		  }]
 		},
 		options: {
 		  responsive: true,
+		  rotation: 0,
 		  maintainAspectRatio: false,
+		  cutout: "50%", // donut hole size
 		  plugins: {
 			legend: {
-			  position: 'right',
+			  position: "right",
 			  labels: {
-				color: '#eee',
+				color: "#eee",
 				padding: 10,
-				font: {
-				  size: 11
-				}
+				font: { size: 11 }
 			  }
 			},
 			tooltip: {
@@ -4626,12 +4980,22 @@
 				  return `${context.label}: ${value.toLocaleString()}kg (${percentage}%)`;
 				}
 			  }
+			},
+			title: {
+			  display: true,
+			  text: "",
+			  color: "#FFDD77",
+			  font: { size: 16, weight: "bold" },
+			  padding: { top: 10, bottom: 20 }
 			}
 		  }
 		}
 	  });
 	}
 
+	/**
+	 * Closes the Total Volume Distribution Modal & destroys the chart.
+	 */
 	function closeTotalVolumeDistributionModal() {
 	  document.getElementById("totalVolumeDistributionOverlay").classList.remove("active");
 	  if (totalVolumeDistributionChart) {
@@ -4902,6 +5266,8 @@
       // Finally, initial render:
       renderCalendar(currentYear, currentMonth);
     });
+	
+	
   </script>
 </body>
 </html>
