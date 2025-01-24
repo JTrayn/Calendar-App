@@ -1902,6 +1902,100 @@
       =       2) Helper Functions           =
       =======================================
     */
+	
+	
+	// Assists with fixing 'null' weight values for bodyweight exercises like pull ups
+	const bodyweightExercises = new Set();
+	function findNearestWeight(dateKey) {
+	  const targetDate = parseDateKey(dateKey);
+	  
+	  const datesWithWeights = Object.keys(calendarData)
+		.filter(key => calendarData[key].weight)
+		.map(key => ({
+		  key,
+		  date: parseDateKey(key),
+		  weight: calendarData[key].weight
+		}))
+		.sort((a, b) => a.date - b.date);
+
+	  if (datesWithWeights.length === 0) return 0;
+
+	  let nearestDate = datesWithWeights[0];
+	  let minDiff = Math.abs(targetDate - nearestDate.date);
+
+	  for (const dateObj of datesWithWeights) {
+		const diff = Math.abs(targetDate - dateObj.date);
+		if (diff < minDiff) {
+		  minDiff = diff;
+		  nearestDate = dateObj;
+		}
+	  }
+	  return nearestDate.weight;
+	}
+
+	function fixNullWeights() {
+	  bodyweightExercises.clear();
+	  Object.keys(calendarData).forEach(dateKey => {
+		const dayData = calendarData[dateKey];
+		if (!dayData.hevyWorkouts) return;
+
+		dayData.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(exercise => {
+			exercise.sets.forEach((set, setIndex) => {
+			  if (set.weight_kg === null || set.weight_kg === undefined) {
+				// Store reference to this bodyweight exercise
+				bodyweightExercises.add({
+				  dateKey,
+				  workoutId: workout.id,
+				  exerciseIndex: workout.exercises.indexOf(exercise),
+				  setIndex
+				});
+				
+				// Set initial weight
+				set.weight_kg = findNearestWeight(dateKey);
+			  }
+			});
+		  });
+		});
+		calendarData[dateKey] = dayData;
+	  });
+	  localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+	}
+
+	// Hook into weight updates
+	const originalSetDayData = window.setDayData;
+	window.setDayData = function(dateKey, newData) {
+	  // Call original function
+	  originalSetDayData(dateKey, newData);
+	  
+	  // If weight was updated, update bodyweight exercises
+	  if (newData.weight !== undefined) {
+		updateBodyweightExercises();
+	  }
+	};
+
+	function updateBodyweightExercises() {
+	  bodyweightExercises.forEach(ref => {
+		const dayData = calendarData[ref.dateKey];
+		if (!dayData?.hevyWorkouts) return;
+		
+		const workout = dayData.hevyWorkouts.find(w => w.id === ref.workoutId);
+		if (!workout) return;
+		
+		const exercise = workout.exercises[ref.exerciseIndex];
+		if (!exercise) return;
+		
+		const set = exercise.sets[ref.setIndex];
+		if (!set) return;
+		
+		// Update to nearest weight
+		set.weight_kg = findNearestWeight(ref.dateKey);
+	  });
+	  
+	  localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+	  renderCalendar(currentYear, currentMonth);
+	}
+	
 	// 1) Preload images
 	const monthImagesToPreload = monthNames.map((month) => {
 		return month.toLowerCase() + '.jpg';
@@ -3252,7 +3346,7 @@
             }
           }
         });
-
+		fixNullWeights();
         showCustomAlert(`Imported ${importedCount} new Hevy workouts into calendar.`);
         renderCalendar(currentYear, currentMonth);
       } catch(err) {
@@ -3620,12 +3714,9 @@
 		  return;
 		}
 	  };
-
-	  /**
-	   * Build the star-sparkle container that we insert for PR sets.
-	   * This is the swirling/twinkling star pattern that surrounds the set.
-	   */
-	  function buildStarsContainer() {
+	}
+	
+	function buildStarsContainer() {
 		  // Single star path
 		  const starSVG = `
 			<svg viewBox="0 0 784.11 815.53">
@@ -3648,7 +3739,6 @@
 		  }
 		  html += `</div>`;
 		  return html;
-		}
 	}
 	
 
