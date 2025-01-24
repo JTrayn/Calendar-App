@@ -752,6 +752,7 @@
 	/* =========================================
 	   14) UPDATED PR STYLING (SHIMMER & GLOW)
 	   ========================================= */
+
 	.pr-text {
 	  position: relative;
 	  display: inline-block;
@@ -772,19 +773,24 @@
 		0 0 2px rgba(255, 216, 111, 0.4);
 	  animation: textShimmer 3s infinite ease-in-out;
 	}
+
 	@keyframes textShimmer {
-	  0% { background-position: 0% 50%;}
-	  50% { background-position: 100% 50%;}
-	  100% { background-position: 0% 50%;}
+	  0%   { background-position: 0%   50%; }
+	  50%  { background-position: 100% 50%; }
+	  100% { background-position: 0%   50%; }
 	}
+
 	.pr-border {
 	  position: relative;
 	  border: 2px solid #FFD86F;
 	  overflow: visible;
 	}
+
 	.hevy-set.pr-border {
-		background: #000000;
+	  background: #000000; /* Your black background on PR sets */
 	}
+
+	/* Glimmering border animation */
 	.pr-border::after {
 	  content: "";
 	  position: absolute;
@@ -805,10 +811,88 @@
 	  z-index: 0;
 	  animation: borderShimmer 3s infinite ease-in-out;
 	}
+
 	@keyframes borderShimmer {
-	  0% { background-position: 0% 50%;}
-	  50% { background-position: 100% 50%;}
-	  100% { background-position: 0% 50%;}
+	  0%   { background-position: 0%   50%; }
+	  50%  { background-position: 100% 50%; }
+	  100% { background-position: 0%   50%; }
+	}
+
+	/* 14A) Twinkling PR Stars (always visible) */
+	.pr-border .stars-container {
+	  pointer-events: none; /* so stars don’t block clicks on the set */
+	}
+
+	/* 
+	   Every star is visible by default (opacity:1) 
+	   and uses the twinkle animation with different delays.
+	*/
+	.pr-border .stars-container [class^="star-"] {
+	  position: absolute;
+	  opacity: 1;
+	  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+	  animation: twinkle 1.5s ease-in-out infinite;
+	}
+
+	.pr-border .stars-container .star-1 {
+	  top: -10%;  left:  5%;  width: 9px;
+	  animation-delay: 0.1s;
+	}
+	.pr-border .stars-container .star-2 {
+	  top:  10%;  left: 90%;  width: 10px;
+	  animation-delay: 0.3s;
+	}
+	.pr-border .stars-container .star-3 {
+	  top:  40%;  left:  8%;  width: 9px;
+	  animation-delay: 0.5s;
+	}
+	.pr-border .stars-container .star-4 {
+	  top:  55%;  left: 95%;  width: 13px;
+	  animation-delay: 0.7s;
+	}
+	.pr-border .stars-container .star-5 {
+	  top:  70%;  left: 40%;  width: 9px;
+	  animation-delay: 0.9s;
+	}
+	.pr-border .stars-container .star-6 {
+	  top:  -15%;  left: 70%;  width: 11px;
+	  animation-delay: 1.1s;
+	}
+	.pr-border .stars-container .star-7 {
+	  top:  55%;  left:  -5%;  width: 9px;
+	  animation-delay: 1.3s;
+	}
+	.pr-border .stars-container .star-8 {
+	  top:  85%;  left: 78%;  width: 7px;
+	  animation-delay: 1.5s;
+	}
+	.pr-border .stars-container .star-9 {
+	  top:  5%;  left: 50%;  width: 11px;
+	  animation-delay: 1.7s;
+	}
+	.pr-border .stars-container .star-10 {
+	  top: 85%;   left: 25%;  width: 12px;
+	  animation-delay: 1.9s;
+	}
+	/* Twinkle keyframes (flicker) */
+	@keyframes twinkle {
+	  0%, 100% {
+		opacity: 1;
+		transform: scale(1);
+	  }
+	  50% {
+		opacity: 0.4;
+		transform: scale(0.9);
+	  }
+	}
+	/* Example star path fill color (white-ish gold) */
+	.fil0 {
+	  fill: #FFF9E6;
+	}
+	.pr-labels .pr-text.smaller-pr {
+	  font-size: 0.6rem;  /* or 0.8rem, whichever you prefer */
+	  display: block;      /* ensure each label is on its own line */
+	  margin: 2px 0 0 0;   /* small spacing */
 	}
 
 	/* =========================================
@@ -1465,6 +1549,7 @@
           <option value="Work">🔵 Work</option>
           <option value="PublicHoliday">🟡 Public Holiday</option>
 		  <option value="Deadline">🔴 Deadline</option>
+		  <option value="School">🟠 School</option>
         </select>
       </div>
       <!-- Alert Text -->
@@ -1521,6 +1606,7 @@
           <option value="Work">🔵 Work</option>
           <option value="PublicHoliday">🟡 Public Holiday</option>
 		  <option value="Deadline">🔴 Deadline</option>
+		  <option value="School">🟠 School</option>
         </select>
       </div>
       <!-- Work Time Row -->
@@ -2963,7 +3049,8 @@
       "Birthday": "#FF69B4",
       "Work": "#1E90FF",
       "PublicHoliday": "#FFD700",
-	  "Deadline": "#C41E3A"
+	  "Deadline": "#C41E3A",
+	  "School": "#FF6600"
     };
     const presetWorkTimeMapping = {
       "morning-bg": "0600",
@@ -3368,57 +3455,45 @@
 		html += `<div class="hevy-workout-title">${escapeHtml(workout.title)}</div>`;
 
 		workout.exercises.forEach(exercise => {
-		  // Compare with prior best
-		  const { bestWeight, bestRepsForWeight } = getBestWeightAndRepsBeforeDate(exercise.title, dateKey);
+		  const prInfo = getGlobalPRsForExercise(exercise.title);
+		  const prTypesMap = {};
 
-		  // Check volume/ORM PR
-		  const prevMaxVolume = getMaxVolumeForExerciseBeforeDate(exercise.title, dateKey);
-		  const prevMaxOrm = getMaxOrmForExerciseBeforeDate(exercise.title, dateKey);
-
-		  let exerciseVolume = 0;
-		  let highestOrmForThisExercise = 0;
-		  exercise.sets.forEach(s => {
-			const setVolume = s.weight_kg * s.reps;
-			exerciseVolume += setVolume;
-			const setOrm = computeOrm(s.weight_kg, s.reps);
-			if (setOrm > highestOrmForThisExercise) {
-			  highestOrmForThisExercise = setOrm;
-			}
-		  });
-
-		  const isVolumePR = exerciseVolume > prevMaxVolume;
-		  const isOrmPR = highestOrmForThisExercise > prevMaxOrm;
-
-		  // Find any set that exceeds prior best
-		  const candidates = [];
-		  exercise.sets.forEach((s, i) => {
-			if (
-			  s.weight_kg > bestWeight ||
-			  (s.weight_kg === bestWeight && s.reps > bestRepsForWeight)
-			) {
-			  candidates.push({ index: i, weight: s.weight_kg, reps: s.reps });
-			}
-		  });
-		  let highlightSetIndex = -1;
-		  if (candidates.length > 0) {
-			const maxWeight = Math.max(...candidates.map(c => c.weight));
-			const topWeightSets = candidates.filter(c => c.weight === maxWeight);
-			const bestReps = Math.max(...topWeightSets.map(c => c.reps));
-			const highlight = topWeightSets.find(c => c.reps === bestReps);
-			highlightSetIndex = highlight.index;
+		  function markPRSet(record, prLabel) {
+			if (!record) return;
+			const key = `${record.dateKey}_${record.workoutId}_${record.setIndex}`;
+			if (!prTypesMap[key]) prTypesMap[key] = [];
+			prTypesMap[key].push(prLabel);
 		  }
+		  markPRSet(prInfo.weightPR, "Weight PR");
+		  markPRSet(prInfo.volumePR, "Volume PR");
+		  markPRSet(prInfo.ormPR,    "1RM PR");
 
 		  html += `<div class="hevy-exercise">`;
-		  html += `<div class="hevy-exercise-title" style="cursor:pointer;" data-exercise="${escapeHtml(exercise.title)}">${escapeHtml(exercise.title)}</div>`;
+		  html += `
+			<div class="hevy-exercise-title"
+				 style="cursor:pointer;"
+				 data-exercise="${escapeHtml(exercise.title)}">
+			  ${escapeHtml(exercise.title)}
+			</div>
+		  `;
 
-		  // Each set
+		  // Build the .hevy-sets
 		  html += `<div class="hevy-sets">`;
 		  exercise.sets.forEach((set, i) => {
+			const setId = `${dateKey}_${workout.id}_${i}`;
 			let setClasses = "hevy-set";
-			let prSpan = "";
-			if (i === highlightSetIndex) {
-			  setClasses += " pr-border";
-			  prSpan = ` <span class="pr-text">PR</span>`;
+			let prLabelHtml = "";
+
+			if (prTypesMap[setId]) {
+			  setClasses += " pr-border"; // highlight border
+			  // CHANGED: Build shimmering gold lines in smaller text
+			  const lines = prTypesMap[setId];
+			  prLabelHtml += `<div class="pr-labels">`;
+			  lines.forEach(line => {
+				// "pr-text" => old gold shimmer, "smaller-pr" => smaller size
+				prLabelHtml += `<div class="pr-text smaller-pr">${line}</div>`;
+			  });
+			  prLabelHtml += `</div>`;
 			}
 
 			html += `
@@ -3427,77 +3502,87 @@
 				   data-reps="${set.reps}"
 				   data-weight="${set.weight_kg}"
 				   data-date-key="${dateKey}">
+				
 				<span class="hevy-set-weight">${set.weight_kg}kg</span>
 				x
 				<span class="hevy-set-reps">${set.reps}</span>
-				${prSpan}
-				${set.rpe ? `<br>RPE: ${set.rpe}` : ""}
+
+				${setClasses.includes('pr-border') ? buildStarsContainer() : ''}
+
+				${prLabelHtml}
 			  </div>
 			`;
 		  });
-		  html += `</div>`; // end .hevy-sets
+		  html += `</div>`; // .hevy-sets
 
-		  // Volume line
-		  let volumeText = `Volume: ${exerciseVolume.toLocaleString()}kg`;
-		  if (isVolumePR) {
-			volumeText += ` <span class="pr-text">PR</span>`;
-		  }
+		  // (unchanged: volume and 1RM lines)
+		  let exerciseVolume = 0;
+		  exercise.sets.forEach(s => { exerciseVolume += s.weight_kg * s.reps; });
 		  html += `
 			<div class="hevy-exercise-volume"
 				 data-exercise="${escapeHtml(exercise.title)}"
 				 data-date-key="${dateKey}">
-			  ${volumeText}
+			  Volume: ${exerciseVolume.toLocaleString()}kg
 			</div>
 		  `;
 
-		  // One Rep Max line
-		  let ormText = "One Rep Max: N/A";
-		  if (highestOrmForThisExercise > 0) {
-			ormText = `One Rep Max: ${highestOrmForThisExercise.toFixed(1)}kg`;
-			if (isOrmPR) {
-			  ormText += ` <span class="pr-text">PR</span>`;
-			}
+		  let highestOrm = 0;
+		  exercise.sets.forEach(s => {
+			const thisOrm = computeOrm(s.weight_kg, s.reps);
+			if (thisOrm > highestOrm) highestOrm = thisOrm;
+		  });
+		  if (highestOrm > 0) {
+			html += `
+			  <div class="hevy-orm"
+				   data-exercise="${escapeHtml(exercise.title)}"
+				   data-date-key="${dateKey}">
+				One Rep Max: ${highestOrm.toFixed(1)}kg
+			  </div>
+			`;
+		  } else {
+			html += `
+			  <div class="hevy-orm"
+				   data-exercise="${escapeHtml(exercise.title)}"
+				   data-date-key="${dateKey}">
+				One Rep Max: N/A
+			  </div>
+			`;
 		  }
-		  html += `
-			<div class="hevy-orm"
-				 data-exercise="${escapeHtml(exercise.title)}"
-				 data-date-key="${dateKey}">
-			  ${ormText}
-			</div>
-		  `;
 
-		  html += `</div>`; // end .hevy-exercise
+		  html += `</div>`; // .hevy-exercise
 		});
 
-		// Summaries (total volume across entire workout)
+		// Summaries (unchanged)
 		let totalWeight = 0;
 		workout.exercises.forEach(ex => {
-		  ex.sets.forEach(s => {
-			totalWeight += (s.weight_kg * s.reps);
-		  });
+		  ex.sets.forEach(s => { totalWeight += (s.weight_kg * s.reps); });
 		});
-		html += `<div class="hevy-total" data-date-key="${dateKey}">Total Volume: ${totalWeight.toLocaleString()}kg</div>`;
+		html += `
+		  <div class="hevy-total" data-date-key="${dateKey}">
+			Total Volume: ${totalWeight.toLocaleString()}kg
+		  </div>
+		`;
 
-		html += `</div>`; // end .hevy-workout
+		html += `</div>`; // .hevy-workout
 	  });
 
 	  container.innerHTML = html;
 
-	  // Container-level click handlers
+	  // 7) Attach click handlers to container for sets, volumes, etc.
 	  container.onclick = (e) => {
-		// 1) If clicked on .hevy-set => open combined Weight & Rep progression
-		const setParent = e.target.closest(".hevy-set");
-		if (setParent) {
+		// a) If user clicked a .hevy-set => open the combined weight+rep progression
+		const setEl = e.target.closest(".hevy-set");
+		if (setEl) {
 		  e.stopPropagation();
-		  const exerciseName = setParent.getAttribute("data-exercise");
-		  const weight = Number(setParent.getAttribute("data-weight"));
-		  const reps = parseInt(setParent.getAttribute("data-reps"), 10);
-		  const dKey = setParent.getAttribute("data-date-key");
+		  const exerciseName = setEl.getAttribute("data-exercise");
+		  const weight = Number(setEl.getAttribute("data-weight"));
+		  const reps   = parseInt(setEl.getAttribute("data-reps"), 10);
+		  const dKey   = setEl.getAttribute("data-date-key");
 		  openExerciseProgressionModal(exerciseName, weight, reps, dKey);
 		  return;
 		}
 
-		// 2) Exercise volume chart
+		// b) If user clicked the exercise volume line => open the exercise volume chart
 		const volumeEl = e.target.closest(".hevy-exercise-volume");
 		if (volumeEl) {
 		  e.stopPropagation();
@@ -3507,7 +3592,7 @@
 		  return;
 		}
 
-		// 3) total volume chart
+		// c) If user clicked the workout total => open daily volume chart
 		const totalEl = e.target.closest(".hevy-total");
 		if (totalEl) {
 		  e.stopPropagation();
@@ -3516,7 +3601,7 @@
 		  return;
 		}
 
-		// 4) One Rep Max chart
+		// d) If user clicked the 1RM line => open 1RM progression chart
 		const ormEl = e.target.closest(".hevy-orm");
 		if (ormEl) {
 		  e.stopPropagation();
@@ -3526,7 +3611,7 @@
 		  return;
 		}
 
-		// 5) Exercise Summary
+		// e) If user clicked the exercise title => open the exercise summary modal
 		const exerciseTitleEl = e.target.closest(".hevy-exercise-title");
 		if (exerciseTitleEl) {
 		  e.stopPropagation();
@@ -3534,6 +3619,115 @@
 		  openExerciseSummaryModal(exerciseName);
 		  return;
 		}
+	  };
+
+	  /**
+	   * Build the star-sparkle container that we insert for PR sets.
+	   * This is the swirling/twinkling star pattern that surrounds the set.
+	   */
+	  function buildStarsContainer() {
+		  // Single star path
+		  const starSVG = `
+			<svg viewBox="0 0 784.11 815.53">
+			  <path 
+				d="M392.05 0c-20.9,210.08 -184.06,378.41 
+						  -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74
+						  20.93,-210.06 184.09,-378.37 392.05,-407.74
+						  -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+				class="fil0"/>
+			</svg>
+		  `;
+		  
+		  let html = `<div class="stars-container">`;
+		  for (let i = 1; i <= 10; i++) {
+			html += `
+			  <div class="star-${i}">
+				${starSVG}
+			  </div>
+			`;
+		  }
+		  html += `</div>`;
+		  return html;
+		}
+	}
+	
+
+	function getGlobalPRsForExercise(exerciseName) {
+	  let weightPR = null;  // will store a record { dateKey, workoutId, setIndex, weight, reps, volume, orm }
+	  let volumePR = null;
+	  let ormPR    = null;
+
+	  // Loop over all days in calendarData
+	  for (const dateKey of Object.keys(calendarData)) {
+		const dayObj = calendarData[dateKey];
+		if (!dayObj.hevyWorkouts) continue;
+
+		// Loop each workout
+		dayObj.hevyWorkouts.forEach(workout => {
+		  // Loop each exercise
+		  workout.exercises.forEach((ex) => {
+			if (ex.title !== exerciseName) return;
+			// We found the exercise, now check each set
+			ex.sets.forEach((set, idx) => {
+			  const setVolume = set.weight_kg * set.reps;
+			  const setOrm    = computeOrm(set.weight_kg, set.reps);
+
+			  // We'll build a "record" with enough info to identify and compare
+			  const record = {
+				dateKey,
+				workoutId: workout.id,
+				setIndex: idx,
+				weight: set.weight_kg,
+				reps: set.reps,
+				volume: setVolume,
+				orm: setOrm
+			  };
+
+			  // 1) Check if it’s the new Weight PR
+			  if (!weightPR) {
+				weightPR = record;
+			  } else {
+				if (record.weight > weightPR.weight) {
+				  weightPR = record;
+				} else if (record.weight === weightPR.weight) {
+				  // Tiebreaker: compare weight*reps
+				  const currentWR = record.weight * record.reps;
+				  const bestWR    = weightPR.weight * weightPR.reps;
+				  if (currentWR > bestWR) {
+					weightPR = record;
+				  }
+				  // If still tied, keep the older (no change)
+				}
+			  }
+
+			  // 2) Check if it’s the new Volume PR
+			  if (!volumePR) {
+				volumePR = record;
+			  } else {
+				if (record.volume > volumePR.volume) {
+				  volumePR = record;
+				}
+				// If tied, keep the first encountered => do nothing
+			  }
+
+			  // 3) Check if it’s the new 1RM PR
+			  if (!ormPR) {
+				ormPR = record;
+			  } else {
+				if (record.orm > ormPR.orm) {
+				  ormPR = record;
+				}
+				// If tied, keep the first encountered => do nothing
+			  }
+			});
+		  });
+		});
+	  }
+
+	  return {
+		weightPR,
+		volumePR,
+		ormPR
 	  };
 	}
 
@@ -4952,8 +5146,8 @@
 		  datasets: [{
 			data: data,
 			backgroundColor: backgroundColors,
-			borderWidth: 2,   // remove outline
-			spacing: 2,       // smaller gap between slices
+			borderWidth: 1,   // remove outline
+			spacing: 1,       // smaller gap between slices
 			offset: offsetArray
 		  }]
 		},
