@@ -5,7 +5,8 @@
 ![ui2](https://github.com/user-attachments/assets/44b37bdc-5b48-4258-9b7c-27c86b66a16f)
 ![ui3](https://github.com/user-attachments/assets/82e943ee-54f9-4c19-ae38-eb58a1acd97d)
 ![image](https://github.com/user-attachments/assets/e4bd00ed-ae97-4954-9ea0-48393c5cb101)
-![image](https://github.com/user-attachments/assets/43a7d14b-b810-4811-b71d-78a1d199089b)
+![image](https://github.com/user-attachments/assets/85bea331-c9c3-4f90-8917-dbf8244f0ac9)
+
 
 
 This is a Calendar application I created mostly for personal use. It's designed to cater to my abnormal work shifts, as well as to track my workouts and weight.
