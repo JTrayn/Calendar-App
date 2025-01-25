@@ -166,11 +166,7 @@
 	  opacity: 0.15;
 	  pointer-events: none;
 	}
-	.morning-bg { background-color: #FFAD66;}
-	.late-day-bg { background-color: #CC8A52;}
-	.afternoon-bg { background-color: #7AB6D9;}
-	.evening-bg { background-color: #4F7EAA;}
-	.night-bg { background-color: #5C4EA2;}
+
 	.off-bg {
 	  background-color: #3A3A3A;
 	  opacity: 0.8;
@@ -399,6 +395,7 @@
 	#singleOverlay .modal#singleModal {
 	  width: 420px;
 	  padding: 1rem;
+	  padding-bottom: 0rem;
 	  max-height: 80vh; /* Increased to restore taller appearance */
 	  overflow-y: auto;
 	  display: flex;
@@ -510,6 +507,7 @@
 	  grid-template-columns: 1fr auto 1fr;
 	  gap: 0.5rem;
 	  padding-top: 0.5rem;
+	  padding-bottom: 0.5rem;
 	  border-top: 1px solid #444;
 	  margin-top: auto;
 	  position: sticky;
@@ -1057,7 +1055,7 @@
 	  color: #888;
 	  font-size: 0.9rem;
 	  margin-top: 0.5rem;
-	  margin-bottom: 1.5rem;
+	  margin-bottom: 0.5rem;
 	  border-top: 1px solid #444;
 	  padding-top: 0.5rem;
 	}
@@ -1148,7 +1146,7 @@
 	   21) CUSTOM ALERT OVERLAY & MODAL
 	   ========================================= */
 	#customAlertOverlay {
-	  z-index: 999;
+	  z-index: 10000 !important;
 	}
 	.custom-alert-modal {
 	  background: #2D2D2D;
@@ -1246,6 +1244,11 @@
 	  border-bottom: 1px solid #555;
 	  color: #4DAAFF;
 	  font-size: 1.2rem;
+	  display: flex;
+	  align-items: center;
+	  gap: 1rem;
+	  padding: 0.5rem 0;
+	  font-weight: bold;
 	}
 	.key-stats-grid {
 	  display: grid;
@@ -1336,10 +1339,13 @@
 	  border-radius: 4px;
 	  cursor: pointer;
 	  transition: all 0.2s;
+	  font-size: 0.9rem; /* Slightly smaller font */
+	  order: 2; /* Ensures it stays on the right in flex container */
 	}
 	.compare-button:hover {
 	  background: #555;
 	  transform: translateY(-1px);
+	  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 	}
 	@keyframes glowPulse {
 	  0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);}
@@ -1441,6 +1447,229 @@
 	  background: #666;
 	}
 	
+	/* =========================================
+	   27) EXERCISE HISTORY MODAL
+	   ========================================= */	
+	#exerciseHistoryOverlay {
+	  z-index: 1005;
+	}
+	#exerciseHistoryModal {
+	  width: 500px; /* Match exercise summary width */
+	  max-height: 80vh;
+	}
+	#exerciseHistoryContent {
+	  max-height: 70vh;
+	  overflow-y: auto;
+	  padding-right: 10px;
+	}
+	/* Add scrollbar styling to match exercise summary */
+	#exerciseHistoryContent::-webkit-scrollbar {
+	  width: 8px;
+	}
+	#exerciseHistoryContent::-webkit-scrollbar-track {
+	  background: #2D2D2D;
+	  border-radius: 4px;
+	}
+	#exerciseHistoryContent::-webkit-scrollbar-thumb {
+	  background: #555;
+	  border-radius: 4px;
+	}
+	#exerciseHistoryContent::-webkit-scrollbar-thumb:hover {
+	  background: #666;
+	}
+	.exercise-history-entry {
+	  background: #393939;
+	  border-radius: 8px;
+	  padding: 1.2rem;
+	  margin-bottom: 1rem;
+	  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+	}
+	.exercise-history-date {
+	  font-size: 0.95rem;
+	  color: #4DAAFF;
+	  margin-bottom: 1rem;
+	  padding-bottom: 0.5rem;
+	  border-bottom: 1px solid #444;
+	}
+	.exercise-history-sets {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	  gap: 0.75rem;
+	}
+	#exerciseProgressOverlay {
+		z-index: 1006; /* Was 1001 */
+	}
+	#volumeOverlay {
+	  z-index: 1006; /* Was 1003 */
+	}
+	#ormProgressOverlay {
+	  z-index: 1006; /* Was 1004 */
+	}
+	#exerciseHistoryOverlay {
+	  z-index: 1005; /* Keep this lower than progress modals */
+	}
+	.exercise-history-header {
+	  margin-bottom: 1rem;
+	}
+	.exercise-history-subheader {
+	  color: #4DAAFF;
+	  font-size: 1.2rem;
+	  font-weight: 700;
+	  margin-top: 0.5rem;
+	  text-align: left;
+	}
+	
+	/* =========================================
+	  28) PRESET CREATION RELATED
+	  ========================================= */	
+	.preset-separator {
+	 width: 100%;
+	 height: 1px;
+	 background: #444;
+	 margin: 0.5rem 0;
+	 grid-column: 1 / -1;
+	}
+
+	#singleColorSwatchesContainer,
+	#multiColorSwatchesContainer {
+	 display: grid;
+	 grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+	 gap: 0.5rem;
+	 margin-top: 0.5rem;
+	}
+
+	#singleColorSwatchesContainer .add-preset-emoji {
+	 grid-column: 1 / -1;
+	 text-align: center;
+	 margin-top: 0rem;
+	 padding: 0.3rem;
+	 border: 1px solid #444;
+	 border-radius: 4px;
+	}
+
+	#singleColorSwatchesContainer .add-preset-emoji:hover {
+	 background-color: rgba(255, 255, 255, 0.4);
+	}
+
+	#presetCreationModal {
+	 width: 420px;
+	 max-height: 80vh;
+	 overflow-y: auto;
+	 display: flex;
+	 flex-direction: column;
+	 padding: 1rem;
+	}
+
+	#presetCreationModal h2 {
+	 font-size: 1.1rem;
+	 color: #EAEAEA;
+	 margin-bottom: 0rem;
+	 text-align: center;
+	 padding-bottom: 0.4rem;
+	 border-bottom: 1px solid #444;
+	}
+
+	#presetCreationModal .modal-row {
+	 display: flex;
+	 flex-direction: column;
+	 gap: 0.25rem;
+	 background: #393939;
+	 padding: 0.5rem;
+	 border-radius: 6px;
+	 margin-bottom: 0.35rem;
+	 transition: background-color 0.2s;
+	}
+
+	#presetCreationModal .modal-row:hover {
+	 background: #424242;
+	}
+
+	#presetCreationModal .modal-row label {
+	 font-size: 0.9rem;
+	 display: flex;
+	 align-items: center;
+	 gap: 0.5rem;
+	 justify-content: space-between;
+	}
+
+	#presetCreationModal input[type="text"],
+	#presetCreationModal input[type="color"],
+	#presetCreationModal select {
+	 width: 100%;
+	 padding: 0.35rem;
+	 background: #2D2D2D;
+	 border: 1px solid #555;
+	 border-radius: 4px;
+	 color: #EAEAEA;
+	 font-size: 0.8rem;
+	 transition: all 0.2s;
+	 height: 28px;
+	}
+
+	#presetCreationModal input[type="color"] {
+	 height: 40px;
+	 padding: 0;
+	 cursor: pointer;
+	}
+
+	#presetCreationModal input:hover,
+	#presetCreationModal select:hover {
+	 border-color: #666;
+	}
+
+	#presetCreationModal input:focus,
+	#presetCreationModal select:focus {
+	 border-color: #4DAAFF;
+	 outline: none;
+	 box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.2);
+	}
+
+	#presetCreationModal .modal-buttons {
+	 display: grid;
+	 grid-template-columns: 1fr 1fr;
+	 gap: 0.5rem;
+	 padding-top: 0.5rem;
+	 border-top: 1px solid #444;
+	 margin-top: auto;
+	}
+
+	#presetCreationModal button {
+	 padding: 0.5rem;
+	 border: 1px solid #555;
+	 border-radius: 4px;
+	 cursor: pointer;
+	 transition: all 0.2s;
+	}
+
+	#presetCreationModal #savePresetBtn {
+	 background: #4DAAFF;
+	 color: white;
+	}
+
+	#presetCreationModal #savePresetBtn:hover {
+	 background: #82c3ff;
+	}
+
+	#presetCreationModal #cancelPresetBtn {
+	 background: #444;
+	 color: #EEE;
+	}
+
+	#presetCreationModal #cancelPresetBtn:hover {
+	 background: #555;
+	}
+
+	.delete-preset-emoji:hover {
+	 background: rgba(255, 0, 0, 0.2);
+	 border-color: #ff4444;
+	}
+
+	.delete-preset-emoji[disabled] {
+	 opacity: 0.5;
+	 cursor: not-allowed;
+	 pointer-events: none;
+	}
+
   </style>
 </head>
 
@@ -1493,6 +1722,7 @@
           <span id="singleShiftMainLabel">Shift Presets:</span>
           <span class="shift-label-text" id="singleShiftLabelText">(none)</span>
           <span class="reset-emoji" data-field="shiftClass" title="Reset Shift">⟳</span>
+		  
         </label>
         <div class="color-swatches" id="singleColorSwatchesContainer"></div>
       </div>
@@ -1525,11 +1755,11 @@
       </div>
       <!-- Work Time – Dropdown -->
       <div class="modal-row">
-        <label>Work Time (HHMM)
-          <span class="reset-emoji" data-field="workTime" title="Reset Work Time">⟳</span>
-        </label>
-        <select id="singleWorkTimeSelect"></select>
-      </div>
+		  <label>Work Time (HHMM)
+			<span class="reset-emoji" data-field="workTime" title="Reset Work Time">⟳</span>
+		  </label>
+		  <input type="text" id="singleWorkTimeSelect" placeholder="e.g. 2100">
+		</div>
       <!-- Weight -->
       <div class="modal-row">
         <label>Weight (kg)
@@ -1612,7 +1842,7 @@
       <!-- Work Time Row -->
       <div class="modal-row" id="multiWorkTimeRow" style="display: none;">
         <label>Work Time (HHMM)</label>
-        <select id="multiWorkTimeSelect"></select>
+        <input type="text" id="multiWorkTimeInput" placeholder="e.g. 0900">
       </div>
       <!-- Value Row for other keys -->
       <div class="modal-row" id="multiValueRow" style="display:none;">
@@ -1843,7 +2073,86 @@
 	  </div>
 	</div>
 	
+	<div class="overlay" id="exerciseHistoryOverlay">
+	  <div class="modal" id="exerciseHistoryModal">
+		<h2>Exercise History</h2>
+		<div class="exercise-history-subheader" id="exerciseHistorySubheader"></div>
+		<div id="exerciseHistoryContent" class="exercise-summary-scroll">
+		  <!-- Content will be populated dynamically -->
+		</div>
+		<div class="modal-buttons">
+		  <button id="exerciseHistoryCloseBtn" title="Close Exercise History">Close</button>
+		</div>
+	  </div>
+	</div>
+		
+	<!-- Custom Preset Creation Modal -->
+	<div class="overlay" id="presetCreationOverlay">
+	  <div class="modal" id="presetCreationModal">
+		<h2>Create Custom Preset</h2>
+		
+		<div class="modal-row">
+		  <label>Preset Name</label>
+		  <input type="text" id="presetNameInput" placeholder="Morning Routine" required>
+		</div>
+		
+		<div class="modal-row">
+		  <label>Preset Color</label>
+		  <input type="color" id="presetColorInput" value="#4daaff">
+		</div>
 
+		<div class="modal-row">
+		  <label>Workout Type</label>
+		  <select id="presetWorkoutSelect">
+			<option value="Push">Push</option>
+			<option value="Pull">Pull</option>
+			<option value="Rest">Rest</option>
+			<option value="Upper">Upper</option>
+			<option value="Lower">Lower</option>
+			<option value="Chest">Chest</option>
+			<option value="Arms">Arms</option>
+			<option value="Shoulders">Shoulders</option>
+			<option value="Back">Back</option>
+			<option value="Legs">Legs</option>
+			<option value="Cardio">Cardio</option>
+			<option value="None">None</option>
+		  </select>
+		</div>
+
+		<div class="modal-row">
+		  <label>Gym Time (HHMM)</label>
+		  <input type="text" id="presetGymTime" placeholder="0900">
+		</div>
+
+		<div class="modal-row">
+		  <label>Work Time (HHMM)</label>
+		  <input type="text" id="presetWorkTime" placeholder="0900">
+		</div>
+
+		<div class="modal-row">
+		  <label>Alert Type</label>
+		  <select id="presetAlertType">
+			<option value="None">None</option>
+			<option value="Generic">Generic</option>
+			<option value="Birthday">Birthday</option>
+			<option value="Work">Work</option>
+			<option value="PublicHoliday">PublicHoliday</option>
+			<option value="Deadline">Deadline</option>
+			<option value="School">School</option>
+		  </select>
+		</div>
+
+		<div class="modal-row">
+		  <label>Alert Text</label>
+		  <input type="text" id="presetAlertText" placeholder="Special event">
+		</div>
+
+		<div class="modal-buttons">
+		  <button id="savePresetBtn">Save Preset</button>
+		  <button id="cancelPresetBtn">Cancel</button>
+		</div>
+	  </div>
+	</div>
   <script>
     /*
       =======================================
@@ -1853,6 +2162,212 @@
 
     const START_YEAR = 2020;
     const END_YEAR = 2030;
+	const LS_PRESETS_KEY = "customPresets";
+	
+	let customPresets = JSON.parse(localStorage.getItem(LS_PRESETS_KEY)) || [];
+	
+	const baseColorOptions = [
+	  { className: "off-bg", label: "Off (Weekly Leave)" },
+	  { className: "al-bg", label: "Annual Leave" },
+	  { 
+		className: "shift-0000",
+		label: "00:00",
+		data: {
+		  workTime: "0000",
+		  color: "#926E8E"
+		}
+	  },
+	  { 
+		className: "shift-0100",
+		label: "01:00",
+		data: {
+		  workTime: "0100",
+		  color: "#A47887"
+		}
+	  },
+	  { 
+		className: "shift-0200",
+		label: "02:00",
+		data: {
+		  workTime: "0200",
+		  color: "#B78381"
+		}
+	  },
+	  { 
+		className: "shift-0300",
+		label: "03:00",
+		data: {
+		  workTime: "0300",
+		  color: "#C8917A"
+		}
+	  },
+	  { 
+		className: "shift-0400",
+		label: "04:00",
+		data: {
+		  workTime: "0400",
+		  color: "#DB9C73"
+		}
+	  },
+	  { 
+		className: "shift-0500",
+		label: "05:00",
+		data: {
+		  workTime: "0500",
+		  color: "#EDA76D"
+		}
+	  },
+	  { 
+		className: "shift-0600",
+		label: "06:00",
+		data: {
+		  workTime: "0600",
+		  color: "#FFAD66"
+		}
+	  },
+	  { 
+		className: "shift-0700",
+		label: "07:00",
+		data: {
+		  workTime: "0700",
+		  color: "#EEAE74"
+		}
+	  },
+	  { 
+		className: "shift-0800",
+		label: "08:00",
+		data: {
+		  workTime: "0800",
+		  color: "#DEAF83"
+		}
+	  },
+	  { 
+		className: "shift-0900",
+		label: "09:00",
+		data: {
+		  workTime: "0900",
+		  color: "#D0A77D"
+		}
+	  },
+	  { 
+		className: "shift-1000",
+		label: "10:00",
+		data: {
+		  workTime: "1000",
+		  color: "#BDB2A0"
+		}
+	  },
+	  { 
+		className: "shift-1100",
+		label: "11:00",
+		data: {
+		  workTime: "1100",
+		  color: "#ACB3AE"
+		}
+	  },
+	  { 
+		className: "shift-1200",
+		label: "12:00",
+		data: {
+		  workTime: "1200",
+		  color: "#9CB4BC"
+		}
+	  },
+	  { 
+		className: "shift-1300",
+		label: "13:00",
+		data: {
+		  workTime: "1300",
+		  color: "#8CB4CA"
+		}
+	  },
+	  { 
+		className: "shift-1400",
+		label: "14:00",
+		data: {
+		  workTime: "1400",
+		  color: "#7AB6D9"
+		}
+	  },
+	  { 
+		className: "shift-1500",
+		label: "15:00",
+		data: {
+		  workTime: "1500",
+		  color: "#76A7D1"
+		}
+	  },
+	  { 
+		className: "shift-1600",
+		label: "16:00",
+		data: {
+		  workTime: "1600",
+		  color: "#7198C9"
+		}
+	  },
+	  { 
+		className: "shift-1700",
+		label: "17:00",
+		data: {
+		  workTime: "1700",
+		  color: "#6D8BC2"
+		}
+	  },
+	  { 
+		className: "shift-1800",
+		label: "18:00",
+		data: {
+		  workTime: "1800",
+		  color: "#697DBA"
+		}
+	  },
+	  { 
+		className: "shift-1900",
+		label: "19:00",
+		data: {
+		  workTime: "1900",
+		  color: "#627AA3"
+		}
+	  },
+	  { 
+		className: "shift-2000",
+		label: "20:00",
+		data: {
+		  workTime: "2000",
+		  color: "#6060AA"
+		}
+	  },
+	  { 
+		className: "shift-2100",
+		label: "21:00",
+		data: {
+		  workTime: "2100",
+		  color: "#5C4EA2"
+		}
+	  },
+	  { 
+		className: "shift-2200",
+		label: "22:00",
+		data: {
+		  workTime: "2200",
+		  color: "#6E599B"
+		}
+	  },
+	  { 
+		className: "shift-2300",
+		label: "23:00",
+		data: {
+		  workTime: "2300",
+		  color: "#806395"
+		}
+	  }
+	];
+	
+	let colorOptions = [
+      { className: "off-bg",       label: "Off (Weekly Leave)" },
+      { className: "al-bg",        label: "Annual Leave" }
+    ];
+	colorOptions = [...baseColorOptions, ...customPresets];
 
     const monthNames = [
       "January","February","March","April","May","June",
@@ -1860,7 +2375,6 @@
     ];
     const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
-    // We'll store multi-year data in localStorage
     const LS_CALENDAR_DATA_KEY = "multiYearCalendarData";
     const LS_DEFAULT_CYCLE_KEY = "defaultCycleMultiYear";
 
@@ -1896,6 +2410,11 @@
     let exerciseOrmProgressChart = null;
 	let currentVolumeDateKey = null;
 	let totalVolumeDistributionChart = null;
+	
+	// Preset creation related
+	let presetCreationModal;
+	let savePresetBtn;
+	let cancelPresetBtn;
 
     /*
       =======================================
@@ -1903,6 +2422,119 @@
       =======================================
     */
 	
+	function initializePresetCreation() {
+	    presetCreationModal = document.getElementById('presetCreationOverlay');
+	    savePresetBtn = document.getElementById('savePresetBtn');
+	    cancelPresetBtn = document.getElementById('cancelPresetBtn');
+
+	    // Save preset handler
+		savePresetBtn.addEventListener("click", function() {
+		  const presetName = document.getElementById("presetNameInput").value.trim();
+		  const presetColor = document.getElementById("presetColorInput").value;
+		  const gymTime = document.getElementById("presetGymTime").value.trim();
+		  const workTime = document.getElementById("presetWorkTime").value.trim();
+
+		  // Validation
+		  if (!presetName) {
+			showCustomAlert("Preset name is required!");
+			document.getElementById("presetNameInput").focus();
+			return;
+		  }
+		  
+		  if (gymTime && !validateTimeHHMM(gymTime)) {
+			showCustomAlert("Invalid Gym Time format! Use HHMM (e.g. 0900)");
+			return;
+		  }
+
+		  if (workTime && !validateTimeHHMM(workTime)) {
+			showCustomAlert("Invalid Work Time format! Use HHMM (e.g. 0900)");
+			return;
+		  }
+
+		  // Create new preset object
+		  const newPreset = {
+			className: `custom-${presetName.toLowerCase().replace(/[^a-z0-9]/gi, '-')}`,
+			label: presetName,
+			custom: true,
+			data: {
+			  color: presetColor,
+			  gym: document.getElementById('presetWorkoutSelect').value,
+			  gymTime: gymTime,
+			  workTime: workTime,
+			  alert: {
+				type: document.getElementById('presetAlertType').value,
+				text: document.getElementById('presetAlertText').value.trim()
+			  }
+			}
+		  };
+
+		  // Add to storage
+		  customPresets.push(newPreset);
+		  localStorage.setItem(LS_PRESETS_KEY, JSON.stringify(customPresets));
+
+		  // Update UI
+		  colorOptions = [...baseColorOptions, ...customPresets];
+		  buildColorSwatches();
+
+		  // Add dynamic CSS
+		  const style = document.createElement('style');
+		  style.textContent = `.${newPreset.className} { background-color: ${newPreset.data.color}; }`;
+		  document.head.appendChild(style);
+
+		  // Close modal
+		  presetCreationModal.classList.remove('active');
+		  showCustomAlert(`"${presetName}" preset created successfully!`);
+		});
+
+		  // Cancel handler
+		  cancelPresetBtn.addEventListener('click', function() {
+			presetCreationModal.classList.remove('active');
+		  });
+	}
+
+	// Initialize when DOM loads
+	document.addEventListener('DOMContentLoaded', initializePresetCreation);
+	
+	function addNewPreset() {
+	  // Reset form
+	  document.getElementById('presetNameInput').value = '';
+	  document.getElementById('presetColorInput').value = '#4daaff';
+	  document.getElementById('presetWorkoutSelect').value = 'None';
+	  document.getElementById('presetGymTime').value = '';
+	  document.getElementById('presetWorkTime').value = '';
+	  document.getElementById('presetAlertType').value = 'None';
+	  document.getElementById('presetAlertText').value = '';
+
+	  
+	  // Show modal
+	  presetCreationModal.classList.add('active');
+	}
+	
+	// Useful for Exercise History Modal
+	function getAllSessionsForExercise(exerciseName) {
+	  const sessions = [];
+	  
+	  Object.keys(calendarData).forEach(dateKey => {
+		const dayObj = calendarData[dateKey];
+		if (dayObj.hevyWorkouts) {
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(exercise => {
+			  if (exercise.title === exerciseName) {
+				sessions.push({
+				  date: parseDateKey(dateKey),
+				  dateKey,
+				  workout,
+				  exercise: exercise
+				});
+			  }
+			});
+		  });
+		}
+	  });
+	  
+	  // Sort by date descending (newest first)
+	  return sessions.sort((a, b) => b.date - a.date);
+	}
 	
 	// Assists with fixing 'null' weight values for bodyweight exercises like pull ups
 	const bodyweightExercises = new Set();
@@ -2057,7 +2689,6 @@
 		  }
 		}
 	  }
-
 	  // If no PR found in all workouts, return false
 	  return false;
 	}
@@ -2182,21 +2813,23 @@
       }
       return `${displayHour}:${minute}${period}`;
     }
-    function getDayData(dateKey) {
-      if(!calendarData[dateKey]) {
-        calendarData[dateKey] = {
-          shiftClass: "off-bg",
-          gym: "None",
-          gymTime: "",
-          workTime: "",
-          completed: false,
-          weight: null,
-          alert: null,
-          hevyWorkouts: []
-        };
-      }
-      return calendarData[dateKey];
-    }
+	function getDayData(dateKey) {
+	  if(!calendarData[dateKey]) {
+		calendarData[dateKey] = {
+		  shiftClass: "off-bg",
+		  gym: "None",
+		  gymTime: "",
+		  workTime: "",
+		  completed: false,
+		  weight: null,
+		  alert: null,
+		  hevyWorkouts: [],
+		  customColor: null // Add this new field
+		};
+	  }
+	  return calendarData[dateKey];
+	}
+	
     function setDayData(dateKey, newData) {
       if(!calendarData[dateKey]) {
         calendarData[dateKey] = {};
@@ -2486,6 +3119,7 @@
       }
       return grid;
     }
+	
     function blankCell(row, col) {
       const blank = document.createElement("div");
       blank.classList.add("day-cell", "faded");
@@ -2493,150 +3127,142 @@
       blank.setAttribute("data-col", col);
       return blank;
     }
-    function renderDayCell(dateObj, dayNum) {
-      const dateKey = getDateKey(dateObj);
-      const dayData = getDayData(dateKey);
+	
+	function renderDayCell(dateObj, dayNum) {
+	  const dateKey = getDateKey(dateObj);
+	  const dayData = getDayData(dateKey);
 
-      const cell = document.createElement("div");
-      cell.classList.add("day-cell");
+	  const cell = document.createElement("div");
+	  cell.classList.add("day-cell");
 
-      // Shift color or custom
-      if(dayData.workTime && !isOffDayShift(dayData.shiftClass)) {
-        // If user picked custom shift but has a known time color, use that:
-        if(dayData.shiftClass === "custom-shift" && workTimeColors[dayData.workTime]) {
-          cell.style.backgroundColor = workTimeColors[dayData.workTime];
-        } else if(workTimeColors[dayData.workTime]) {
-          cell.style.backgroundColor = workTimeColors[dayData.workTime];
-        } else {
-          cell.classList.add(dayData.shiftClass);
-        }
-      } else {
-        cell.classList.add(dayData.shiftClass);
-      }
+	  // Modified color handling
+	  if (dayData.shiftClass === "custom-color" && dayData.customColor) {
+		cell.style.backgroundColor = dayData.customColor;
+	  } else {
+		cell.classList.add(dayData.shiftClass);
+	  }
 
-      cell.setAttribute("data-date-key", dateKey);
+	  cell.setAttribute("data-date-key", dateKey);
 
-      if(isToday(dateObj)) cell.classList.add("today");
-      if(dayData.completed) cell.classList.add("completed");
-      if(selectedDates.has(dateKey)) cell.classList.add("selected");
+	  if (isToday(dateObj)) cell.classList.add("today");
+	  if (dayData.completed) cell.classList.add("completed");
+	  if (selectedDates.has(dateKey)) cell.classList.add("selected");
 
-      // Date number
-      const dateDiv = document.createElement("div");
-      dateDiv.classList.add("date-num");
-      dateDiv.textContent = dayNum;
-      cell.appendChild(dateDiv);
+	  // Date number
+	  const dateDiv = document.createElement("div");
+	  dateDiv.classList.add("date-num");
+	  dateDiv.textContent = dayNum;
+	  cell.appendChild(dateDiv);
 
-      // Free time
-      if(isToday(dateObj)) {
-        if(isOffDayShift(dayData.shiftClass)) {
-          const currentFreeTime = computeCurrentDayFreeTimeFull();
-          appendFreeTime(cell, currentFreeTime, true);
-        } else {
-          const freeTime = computeFreeTime(dateKey);
-          if(freeTime) appendFreeTime(cell, freeTime);
-        }
-      } else {
-        const freeTime = computeFreeTime(dateKey);
-        if(freeTime) appendFreeTime(cell, freeTime);
-      }
+	  // Free time
+	  if (isToday(dateObj)) {
+		if (isOffDayShift(dayData.shiftClass)) {
+		  const currentFreeTime = computeCurrentDayFreeTimeFull();
+		  appendFreeTime(cell, currentFreeTime, true);
+		} else {
+		  const freeTime = computeFreeTime(dateKey);
+		  if (freeTime) appendFreeTime(cell, freeTime);
+		}
+	  } else {
+		const freeTime = computeFreeTime(dateKey);
+		if (freeTime) appendFreeTime(cell, freeTime);
+	  }
 
-      // Refresh icon
-      const refreshDiv = document.createElement("div");
-      refreshDiv.classList.add("refresh-emoji");
-      refreshDiv.textContent = "⟳";
-      refreshDiv.addEventListener("mousedown", e => e.stopPropagation());
-      refreshDiv.addEventListener("click", e => {
-        e.stopPropagation();
-        if(!selectedDates.has(dateKey)){
-          selectedDates.clear();
-          selectedDates.add(dateKey);
-        }
-        openCustomizationPopup();
-      });
-      cell.appendChild(refreshDiv);
+	  // Refresh icon
+	  const refreshDiv = document.createElement("div");
+	  refreshDiv.classList.add("refresh-emoji");
+	  refreshDiv.textContent = "⟳";
+	  refreshDiv.addEventListener("mousedown", e => e.stopPropagation());
+	  refreshDiv.addEventListener("click", e => {
+		e.stopPropagation();
+		if (!selectedDates.has(dateKey)) {
+		  selectedDates.clear();
+		  selectedDates.add(dateKey);
+		}
+		openCustomizationPopup();
+	  });
+	  cell.appendChild(refreshDiv);
 
-      // Alerts
-      if(dayData.alert && dayData.alert.type && dayData.alert.type !== "None") {
-        const color = alertColors[dayData.alert.type] || "#32CD32";
-        const overlay = document.createElement("div");
-        overlay.classList.add("alert-overlay");
-        overlay.style.background = `linear-gradient(to bottom, ${color}CC, transparent 100%)`;
-        cell.appendChild(overlay);
+	  // Alerts
+	  if (dayData.alert && dayData.alert.type && dayData.alert.type !== "None") {
+		const color = alertColors[dayData.alert.type] || "#32CD32";
+		const overlay = document.createElement("div");
+		overlay.classList.add("alert-overlay");
+		overlay.style.background = `linear-gradient(to bottom, ${color}CC, transparent 100%)`;
+		cell.appendChild(overlay);
 
-        const alertSpan = document.createElement("div");
-        alertSpan.classList.add("alert-text");
-        alertSpan.textContent = dayData.alert.text || "";
-        cell.appendChild(alertSpan);
-      }
+		const alertSpan = document.createElement("div");
+		alertSpan.classList.add("alert-text");
+		alertSpan.textContent = dayData.alert.text || "";
+		cell.appendChild(alertSpan);
+	  }
 
-      // Weight display
-      const weightDiv = document.createElement("div");
-      weightDiv.classList.add("weight-display");
-      if(dayData.weight && parseFloat(dayData.weight) > 0) {
-        const arrow = getWeightArrow(dateKey);
-        let arrowColor = "#FFF";
-        if(arrow === "↑") arrowColor = "#FF4444";
-        if(arrow === "↓") arrowColor = "#66CC66";
+	  // Weight display
+	  const weightDiv = document.createElement("div");
+	  weightDiv.classList.add("weight-display");
+	  if (dayData.weight && parseFloat(dayData.weight) > 0) {
+		const arrow = getWeightArrow(dateKey);
+		let arrowColor = "#FFF";
+		if (arrow === "↑") arrowColor = "#FF4444";
+		if (arrow === "↓") arrowColor = "#66CC66";
 
-        const textSpan = `${dayData.weight}kg`;
-        if(arrow){
-          if(arrow === "↑"){
-            weightDiv.innerHTML = `<span style="font-size:120%; color:${arrowColor}; margin-right:0.3em;">${arrow}</span> ${textSpan}`;
-            weightDiv.style.color = arrowColor;
-          } else {
-            weightDiv.innerHTML = `${textSpan} <span style="font-size:120%; color:${arrowColor}; margin-left:0.3em;">${arrow}</span>`;
-            weightDiv.style.color = arrowColor;
-          }
-        } else {
-          weightDiv.textContent = textSpan;
-        }
-      }
-      cell.appendChild(weightDiv);
+		const textSpan = `${dayData.weight}kg`;
+		if (arrow) {
+		  if (arrow === "↑") {
+			weightDiv.innerHTML = `<span style="font-size:120%; color:${arrowColor}; margin-right:0.3em;">${arrow}</span> ${textSpan}`;
+			weightDiv.style.color = arrowColor;
+		  } else {
+			weightDiv.innerHTML = `${textSpan} <span style="font-size:120%; color:${arrowColor}; margin-left:0.3em;">${arrow}</span>`;
+			weightDiv.style.color = arrowColor;
+		  }
+		} else {
+		  weightDiv.textContent = textSpan;
+		}
+	  }
+	  cell.appendChild(weightDiv);
 
-      // Shift time
-      const shiftTimeDiv = document.createElement("div");
-      shiftTimeDiv.classList.add("shift-time-text");
-      if(dayData.shiftClass === "al-bg") {
-        shiftTimeDiv.textContent = "AL";
-      } else if(dayData.workTime && !isOffDayShift(dayData.shiftClass)) {
-        shiftTimeDiv.textContent = dayData.workTime;
-      }
-      cell.appendChild(shiftTimeDiv);
+	  // Shift time
+	  const shiftTimeDiv = document.createElement("div");
+	  shiftTimeDiv.classList.add("shift-time-text");
+	  if (dayData.shiftClass === "al-bg") {
+		shiftTimeDiv.textContent = "AL";
+	  } else if (dayData.workTime && !isOffDayShift(dayData.shiftClass)) {
+		shiftTimeDiv.textContent = dayData.workTime;
+	  }
+	  cell.appendChild(shiftTimeDiv);
 
-      // Workout info
-      const wDiv = document.createElement("div");
-      wDiv.classList.add("workout-info");
-      if(dayData.gym === "Rest") {
-        wDiv.textContent = "😴";
-        wDiv.style.opacity = "1.0";
-      }
-      else if(dayData.gym === "None") {
-        wDiv.textContent = "";
-      }
-      else {
-        wDiv.innerHTML = `${dayData.gym}: ${formatTimeForDisplay(dayData.gymTime || "")}`;
-      }
-      cell.appendChild(wDiv);
+	  // Workout info
+	  const wDiv = document.createElement("div");
+	  wDiv.classList.add("workout-info");
+	  if (dayData.gym === "Rest") {
+		wDiv.textContent = "😴";
+		wDiv.style.opacity = "1.0";
+	  } else if (dayData.gym === "None") {
+		wDiv.textContent = "";
+	  } else {
+		wDiv.innerHTML = `${dayData.gym}: ${formatTimeForDisplay(dayData.gymTime || "")}`;
+	  }
+	  cell.appendChild(wDiv);
 
-      // Completed badge
-      const badgeDiv = document.createElement("div");
-      badgeDiv.classList.add("completed-badge");
-      if(dayData.completed) badgeDiv.classList.add("enabled");
-      badgeDiv.addEventListener("mousedown", e => e.stopPropagation());
-      badgeDiv.addEventListener("click", (e) => {
-        e.stopPropagation();
-        setDayData(dateKey, { completed: !dayData.completed });
-        renderCalendar(currentYear, currentMonth);
-      });
-      badgeDiv.innerHTML = `
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-      `;
-      cell.appendChild(badgeDiv);
-	  
-      return cell;
-    }
+	  // Completed badge
+	  const badgeDiv = document.createElement("div");
+	  badgeDiv.classList.add("completed-badge");
+	  if (dayData.completed) badgeDiv.classList.add("enabled");
+	  badgeDiv.addEventListener("mousedown", e => e.stopPropagation());
+	  badgeDiv.addEventListener("click", (e) => {
+		e.stopPropagation();
+		setDayData(dateKey, { completed: !dayData.completed });
+		renderCalendar(currentYear, currentMonth);
+	  });
+	  badgeDiv.innerHTML = `
+		<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+		  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+		</svg>
+	  `;
+	  cell.appendChild(badgeDiv);
+
+	  return cell;
+	}
     function appendFreeTime(cell, freeTimeValue, isTodayOffShift) {
       const freeTimeDiv = document.createElement("div");
       freeTimeDiv.classList.add("free-time-text");
@@ -2689,163 +3315,175 @@
           (preset === "off-bg" || preset === "al-bg");
       }
     }
-    function openSingleModal() {
-      document.getElementById("singleOverlay").classList.add("active");
-      document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
+	function openSingleModal() {
+	  document.getElementById("singleOverlay").classList.add("active");
+	  document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
 
-      const [dKey] = [...selectedDates];
-      currentSingleDayKey = dKey;
-      const dayData = getDayData(dKey);
+	  const [dKey] = [...selectedDates];
+	  currentSingleDayKey = dKey;
+	  const dayData = getDayData(dKey);
 
-      // Date
-      const dateObj = parseDateKey(currentSingleDayKey);
-      const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
-      document.getElementById("singleModalDate").textContent = formattedDate;
+	  // Date
+	  const dateObj = parseDateKey(currentSingleDayKey);
+	  const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
+	  document.getElementById("singleModalDate").textContent = formattedDate;
 
-      // Shift Preset
-      document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(swatch => {
-        if(swatch.id === `swatch-single-${dayData.shiftClass}`){
-          swatch.classList.add("active");
-        } else {
-          swatch.classList.remove("active");
-        }
-      });
-      const preset = colorOptions.find(opt => opt.className === dayData.shiftClass);
-      document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "Custom Shift";
+	  // Shift Preset
+	  document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(swatch => {
+		if(swatch.id === `swatch-single-${dayData.shiftClass}`){
+		  swatch.classList.add("active");
+		} else {
+		  swatch.classList.remove("active");
+		}
+	  });
+	  const preset = colorOptions.find(opt => opt.className === dayData.shiftClass);
+	  document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "Custom Shift";
 
-      // Form values
-      document.getElementById("singleWorkoutTypeSelect").value = dayData.gym || "None";
-      document.getElementById("singleGymTimeInput").value = dayData.gymTime || "";
-      populateWorkTimeSelect("singleWorkTimeSelect", dayData.workTime);
-      document.getElementById("singleWeightInput").value = dayData.weight || "";
+	  // Form values
+	  document.getElementById("singleWorkoutTypeSelect").value = dayData.gym || "None";
+	  document.getElementById("singleGymTimeInput").value = dayData.gymTime || "";
+	  document.getElementById("singleWorkTimeSelect").value = dayData.workTime || ""; // Fixed
+	  document.getElementById("singleWeightInput").value = dayData.weight || "";
 
-      if(isOffDayShift(dayData.shiftClass)) {
-        document.getElementById("singleWorkTimeSelect").disabled = true;
-      } else {
-        document.getElementById("singleWorkTimeSelect").disabled = false;
-      }
+	  if(isOffDayShift(dayData.shiftClass)) {
+		document.getElementById("singleWorkTimeSelect").disabled = true;
+	  } else {
+		document.getElementById("singleWorkTimeSelect").disabled = false;
+	  }
 
-      // Alerts
-      let alertVal = "None";
-      if(dayData.alert && dayData.alert.type && dayData.alert.type !== "None") {
-        alertVal = dayData.alert.type;
-      }
-      document.getElementById("singleAlertTypeSelect").value = alertVal;
-      document.getElementById("singleAlertTextInput").value =
-        (dayData.alert && dayData.alert.text) ? dayData.alert.text : "";
-    }
+	  // Alerts
+	  let alertVal = "None";
+	  if(dayData.alert && dayData.alert.type && dayData.alert.type !== "None") {
+		alertVal = dayData.alert.type;
+	  }
+	  document.getElementById("singleAlertTypeSelect").value = alertVal;
+	  document.getElementById("singleAlertTextInput").value =
+		(dayData.alert && dayData.alert.text) ? dayData.alert.text : "";
+
+	  // Scroll to top
+	  document.getElementById("singleModal").scrollTop = 0;
+	}
+	
     function closeSingleModal() {
       document.getElementById("singleOverlay").classList.remove("active");
     }
-    function resetSingleField(fieldName) {
-      if(!currentSingleDayKey) return;
-      const defaultData = getDefaultDataForDate(currentSingleDayKey);
-      if(!defaultData) return;
+	function resetSingleField(fieldName) {
+	  if(!currentSingleDayKey) return;
+	  const defaultData = getDefaultDataForDate(currentSingleDayKey);
+	  if(!defaultData) return;
 
-      if(fieldName === "shiftClass"){
-        document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
-        const sw = document.getElementById("swatch-single-" + defaultData.shiftClass);
-        if(sw) sw.classList.add("active");
-        const preset = colorOptions.find(o => o.className === defaultData.shiftClass);
-        document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "(none)";
+	  if(fieldName === "shiftClass"){
+		document.querySelectorAll("#singleColorSwatchesContainer .swatch").forEach(s => s.classList.remove("active"));
+		const sw = document.getElementById("swatch-single-" + defaultData.shiftClass);
+		if(sw) sw.classList.add("active");
+		const preset = colorOptions.find(o => o.className === defaultData.shiftClass);
+		document.getElementById("singleShiftLabelText").textContent = preset ? preset.label : "(none)";
 
-        if(isOffDayShift(defaultData.shiftClass)) {
-          document.getElementById("singleWorkTimeSelect").disabled = true;
-        } else {
-          document.getElementById("singleWorkTimeSelect").disabled = false;
-        }
-      } else if(fieldName === "gym"){
-        document.getElementById("singleWorkoutTypeSelect").value = defaultData.gym;
-      } else if(fieldName === "gymTime"){
-        document.getElementById("singleGymTimeInput").value = defaultData.gymTime || "";
-      } else if(fieldName === "workTime"){
-        populateWorkTimeSelect("singleWorkTimeSelect", defaultData.workTime);
-      } else if(fieldName === "weight"){
-        document.getElementById("singleWeightInput").value = defaultData.weight || "";
-      } else if(fieldName === "alertType"){
-        if(defaultData.alert && defaultData.alert.type){
-          document.getElementById("singleAlertTypeSelect").value = defaultData.alert.type;
-        } else {
-          document.getElementById("singleAlertTypeSelect").value = "None";
-        }
-      } else if(fieldName === "alertText"){
-        if(defaultData.alert && defaultData.alert.text){
-          document.getElementById("singleAlertTextInput").value = defaultData.alert.text;
-        } else {
-          document.getElementById("singleAlertTextInput").value = "";
-        }
-      }
-    }
-    function saveSingleModal() {
-      if(!currentSingleDayKey) return;
-      const updates = {};
-      const activeSwatch = document.querySelector("#singleColorSwatchesContainer .swatch.active");
-      if(activeSwatch){
-        updates.shiftClass = activeSwatch.id.replace("swatch-single-", "");
-      }
-      updates.gym = document.getElementById("singleWorkoutTypeSelect").value.trim();
+		if(isOffDayShift(defaultData.shiftClass)) {
+		  document.getElementById("singleWorkTimeSelect").disabled = true;
+		} else {
+		  document.getElementById("singleWorkTimeSelect").disabled = false;
+		}
+	  } else if(fieldName === "gym"){
+		document.getElementById("singleWorkoutTypeSelect").value = defaultData.gym;
+	  } else if(fieldName === "gymTime"){
+		document.getElementById("singleGymTimeInput").value = defaultData.gymTime || "";
+	  } else if(fieldName === "workTime"){
+		document.getElementById("singleWorkTimeSelect").value = defaultData.workTime || "";
+	  } else if(fieldName === "weight"){
+		document.getElementById("singleWeightInput").value = defaultData.weight || "";
+	  } else if(fieldName === "alertType"){
+		if(defaultData.alert && defaultData.alert.type){
+		  document.getElementById("singleAlertTypeSelect").value = defaultData.alert.type;
+		} else {
+		  document.getElementById("singleAlertTypeSelect").value = "None";
+		}
+	  } else if(fieldName === "alertText"){
+		if(defaultData.alert && defaultData.alert.text){
+		  document.getElementById("singleAlertTextInput").value = defaultData.alert.text;
+		} else {
+		  document.getElementById("singleAlertTextInput").value = "";
+		}
+	  }
+	}
+	function saveSingleModal() {
+	  if(!currentSingleDayKey) return;
+	  const updates = {};
+	  const activeSwatch = document.querySelector("#singleColorSwatchesContainer .swatch.active");
+	  
+	  if(activeSwatch) {
+		updates.shiftClass = activeSwatch.id.replace("swatch-single-", "");
+	  }
+	  
+	  updates.gym = document.getElementById("singleWorkoutTypeSelect").value.trim();
+	  
+	  // Work time
+	  updates.workTime = document.getElementById("singleWorkTimeSelect").value.trim();
+	  if(updates.workTime) {
+		if(!validateTimeHHMM(updates.workTime)) {
+		  showCustomAlert("Invalid Work Time. Use HHMM format (e.g. 2100).");
+		  return;
+		}
+	  }
+	  
+	  // Gym time
+	  const newGymTime = document.getElementById("singleGymTimeInput").value.trim();
+	  if(newGymTime) {
+		if(!validateTimeHHMM(newGymTime)) {
+		  showCustomAlert("Invalid Gym Time. Use HHMM format (e.g. 2100).");
+		  return;
+		}
+		updates.gymTime = newGymTime;
+	  } else {
+		updates.gymTime = "";
+	  }
 
-      // Gym time
-      const newGymTime = document.getElementById("singleGymTimeInput").value.trim();
-      if(newGymTime){
-        if(!validateTimeHHMM(newGymTime)){
-          showCustomAlert("Invalid Gym Time. Use HHMM format (e.g. 2100).");
-          return;
-        }
-        updates.gymTime = newGymTime;
-      } else {
-        updates.gymTime = "";
-      }
+	  // Preset color
+	  if(activeSwatch && activeSwatch.id.includes('custom-')) {
+		const preset = colorOptions.find(p => p.className === activeSwatch.id.replace("swatch-single-", ""));
+		if(preset && preset.data) {
+		  updates.presetColor = preset.data.color;
+		}
+	  }
 
-      // Work time
-      if(updates.shiftClass === "off-bg" || updates.shiftClass === "al-bg"){
-        updates.workTime = "";
-      } else {
-        updates.workTime = document.getElementById("singleWorkTimeSelect").value;
-        const isPreset = Object.values(presetWorkTimeMapping).includes(updates.workTime);
-        if(!isPreset){
-          updates.shiftClass = "custom-shift";
-        }
-      }
+	  // Weight
+	  const weightVal = document.getElementById("singleWeightInput").value.trim();
+	  if(weightVal) {
+		let wf = parseFloat(weightVal);
+		if(isNaN(wf) || wf <= 0) {
+		  showCustomAlert("Invalid weight.");
+		  return;
+		}
+		updates.weight = wf.toFixed(1);
+	  } else {
+		updates.weight = null;
+	  }
 
-      // Weight
-      const weightVal = document.getElementById("singleWeightInput").value.trim();
-      if(weightVal){
-        let wf = parseFloat(weightVal);
-        if(isNaN(wf) || wf <= 0){
-          showCustomAlert("Invalid weight.");
-          return;
-        }
-        updates.weight = wf.toFixed(1);
-      } else {
-        updates.weight = null;
-      }
+	  // Alert
+	  const alertType = document.getElementById("singleAlertTypeSelect").value;
+	  const alertText = document.getElementById("singleAlertTextInput").value.trim();
+	  if(alertType && alertType !== "None") {
+		updates.alert = { type: alertType, text: alertText || "" };
+	  } else {
+		updates.alert = null;
+	  }
 
-      // Alert
-      const alertType = document.getElementById("singleAlertTypeSelect").value;
-      const alertText = document.getElementById("singleAlertTextInput").value.trim();
-      if(alertType && alertType !== "None"){
-        updates.alert = { type: alertType, text: alertText || "" };
-      } else {
-        updates.alert = null;
-      }
+	  setDayData(currentSingleDayKey, updates);
+	  closeSingleModal();
+	  renderCalendar(currentYear, currentMonth);
 
-      setDayData(currentSingleDayKey, updates);
-      closeSingleModal();
-      renderCalendar(currentYear, currentMonth);
-
-      // Pulse highlight
-      setTimeout(() => {
-        const cellElement = document.querySelector(`[data-date-key="${currentSingleDayKey}"]`);
-        if(cellElement){
-          cellElement.classList.add("cell-pulse");
-          cellElement.addEventListener("animationend", function handler(){
-            cellElement.classList.remove("cell-pulse");
-            cellElement.removeEventListener("animationend", handler);
-          });
-        }
-      }, 100);
-    }
+	  // Pulse highlight
+	  setTimeout(() => {
+		const cellElement = document.querySelector(`[data-date-key="${currentSingleDayKey}"]`);
+		if(cellElement) {
+		  cellElement.classList.add("cell-pulse");
+		  cellElement.addEventListener("animationend", function handler() {
+			cellElement.classList.remove("cell-pulse");
+			cellElement.removeEventListener("animationend", handler);
+		  });
+		}
+	  }, 100);
+	}
     function revertSingleModal() {
       if(!currentSingleDayKey) return;
       const defaultData = getDefaultDataForDate(currentSingleDayKey);
@@ -2910,119 +3548,125 @@
         document.getElementById("multiValueInput").placeholder = multiPlaceholderMap[key] || "";
       }
     }
-    function saveMultiModal() {
-      const key = document.getElementById("multiKeySelect").value;
-      if(!key){
-        showCustomAlert("Please select a key to change.");
-        return;
-      }
+	function saveMultiModal() {
+	  const key = document.getElementById("multiKeySelect").value;
+	  if (!key) {
+		showCustomAlert("Please select a key to change.");
+		return;
+	  }
 
-      let newValue;
-      if(key === "shiftClass"){
-        const swatch = document.querySelector("#multiColorSwatchesContainer .swatch.active");
-        if(!swatch){
-          showCustomAlert("Please choose a shift preset.");
-          return;
-        }
-        newValue = swatch.id.replace("swatch-multi-", "");
-      } else if(key === "alertType"){
-        newValue = document.getElementById("multiAlertTypeSelect").value;
-      } else if(key === "workTime"){
-        newValue = document.getElementById("multiWorkTimeSelect").value;
-      } else if(key === "gym"){
-        newValue = document.getElementById("multiWorkoutTypeSelect").value;
-      } else {
-        newValue = document.getElementById("multiValueInput").value.trim();
-      }
+	  let newValue;
+	  if (key === "shiftClass") {
+		const swatch = document.querySelector("#multiColorSwatchesContainer .swatch.active");
+		if (!swatch) {
+		  showCustomAlert("Please choose a shift preset.");
+		  return;
+		}
+		newValue = swatch.id.replace("swatch-multi-", "");
+		
+		// Find preset data
+		const preset = colorOptions.find(opt => opt.className === newValue);
+		
+		selectedDates.forEach(dKey => {
+		  const updated = {
+			shiftClass: newValue
+		  };
+		  
+		  // Apply all preset data if available
+		  if (preset && preset.data) {
+			updated.workTime = preset.data.workTime || "";
+			updated.gymTime = preset.data.gymTime || "";
+			updated.gym = preset.data.gym || "None";
+			updated.alert = preset.data.alert || null;
+		  } else if (newValue === "off-bg" || newValue === "al-bg") {
+			updated.workTime = "";
+		  }
+		  
+		  setDayData(dKey, updated);
+		});
+	  } else {
+		if (key === "alertType") {
+		  newValue = document.getElementById("multiAlertTypeSelect").value;
+		} else if (key === "workTime") {
+		  newValue = document.getElementById("multiWorkTimeInput").value.trim();
+		  if (newValue && !validateTimeHHMM(newValue)) {
+			showCustomAlert("Invalid time. Use HHMM format (e.g. 0900).");
+			return;
+		  }
+		} else if (key === "gym") {
+		  newValue = document.getElementById("multiWorkoutTypeSelect").value;
+		} else {
+		  newValue = document.getElementById("multiValueInput").value.trim();
+		}
 
-      if(key === "gymTime" && newValue){
-        if(!validateTimeHHMM(newValue)){
-          showCustomAlert("Invalid time. Use HHMM format (e.g. 0600).");
-          return;
-        }
-      }
-      if(key === "weight"){
-        if(newValue){
-          let wf = parseFloat(newValue);
-          if(isNaN(wf) || wf <= 0){
-            showCustomAlert("Invalid weight.");
-            return;
-          }
-          newValue = wf.toFixed(1);
-        } else {
-          newValue = null;
-        }
-      }
+		if (key === "gymTime" && newValue) {
+		  if (!validateTimeHHMM(newValue)) {
+			showCustomAlert("Invalid time. Use HHMM format (e.g. 0600).");
+			return;
+		  }
+		}
+		if (key === "weight") {
+		  if (newValue) {
+			let wf = parseFloat(newValue);
+			if (isNaN(wf) || wf <= 0) {
+			  showCustomAlert("Invalid weight.");
+			  return;
+			}
+			newValue = wf.toFixed(1);
+		  } else {
+			newValue = null;
+		  }
+		}
 
-      selectedDates.forEach(dKey => {
-        const updated = {};
+		selectedDates.forEach(dKey => {
+		  const updated = {};
 
-        if(key === "shiftClass"){
-          updated.shiftClass = newValue;
-          if(presetWorkTimeMapping[newValue]) {
-            updated.workTime = presetWorkTimeMapping[newValue];
-          } else if(newValue === "off-bg" || newValue === "al-bg"){
-            updated.workTime = "";
-          }
-        }
-        else if(key === "gym"){
-          updated.gym = newValue || "";
-        }
-        else if(key === "gymTime"){
-          updated.gymTime = newValue || "";
-        }
-        else if(key === "workTime"){
-          updated.workTime = newValue || "";
-          const found = Object.entries(presetWorkTimeMapping)
-                             .find(([preset, time]) => time === newValue);
-          if(found) {
-            updated.shiftClass = found[0];
-          } else {
-            updated.shiftClass = "custom-shift";
-          }
-        }
-        else if(key === "weight"){
-          updated.weight = newValue ? newValue : null;
-        }
-        else if(key === "alertType"){
-          if(newValue === "None"){
-            updated.alert = null;
-          } else {
-            updated.alert = { type: newValue, text: "" };
-          }
-        }
-        else if(key === "alertText"){
-          if(newValue){
-            if(calendarData[dKey].alert && calendarData[dKey].alert.type && calendarData[dKey].alert.type !== "None"){
-              updated.alert = { type: calendarData[dKey].alert.type, text: newValue };
-            } else {
-              updated.alert = { type: "Generic", text: newValue };
-            }
-          } else {
-            updated.alert = null;
-          }
-        }
+		  if (key === "gym") {
+			updated.gym = newValue || "";
+		  } else if (key === "gymTime") {
+			updated.gymTime = newValue || "";
+		  } else if (key === "workTime") {
+			updated.workTime = newValue || "";
+		  } else if (key === "weight") {
+			updated.weight = newValue ? newValue : null;
+		  } else if (key === "alertType") {
+			if (newValue === "None") {
+			  updated.alert = null;
+			} else {
+			  updated.alert = { type: newValue, text: "" };
+			}
+		  } else if (key === "alertText") {
+			if (newValue) {
+			  if (calendarData[dKey].alert && calendarData[dKey].alert.type && calendarData[dKey].alert.type !== "None") {
+				updated.alert = { type: calendarData[dKey].alert.type, text: newValue };
+			  } else {
+				updated.alert = { type: "Generic", text: newValue };
+			  }
+			} else {
+			  updated.alert = null;
+			}
+		  }
 
-        setDayData(dKey, updated);
-      });
+		  setDayData(dKey, updated);
+		});
+	  }
 
-      closeMultiModal();
-      renderCalendar(currentYear, currentMonth);
+	  closeMultiModal();
+	  renderCalendar(currentYear, currentMonth);
 
-      // Pulse highlight
-      setTimeout(() => {
-        selectedDates.forEach(dKey => {
-          const cellElement = document.querySelector(`[data-date-key="${dKey}"]`);
-          if(cellElement){
-            cellElement.classList.add("cell-pulse");
-            cellElement.addEventListener("animationend", function handler(){
-              cellElement.classList.remove("cell-pulse");
-              cellElement.removeEventListener("animationend", handler);
-            });
-          }
-        });
-      }, 100);
-    }
+	  setTimeout(() => {
+		selectedDates.forEach(dKey => {
+		  const cellElement = document.querySelector(`[data-date-key="${dKey}"]`);
+		  if (cellElement) {
+			cellElement.classList.add("cell-pulse");
+			cellElement.addEventListener("animationend", function handler() {
+			  cellElement.classList.remove("cell-pulse");
+			  cellElement.removeEventListener("animationend", handler);
+			});
+		  }
+		});
+	  }, 100);
+	}
     function revertMultiModal() {
       selectedDates.forEach(dKey => {
         const defaultData = getDefaultDataForDate(dKey);
@@ -3121,15 +3765,6 @@
       =   7) Shift Preset & Color Swatches  =
       =======================================
     */
-    const colorOptions = [
-      { className: "morning-bg",   label: "Day Shift" },
-      { className: "late-day-bg",  label: "Late-Day Shift" },
-      { className: "afternoon-bg", label: "Afternoon Shift" },
-      { className: "evening-bg",   label: "Evening Shift" },
-      { className: "night-bg",     label: "Night Shift" },
-      { className: "off-bg",       label: "Off (Weekly Leave)" },
-      { className: "al-bg",        label: "Annual Leave" }
-    ];
     const workTimeColors = {
       "0000": "#926E8E","0100": "#A47887","0200": "#B78381","0300": "#C8917A",
       "0400": "#DB9C73","0500": "#EDA76D","0600": "#FFAD66","0700": "#EEAE74",
@@ -3163,108 +3798,316 @@
       alertText: "e.g. My special event"
     };
 
-    function buildColorSwatches() {
-      function buildSet(containerId, prefix, labelTextId) {
-        const container = document.getElementById(containerId);
-        colorOptions.forEach(opt => {
-          const div = document.createElement("div");
-          div.id = `swatch-${prefix}-${opt.className}`;
-          div.className = `swatch ${opt.className}`;
-          div.title = opt.label;
-          div.addEventListener("mouseover", () => {
-            document.getElementById(labelTextId).textContent = opt.label;
-          });
-          div.addEventListener("mouseout", () => {
-            const activeSw = container.querySelector(".swatch.active");
-            if(activeSw) {
-              const className = activeSw.id.replace(`swatch-${prefix}-`, "");
-              const found = colorOptions.find(o => o.className === className);
-              document.getElementById(labelTextId).textContent = found ? found.label : "(none)";
-            } else {
-              document.getElementById(labelTextId).textContent = "(none)";
-            }
-          });
-          div.addEventListener("click", () => {
-            container.querySelectorAll(".swatch").forEach(s => s.classList.remove("active"));
-            div.classList.add("active");
-            if(prefix === "single") {
-              updateSingleWorkTimeState();
-              const thisPreset = div.id.replace("swatch-single-", "");
-              if(presetWorkTimeMapping[thisPreset]) {
-                document.getElementById("singleWorkTimeSelect").value = presetWorkTimeMapping[thisPreset];
-              }
-            } else if(prefix === "multi") {
-              if(document.getElementById("multiKeySelect").value === "shiftClass") {
-                const thisPreset = div.id.replace("swatch-multi-", "");
-                if(presetWorkTimeMapping[thisPreset]) {
-                  document.getElementById("multiWorkTimeSelect").value = presetWorkTimeMapping[thisPreset];
-                }
-              }
-            }
-          });
-          container.appendChild(div);
-        });
-      }
-      buildSet("singleColorSwatchesContainer", "single", "singleShiftLabelText");
-      buildSet("multiColorSwatchesContainer", "multi", "multiShiftLabelText");
-    }
+	function buildColorSwatches() {
+	  function buildSet(containerId, prefix, labelTextId) {
+		const container = document.getElementById(containerId);
+		container.innerHTML = '';
+
+		// Add base color options
+		baseColorOptions.forEach(opt => {
+		  const div = document.createElement("div");
+		  div.id = `swatch-${prefix}-${opt.className}`;
+		  div.className = `swatch ${opt.className}`;
+		  div.title = opt.label;
+
+		  div.addEventListener("mouseover", () => {
+			document.getElementById(labelTextId).textContent = opt.label;
+		  });
+
+		  div.addEventListener("mouseout", () => {
+			const activeSw = container.querySelector(".swatch.active");
+			if (activeSw) {
+			  const className = activeSw.id.replace(`swatch-${prefix}-`, "");
+			  const found = colorOptions.find(o => o.className === className);
+			  document.getElementById(labelTextId).textContent = found ? found.label : "(none)";
+			} else {
+			  document.getElementById(labelTextId).textContent = "(none)";
+			}
+		  });
+
+		  div.addEventListener("click", () => {
+			container.querySelectorAll(".swatch").forEach(s => s.classList.remove("active"));
+			div.classList.add("active");
+
+			// Handle delete button state
+			if (prefix === "single") {
+			  const deleteBtn = container.parentNode.querySelector(".delete-preset-emoji");
+			  const className = div.id.replace("swatch-single-", "");
+			  const preset = colorOptions.find(o => o.className === className);
+			  
+			  if (preset?.custom) {
+				deleteBtn.style.opacity = "1";
+				deleteBtn.style.pointerEvents = "auto";
+			  } else {
+				deleteBtn.style.opacity = "0.5";
+				deleteBtn.style.pointerEvents = "none";
+			  }
+			}
+
+			// Existing preset application logic
+			if (prefix === "single") {
+			  updateSingleWorkTimeState();
+			  const className = div.id.replace("swatch-single-", "");
+			  const preset = colorOptions.find(o => o.className === className);
+			  
+			  if (preset && preset.data) {
+				document.getElementById("singleWorkTimeSelect").value = preset.data.workTime || "";
+				document.getElementById("singleGymTimeInput").value = preset.data.gymTime || "";
+				document.getElementById("singleWorkoutTypeSelect").value = preset.data.gym || "None";
+				document.getElementById("singleAlertTypeSelect").value = preset.data.alert?.type || "None";
+				document.getElementById("singleAlertTextInput").value = preset.data.alert?.text || "";
+			  }
+			}
+		  });
+
+		  container.appendChild(div);
+		});
+
+		// Add separator if custom presets exist
+		if (customPresets.length > 0) {
+		  const separator = document.createElement("div");
+		  separator.className = "preset-separator";
+		  container.appendChild(separator);
+		}
+
+		// Add custom presets
+		customPresets.forEach(opt => {
+		  const div = document.createElement("div");
+		  div.id = `swatch-${prefix}-${opt.className}`;
+		  div.className = `swatch ${opt.className}`;
+		  div.title = opt.label;
+
+		  div.addEventListener("mouseover", () => {
+			document.getElementById(labelTextId).textContent = opt.label;
+		  });
+
+		  div.addEventListener("mouseout", () => {
+			const activeSw = container.querySelector(".swatch.active");
+			if (activeSw) {
+			  const className = activeSw.id.replace(`swatch-${prefix}-`, "");
+			  const found = colorOptions.find(o => o.className === className);
+			  document.getElementById(labelTextId).textContent = found ? found.label : "(none)";
+			} else {
+			  document.getElementById(labelTextId).textContent = "(none)";
+			}
+		  });
+
+		  div.addEventListener("click", () => {
+			container.querySelectorAll(".swatch").forEach(s => s.classList.remove("active"));
+			div.classList.add("active");
+
+			// Handle delete button state
+			if (prefix === "single") {
+			  const deleteBtn = container.parentNode.querySelector(".delete-preset-emoji");
+			  deleteBtn.style.opacity = "1";
+			  deleteBtn.style.pointerEvents = "auto";
+			}
+
+			// Existing preset application logic
+			if (prefix === "single") {
+			  updateSingleWorkTimeState();
+			  const className = div.id.replace("swatch-single-", "");
+			  const preset = colorOptions.find(o => o.className === className);
+			  
+			  if (preset && preset.data) {
+				document.getElementById("singleWorkTimeSelect").value = preset.data.workTime || "";
+				document.getElementById("singleGymTimeInput").value = preset.data.gymTime || "";
+				document.getElementById("singleWorkoutTypeSelect").value = preset.data.gym || "None";
+				document.getElementById("singleAlertTypeSelect").value = preset.data.alert?.type || "None";
+				document.getElementById("singleAlertTextInput").value = preset.data.alert?.text || "";
+			  }
+			}
+		  });
+
+		  container.appendChild(div);
+		});
+
+		// Add buttons only to single modal
+		if (prefix === "single") {
+		  const buttonContainer = document.createElement("div");
+		  buttonContainer.style.cssText = `
+			grid-column: 1 / -1;
+			display: flex;
+			gap: 0.5rem;
+			justify-content: center;
+			margin-top: 0.5rem;
+		  `;
+
+		  // Add Preset Button
+		  const addBtn = document.createElement("div");
+		  addBtn.className = "add-preset-emoji";
+		  addBtn.innerHTML = `<span>➕</span><span>Add Preset</span>`;
+		  addBtn.style.cssText = `
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.75rem;
+			border: 1px solid #444;
+			border-radius: 6px;
+			cursor: pointer;
+			transition: all 0.2s;
+			background: rgba(255, 255, 255, 0.05);
+		  `;
+		  addBtn.addEventListener("mouseenter", () => {
+			addBtn.style.background = "rgba(255, 255, 255, 0.1)";
+			addBtn.style.borderColor = "#666";
+		  });
+		  addBtn.addEventListener("mouseleave", () => {
+			addBtn.style.background = "rgba(255, 255, 255, 0.05)";
+			addBtn.style.borderColor = "#444";
+		  });
+		  addBtn.addEventListener("click", addNewPreset);
+
+		  // Delete Preset Button
+		  const deleteBtn = document.createElement("div");
+		  deleteBtn.className = "delete-preset-emoji";
+		  deleteBtn.innerHTML = `<span>🗑️</span><span>Delete Preset</span>`;
+		  deleteBtn.style.cssText = `
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.75rem;
+			border: 1px solid #444;
+			border-radius: 6px;
+			cursor: pointer;
+			transition: all 0.2s;
+			background: rgba(255, 255, 255, 0.05);
+			opacity: 0.5;
+			pointer-events: none;
+		  `;
+		  deleteBtn.addEventListener("mouseenter", () => {
+			if (deleteBtn.style.pointerEvents !== "none") {
+			  deleteBtn.style.background = "rgba(255, 255, 255, 0.1)";
+			  deleteBtn.style.borderColor = "#666";
+			}
+		  });
+		  deleteBtn.addEventListener("mouseleave", () => {
+			deleteBtn.style.background = "rgba(255, 255, 255, 0.05)";
+			deleteBtn.style.borderColor = "#444";
+		  });
+		  deleteBtn.addEventListener("click", handleDeletePreset);
+
+		  buttonContainer.appendChild(addBtn);
+		  buttonContainer.appendChild(deleteBtn);
+		  container.appendChild(buttonContainer);
+		}
+	  }
+
+	  buildSet("singleColorSwatchesContainer", "single", "singleShiftLabelText");
+	  buildSet("multiColorSwatchesContainer", "multi", "multiShiftLabelText");
+	}
+	
+	function handleDeletePreset() {
+	  const activeSwatch = document.querySelector("#singleColorSwatchesContainer .swatch.active");
+	  if (!activeSwatch) return;
+
+	  const className = activeSwatch.id.replace("swatch-single-", "");
+	  const preset = customPresets.find(p => p.className === className);
+	  
+	  if (preset) {
+		showCustomConfirm(`Delete preset "${preset.label}"?`, () => {
+		  // Store color before deletion
+		  const deletedColor = preset.data.color;
+		  
+		  // Update all cells using this preset
+		  Object.keys(calendarData).forEach(dateKey => {
+			if (calendarData[dateKey].shiftClass === className) {
+			  calendarData[dateKey].shiftClass = "custom-color";
+			  calendarData[dateKey].customColor = deletedColor; // Add new field
+			}
+		  });
+
+		  // Remove from presets
+		  customPresets = customPresets.filter(p => p.className !== className);
+		  localStorage.setItem(LS_PRESETS_KEY, JSON.stringify(customPresets));
+		  
+		  // Remove associated CSS
+		  document.querySelector(`style[data-preset="${className}"]`)?.remove();
+		  
+		  // Update UI
+		  colorOptions = [...baseColorOptions, ...customPresets];
+		  buildColorSwatches();
+		  renderCalendar(currentYear, currentMonth); // Refresh calendar
+		  showCustomAlert("Preset deleted successfully");
+		});
+	  }
+	}
 
     /*
       =======================================
       =   8) Data Backup (Load/Save JSON)   =
       =======================================
     */
-    function saveData() {
-      const dataToSave = {
-        calendarData: calendarData,
-        defaultCycle: defaultCycleData
-      };
-      const dataStr = JSON.stringify(dataToSave, null, 2);
-      const blob = new Blob([dataStr], { type: "application/json" });
-      const url  = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = 'calendar-data-backup.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    function loadData(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const importedData = JSON.parse(e.target.result);
-          if(!importedData || typeof importedData !== 'object'){
-            showCustomAlert("Invalid JSON data.");
-            return;
-          }
-          if(!importedData.calendarData || typeof importedData.calendarData !== 'object'){
-            showCustomAlert("Invalid or missing calendarData in JSON.");
-            return;
-          }
-          calendarData = importedData.calendarData;
-          localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+	function saveData() {
+	  const dataToSave = {
+		calendarData: calendarData,
+		defaultCycle: defaultCycleData,
+		customPresets: customPresets
+	  };
+	  const dataStr = JSON.stringify(dataToSave, null, 2);
+	  const blob = new Blob([dataStr], { type: "application/json" });
+	  const url = URL.createObjectURL(blob);
+	  const a = document.createElement("a");
+	  a.href = url;
+	  a.download = 'calendar-data-backup.json';
+	  a.click();
+	  URL.revokeObjectURL(url);
+	}
+	function loadData(file) {
+	  const reader = new FileReader();
+	  reader.onload = (e) => {
+		try {
+		  const importedData = JSON.parse(e.target.result);
+		  if(!importedData || typeof importedData !== 'object') {
+			showCustomAlert("Invalid JSON data.");
+			return;
+		  }
+		  if(!importedData.calendarData || typeof importedData.calendarData !== 'object') {
+			showCustomAlert("Invalid or missing calendarData in JSON.");
+			return;
+		  }
+		  
+		  calendarData = importedData.calendarData;
+		  localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
 
-          if(importedData.defaultCycle && typeof importedData.defaultCycle === 'object'){
-            defaultCycleData = importedData.defaultCycle;
-            localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
-          } else {
-            defaultCycleData = {
-              pattern: [],
-              startDate: null
-            };
-            localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
-          }
+		  if(importedData.defaultCycle && typeof importedData.defaultCycle === 'object') {
+			defaultCycleData = importedData.defaultCycle;
+			localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+		  } else {
+			defaultCycleData = {
+			  pattern: [],
+			  startDate: null
+			};
+			localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+		  }
 
-          selectedDates.clear();
-          renderCalendar(currentYear, currentMonth);
-          updateCounters();
-          showCustomAlert("Data loaded successfully!");
-        } catch(err){
-          showCustomAlert("Failed to parse JSON file. Please ensure it's valid.");
-        }
-      };
-      reader.readAsText(file);
-    }
+		  if(importedData.customPresets) {
+			customPresets = importedData.customPresets;
+			localStorage.setItem(LS_PRESETS_KEY, JSON.stringify(customPresets));
+			colorOptions = [...baseColorOptions, ...customPresets];
+			
+			// Add CSS for custom preset colors
+			customPresets.forEach(preset => {
+			  if(preset.data && preset.data.color) {
+				const style = document.createElement('style');
+				style.textContent = `.${preset.className} { background-color: ${preset.data.color}; }`;
+				document.head.appendChild(style);
+			  }
+			});
+			
+			buildColorSwatches();
+		  }
+
+		  selectedDates.clear();
+		  renderCalendar(currentYear, currentMonth);
+		  updateCounters();
+		  showCustomAlert("Data loaded successfully!");
+		} catch(err) {
+		  showCustomAlert("Failed to parse JSON file. Please ensure it's valid.");
+		}
+	  };
+	  reader.readAsText(file);
+	}
 
     /*
       =======================================
@@ -3741,12 +4584,10 @@
 		  return html;
 	}
 	
-
 	function getGlobalPRsForExercise(exerciseName) {
 	  let weightPR = null;  // will store a record { dateKey, workoutId, setIndex, weight, reps, volume, orm }
 	  let volumePR = null;
 	  let ormPR    = null;
-
 	  // Loop over all days in calendarData
 	  for (const dateKey of Object.keys(calendarData)) {
 		const dayObj = calendarData[dateKey];
@@ -3772,7 +4613,6 @@
 				volume: setVolume,
 				orm: setOrm
 			  };
-
 			  // 1) Check if it’s the new Weight PR
 			  if (!weightPR) {
 				weightPR = record;
@@ -3789,7 +4629,6 @@
 				  // If still tied, keep the older (no change)
 				}
 			  }
-
 			  // 2) Check if it’s the new Volume PR
 			  if (!volumePR) {
 				volumePR = record;
@@ -3799,7 +4638,6 @@
 				}
 				// If tied, keep the first encountered => do nothing
 			  }
-
 			  // 3) Check if it’s the new 1RM PR
 			  if (!ormPR) {
 				ormPR = record;
@@ -3813,7 +4651,6 @@
 		  });
 		});
 	  }
-
 	  return {
 		weightPR,
 		volumePR,
@@ -4603,79 +5440,89 @@
       =======================================
       Only applies to the *currentYear*.
     */
-    function populateEntireCalendar() {
-      // Turn the currently selectedDates into a cycle pattern
-      // We'll then fill out *only the current year* from Jan 1 to Dec 31
-      const cycleDataArray = Array.from(selectedDates).sort();
-      if(cycleDataArray.length === 0){
-        showCustomAlert("No cycle days selected.");
-        return;
-      }
+	function populateEntireCalendar() {
+	 // Turn the currently selectedDates into a cycle pattern
+	 // We'll then fill out *only the current year* from Jan 1 to Dec 31
+	 const cycleDataArray = Array.from(selectedDates).sort();
+	 if(cycleDataArray.length < 2){
+	   showCustomAlert("Select at least two days to create a cycle pattern.");
+	   return;
+	 }
 
-      const sortedCycle = cycleDataArray.map(k => parseDateKey(k)).sort((a,b) => a - b);
-      const sortedCycleKeys = sortedCycle.map(d => getDateKey(d));
-      const cyclePattern = sortedCycleKeys.map(k => ({ ...getDayData(k) }));
-      const patternLength = cyclePattern.length;
-      const startDate = new Date(sortedCycle[0].getTime());
+	 // Check for consecutive days
+	 const firstDate = parseDateKey(cycleDataArray[0]);
+	 const lastDate = parseDateKey(cycleDataArray[cycleDataArray.length - 1]);
+	 const daysBetween = Math.floor((lastDate - firstDate) / MS_IN_DAY) + 1;
+	 
+	 if(daysBetween !== cycleDataArray.length) {
+	   showCustomAlert("Selected days must be consecutive with no gaps.");
+	   return;
+	 }
 
-      // We'll only overwrite the currentYear
-      const firstOfYear = new Date(currentYear, 0, 1);
-      const lastOfYear = new Date(currentYear, 11, 31);
+	 const sortedCycle = cycleDataArray.map(k => parseDateKey(k)).sort((a,b) => a - b);
+	 const sortedCycleKeys = sortedCycle.map(d => getDateKey(d));
+	 const cyclePattern = sortedCycleKeys.map(k => ({ ...getDayData(k) }));
+	 const patternLength = cyclePattern.length;
+	 const startDate = new Date(sortedCycle[0].getTime());
 
-      // Step 1: Fill backwards within currentYear
-      let currentDate = new Date(startDate.getTime());
-      let cycleIndex = cyclePattern.length;
-      while(currentDate >= firstOfYear) {
-        currentDate.setDate(currentDate.getDate() -1);
-        cycleIndex = (cycleIndex -1 + patternLength) % patternLength;
-        if(currentDate < firstOfYear) break;
-        const dateKey = getDateKey(currentDate);
-        const cycleData = cyclePattern[cycleIndex];
-        calendarData[dateKey] = {
-          shiftClass: cycleData.shiftClass,
-          gym: cycleData.gym,
-          gymTime: cycleData.gymTime,
-          workTime: cycleData.workTime,
-          completed: cycleData.completed,
-          weight: cycleData.weight,
-          alert: cycleData.alert,
-          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
-        };
-      }
+	 // We'll only overwrite the currentYear
+	 const firstOfYear = new Date(currentYear, 0, 1);
+	 const lastOfYear = new Date(currentYear, 11, 31);
 
-      // Step 2: Fill forwards within currentYear
-      currentDate = new Date(startDate.getTime());
-      cycleIndex = 0;
-      while(currentDate <= lastOfYear) {
-        const dateKey = getDateKey(currentDate);
-        const cycleData = cyclePattern[cycleIndex % cyclePattern.length];
-        calendarData[dateKey] = {
-          shiftClass: cycleData.shiftClass,
-          gym: cycleData.gym,
-          gymTime: cycleData.gymTime,
-          workTime: cycleData.workTime,
-          completed: cycleData.completed,
-          weight: cycleData.weight,
-          alert: cycleData.alert,
-          hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
-        };
-        cycleIndex++;
-        currentDate.setDate(currentDate.getDate() + 1);
-        if(currentDate > lastOfYear) break;
-      }
+	 // Step 1: Fill backwards within currentYear
+	 let currentDate = new Date(startDate.getTime());
+	 let cycleIndex = cyclePattern.length;
+	 while(currentDate >= firstOfYear) {
+	   currentDate.setDate(currentDate.getDate() -1);
+	   cycleIndex = (cycleIndex -1 + patternLength) % patternLength;
+	   if(currentDate < firstOfYear) break;
+	   const dateKey = getDateKey(currentDate);
+	   const cycleData = cyclePattern[cycleIndex];
+	   calendarData[dateKey] = {
+		 shiftClass: cycleData.shiftClass,
+		 gym: cycleData.gym,
+		 gymTime: cycleData.gymTime,
+		 workTime: cycleData.workTime,
+		 completed: cycleData.completed,
+		 weight: cycleData.weight,
+		 alert: cycleData.alert,
+		 hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
+	   };
+	 }
 
-      // We'll store that cycle as the default pattern
-      defaultCycleData = {
-        pattern: [...cyclePattern],
-        startDate: getDateKey(sortedCycle[0])
-      };
-      localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
-      localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+	 // Step 2: Fill forwards within currentYear
+	 currentDate = new Date(startDate.getTime());
+	 cycleIndex = 0;
+	 while(currentDate <= lastOfYear) {
+	   const dateKey = getDateKey(currentDate);
+	   const cycleData = cyclePattern[cycleIndex % cyclePattern.length];
+	   calendarData[dateKey] = {
+		 shiftClass: cycleData.shiftClass,
+		 gym: cycleData.gym,
+		 gymTime: cycleData.gymTime,
+		 workTime: cycleData.workTime,
+		 completed: cycleData.completed,
+		 weight: cycleData.weight,
+		 alert: cycleData.alert,
+		 hevyWorkouts: cycleData.hevyWorkouts ? [...cycleData.hevyWorkouts] : []
+	   };
+	   cycleIndex++;
+	   currentDate.setDate(currentDate.getDate() + 1);
+	   if(currentDate > lastOfYear) break;
+	 }
 
-      selectedDates.clear();
-      renderCalendar(currentYear, currentMonth);
-      showCustomAlert("Current year's calendar has been populated with your custom cycle.");
-    }
+	 // We'll store that cycle as the default pattern
+	 defaultCycleData = {
+	   pattern: [...cyclePattern],
+	   startDate: getDateKey(sortedCycle[0])
+	 };
+	 localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+	 localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+
+	 selectedDates.clear();
+	 renderCalendar(currentYear, currentMonth);
+	 showCustomAlert("Current year's calendar has been populated with your custom cycle.");
+	}
     function updatePopulateCalendarButtonState() {
       const btn = document.getElementById("populateCalendarBtn");
       if(selectedDates.size >=2){
@@ -4695,40 +5542,45 @@
       =    Clear Calendar Function          =
       =======================================
     */
-    function clearCalendar() {
-      showCustomConfirm("Are you sure you want to clear the entire calendar? This will remove all your data and set all days to 'None'. This action cannot be undone.", () => {
-        // We'll wipe *all years* from START_YEAR..END_YEAR,
-        // effectively resetting everything to default blank
-        for(let year = START_YEAR; year <= END_YEAR; year++){
-          const startDate = new Date(year, 0, 1);
-          const endDate = new Date(year, 11, 31);
-          const totalDays = Math.floor((endDate - startDate) / MS_IN_DAY) + 1;
+	function clearCalendar() {
+	  showCustomConfirm("Are you sure you want to clear the entire calendar? This will remove all your data and set all days to 'None'. This action cannot be undone.", () => {
+		// Clear calendar data
+		for(let year = START_YEAR; year <= END_YEAR; year++) {
+		  const startDate = new Date(year, 0, 1);
+		  const endDate = new Date(year, 11, 31);
+		  const totalDays = Math.floor((endDate - startDate) / MS_IN_DAY) + 1;
 
-          for(let i = 0; i < totalDays; i++){
-            const currentDate = new Date(startDate.getTime() + i * MS_IN_DAY);
-            const dateKey = getDateKey(currentDate);
-            calendarData[dateKey] = {
-              shiftClass: "off-bg",
-              gym: "None",
-              gymTime: "",
-              workTime: "",
-              completed: false,
-              weight: null,
-              alert: null,
-              hevyWorkouts: []
-            };
-          }
-        }
+		  for(let i = 0; i < totalDays; i++) {
+			const currentDate = new Date(startDate.getTime() + i * MS_IN_DAY);
+			const dateKey = getDateKey(currentDate);
+			calendarData[dateKey] = {
+			  shiftClass: "off-bg",
+			  gym: "None",
+			  gymTime: "",
+			  workTime: "",
+			  completed: false,
+			  weight: null,
+			  alert: null,
+			  hevyWorkouts: []
+			};
+		  }
+		}
 
-        localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
-        defaultCycleData = { pattern: [], startDate: null };
-        localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+		// Clear presets
+		customPresets = [];
+		localStorage.setItem(LS_PRESETS_KEY, JSON.stringify(customPresets));
+		colorOptions = [...baseColorOptions];
 
-        selectedDates.clear();
-        renderCalendar(currentYear, currentMonth);
-        showCustomAlert("Calendar has been cleared. All days are now set to 'None'.");
-      });
-    }
+		localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
+		defaultCycleData = { pattern: [], startDate: null };
+		localStorage.setItem(LS_DEFAULT_CYCLE_KEY, JSON.stringify(defaultCycleData));
+
+		selectedDates.clear();
+		buildColorSwatches(); // Rebuild swatches to reflect cleared presets
+		renderCalendar(currentYear, currentMonth);
+		showCustomAlert("Calendar has been cleared. All days are now set to 'None'.");
+	  });
+	}
 
     /*
       =======================================
@@ -4860,6 +5712,11 @@
 	  let html = `
 		<div class="exercise-summary-header">
 		  ${escapeHtml(exerciseName)}
+		  <button class="compare-button" 
+          style="margin: auto;"
+          onclick="openExerciseHistoryModal('${escapeHtml(exerciseName)}')">
+			Exercise History
+		  </button>
 		</div>
 
 		<div class="key-stats-grid">
@@ -5037,6 +5894,139 @@
 		totalVolume
 	  };
 	}
+	// EXERCISE HISTORY Modal
+	function openExerciseHistoryModal(exerciseName) {
+	  // Activate the modal overlay
+	  document.getElementById("exerciseHistoryOverlay").classList.add("active");
+	  document.getElementById("exerciseHistorySubheader").textContent = exerciseName;
+	  // Get the content container and clear previous content
+	  const content = document.getElementById("exerciseHistoryContent");
+	  content.innerHTML = '';
+	  
+	  // Get all historical sessions for this exercise
+	  const sessions = getAllSessionsForExercise(exerciseName);
+	  
+	  let html = '';
+	  
+	  // Build HTML for each session
+	  sessions.forEach(session => {
+		const formattedDate = session.date.toLocaleDateString('en-US', {
+		  year: 'numeric',
+		  month: 'long',
+		  day: 'numeric'
+		});
+		
+		html += `
+		  <div class="exercise-history-entry">
+			<div class="exercise-history-date">${formattedDate}</div>
+			<div class="hevy-sets exercise-history-sets">
+		`;
+		
+		// Add sets with PR detection
+		session.exercise.sets.forEach((set, index) => {
+		  const prInfo = getSetPRInfo(set, session.exercise.title, session.dateKey, session.workout.id, index);
+		  const prClass = prInfo.isPR ? 'pr-border' : '';
+		  const prLabels = prInfo.labels.length > 0 ? `
+			<div class="pr-labels">
+			  ${prInfo.labels.map(label => `<div class="pr-text smaller-pr">${label}</div>`).join('')}
+			</div>
+		  ` : '';
+		  
+		  html += `
+			<div class="hevy-set ${prClass}" 
+				 data-exercise="${escapeHtml(session.exercise.title)}"
+				 data-reps="${set.reps}"
+				 data-weight="${set.weight_kg}"
+				 data-date-key="${session.dateKey}">
+			  <span class="hevy-set-weight">${set.weight_kg}kg</span>
+			  x
+			  <span class="hevy-set-reps">${set.reps}</span>
+			  ${prInfo.isPR ? buildStarsContainer() : ''}
+			  ${prLabels}
+			</div>
+		  `;
+		});
+		
+		html += `
+			</div>
+		  </div>
+		`;
+	  });
+
+	  // Handle empty state
+	  if (sessions.length === 0) {
+		html = '<p style="text-align: center; color: #888; padding: 2rem;">No historical data found for this exercise.</p>';
+	  }
+
+	  // Insert generated HTML
+	  content.innerHTML = html;
+
+	  // Add click handlers for sets
+	  content.addEventListener('click', (e) => {
+		const setEl = e.target.closest('.hevy-set');
+		if (setEl) {
+		  const exerciseName = setEl.dataset.exercise;
+		  const weight = parseFloat(setEl.dataset.weight);
+		  const reps = parseInt(setEl.dataset.reps, 10);
+		  const dateKey = setEl.dataset.dateKey;
+		  openExerciseProgressionModal(exerciseName, weight, reps, dateKey);
+		}
+	  });
+
+	  // Add close handler
+	  document.getElementById("exerciseHistoryCloseBtn").addEventListener("click", closeExerciseHistoryModal);
+
+	  // Scroll to top
+	  content.scrollTop = 0;
+	}
+
+	function closeExerciseHistoryModal() {
+	  document.getElementById("exerciseHistoryOverlay").classList.remove("active");
+	}
+
+	// Add to existing getSetPRInfo function (if not exists, create it)
+	function getSetPRInfo(set, exerciseName, dateKey, workoutId, setIndex) {
+	  const prInfo = {
+		isPR: false,
+		labels: []
+	  };
+	  
+	  const globalPRs = getGlobalPRsForExercise(exerciseName);
+	  const setDate = parseDateKey(dateKey);
+	  
+	  // Check weight PR
+	  if (set.weight_kg === globalPRs.weightPR?.weight && 
+		  setDate.getTime() === parseDateKey(globalPRs.weightPR.dateKey).getTime() &&
+		  workoutId === globalPRs.weightPR.workoutId &&
+		  setIndex === globalPRs.weightPR.setIndex) {
+		prInfo.isPR = true;
+		prInfo.labels.push('Weight PR');
+	  }
+	  
+	  // Check volume PR
+	  const setVolume = set.weight_kg * set.reps;
+	  if (setVolume === globalPRs.volumePR?.volume && 
+		  setDate.getTime() === parseDateKey(globalPRs.volumePR.dateKey).getTime() &&
+		  workoutId === globalPRs.volumePR.workoutId &&
+		  setIndex === globalPRs.volumePR.setIndex) {
+		prInfo.isPR = true;
+		prInfo.labels.push('Volume PR');
+	  }
+	  
+	  // Check ORM PR
+	  const setORM = computeOrm(set.weight_kg, set.reps);
+	  if (setORM === globalPRs.ormPR?.orm && 
+		  setDate.getTime() === parseDateKey(globalPRs.ormPR.dateKey).getTime() &&
+		  workoutId === globalPRs.ormPR.workoutId &&
+		  setIndex === globalPRs.ormPR.setIndex) {
+		prInfo.isPR = true;
+		prInfo.labels.push('1RM PR');
+	  }
+	  
+	  return prInfo;
+	}
+	
+	
 	/*
       =======================================
       = 20) Exercise Frequency Modal        =
@@ -5293,8 +6283,16 @@
       = 22) DOM Loaded: Event Setup         =
       =======================================
     */
-    window.addEventListener("DOMContentLoaded", () => {
-      buildColorSwatches();
+	window.addEventListener("DOMContentLoaded", () => {
+	  // Add this at the very start of the function
+	  const styleSheet = document.createElement('style');
+	  baseColorOptions.concat(customPresets).forEach(option => {
+		if (option.data && option.data.color) {
+		  styleSheet.textContent += `.${option.className} { background-color: ${option.data.color}; }`;
+		}
+	  });
+	  document.head.appendChild(styleSheet);
+	  buildColorSwatches();
 
       // Single modal
       document.getElementById("singleSaveBtn").addEventListener("click", saveSingleModal);
@@ -5546,7 +6544,7 @@
 	});
 	
 	document.getElementById("exerciseSummaryCloseBtn").addEventListener("click", closeExerciseSummaryModal);
-	
+	document.getElementById("exerciseHistoryCloseBtn").addEventListener("click", closeExerciseHistoryModal);
       // Finally, initial render:
       renderCalendar(currentYear, currentMonth);
     });
