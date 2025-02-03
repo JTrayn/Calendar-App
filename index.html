@@ -5,6 +5,7 @@
   <title>Multi-Year Calendar (2020-2030) + Hevy Chart</title>
 
   <!-- Include Chart.js from a CDN -->
+  <script src="exercise_templates.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
@@ -297,7 +298,6 @@
 	  left: 0;
 	  right: 0;
 	  height: 50%;
-	  z-index: 2;
 	  pointer-events: none;
 	}
 	.alert-text {
@@ -315,7 +315,6 @@
 	  white-space: nowrap;
 	  overflow: hidden;
 	  text-overflow: ellipsis;
-	  z-index: 3;
 	  pointer-events: none;
 	}
 
@@ -330,7 +329,6 @@
 	  width: 100%;
 	  height: 100%;
 	  background-color: rgba(0,0,0,0.6);
-	  z-index: 999;
 	  justify-content: center;
 	  align-items: center;
 	  opacity: 0;
@@ -349,7 +347,7 @@
 	  box-shadow: 0 2px 10px rgba(0,0,0,0.7);
 	  display: flex;
 	  flex-direction: column;
-	  gap: 0.3rem;
+	  gap: 0.1rem;
 	  transform: translateY(-20px);
 	  animation: slideDownFade 0.3s forwards;
 	}
@@ -1068,7 +1066,6 @@
 		   (#exerciseVolumeOverlay)
 	   ========================================= */
 	#exerciseVolumeOverlay {
-	  z-index: 1000;
 	}
 	#exerciseVolumeModal {
 	  width: 500px;
@@ -1103,7 +1100,6 @@
 		   (#exerciseProgressOverlay)
 	   ========================================= */
 	#exerciseProgressOverlay {
-	  z-index: 1001;
 	}
 	#exerciseProgressionModal {
 	  width: 500px;
@@ -1119,7 +1115,6 @@
 		   (#volumeOverlay)
 	   ========================================= */
 	#volumeOverlay {
-	  z-index: 1003;
 	}
 	#volumeModal {
 	  width: 600px;
@@ -1135,7 +1130,6 @@
 		   (#ormProgressOverlay)
 	   ========================================= */
 	#ormProgressOverlay {
-	  z-index: 1004;
 	}
 	#exerciseOrmProgressModal {
 	  width: 500px;
@@ -1149,7 +1143,6 @@
 	   21) CUSTOM ALERT OVERLAY & MODAL
 	   ========================================= */
 	#customAlertOverlay {
-	  z-index: 10000 !important;
 	}
 	.custom-alert-modal {
 	  background: #2D2D2D;
@@ -1215,7 +1208,6 @@
 	  width: 100%;
 	  height: 100%;
 	  background-color: rgba(0,0,0,0.6);
-	  z-index: 1002;
 	  justify-content: center;
 	  align-items: center;
 	}
@@ -1454,7 +1446,6 @@
 	   27) EXERCISE HISTORY MODAL
 	   ========================================= */	
 	#exerciseHistoryOverlay {
-	  z-index: 1005;
 	}
 	#exerciseHistoryModal {
 	  width: 500px; /* Match exercise summary width */
@@ -1500,16 +1491,12 @@
 	  gap: 0.75rem;
 	}
 	#exerciseProgressOverlay {
-		z-index: 1006; /* Was 1001 */
 	}
 	#volumeOverlay {
-	  z-index: 1006; /* Was 1003 */
 	}
 	#ormProgressOverlay {
-	  z-index: 1006; /* Was 1004 */
 	}
 	#exerciseHistoryOverlay {
-	  z-index: 1005; /* Keep this lower than progress modals */
 	}
 	.exercise-history-header {
 	  margin-bottom: 1rem;
@@ -1672,6 +1659,404 @@
 	 cursor: not-allowed;
 	 pointer-events: none;
 	}
+	
+	/* ===============================
+	  29) CREATE NEW WORKOUT MODAL
+	  =============================== */		
+	
+	/* Create Workout Modal Specific Styles */
+	#createWorkoutModal {
+	  width: 600px;
+	  max-height: 85vh;
+	  overflow-y: auto;
+	  padding: 0;
+	  display: flex;
+	  flex-direction: column;
+	}
+
+	.workout-header {
+	  background: linear-gradient(180deg, rgba(77, 170, 255, 0.1) 0%, rgba(77, 170, 255, 0.05) 50%, transparent 100%);
+	  padding: 1.5rem 1.5rem 0rem 1.5rem;
+	  margin-bottom: 0.2rem;
+	}
+
+	.workout-date {
+	  color: #4DAAFF;
+	  font-size: 1.2rem;
+	  font-weight: 500;
+	  margin-bottom: 1.5rem;
+	}
+
+	.title-input {
+	  width: 100%;
+	  padding: 0.75rem 1rem;
+	  font-size: 1.2rem;
+	  background: rgba(45, 45, 45, 0.7);
+	  border: 1px solid #555;
+	  border-radius: 8px;
+	  color: #EAEAEA;
+	  margin-bottom: 1.5rem;
+	  transition: all 0.2s;
+	}
+
+	.title-input:focus {
+	  background: rgba(45, 45, 45, 0.9);
+	  border-color: #4DAAFF;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.2);
+	}
+
+	.workout-times {
+	  display: flex;
+	  align-items: center;
+	  gap: 1.5rem;
+	  background: rgba(45, 45, 45, 0.5);
+	  padding: 1rem;
+	  border-radius: 8px;
+	}
+
+	.time-group {
+	  flex: 1;
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.5rem;
+	}
+
+	.time-label {
+	  color: #888;
+	  font-size: 0.9rem;
+	  font-weight: 500;
+	}
+
+	.time-group input {
+	  padding: 0.5rem;
+	  background: rgba(45, 45, 45, 0.8);
+	  border: 1px solid #555;
+	  border-radius: 6px;
+	  color: #EAEAEA;
+	  font-size: 0.95rem;
+	  transition: all 0.2s;
+	}
+
+	.time-group input:focus {
+	  border-color: #4DAAFF;
+	  box-shadow: 0 0 0 2px rgba(77, 170, 255, 0.2);
+	}
+
+	.time-divider {
+	  width: 1px;
+	  height: 40px;
+	  background: #444;
+	  margin: 0 0.5rem;
+	}
+
+	/* Exercise Section */
+	.exercises-section {
+	  flex-grow: 1;
+	  padding: 0.5rem 1.5rem 0.5rem 1.5rem;
+	  display: flex;
+	  flex-direction: column;
+	  gap: 1rem;
+	}
+
+	.exercise-block {
+	  background: #393939;
+	  border-radius: 8px;
+	  padding: 0.5rem 1rem 0.5rem 1rem;
+	  margin-bottom: 0.5rem;
+	}
+
+	.exercise-header {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  margin-bottom: 1.5rem;
+	}
+
+	.exercise-title {
+	  font-size: 1.1rem;
+	  color: #4DAAFF;
+	  font-weight: 500;
+	}
+
+	.remove-exercise-btn {
+	  background: rgba(255, 255, 255, 0.1);
+	  color: #EEE;
+	  border: none;
+	  width: 2rem;
+	  height: 2rem;
+	  border-radius: 6px;
+	  cursor: pointer;
+	  font-size: 1.2rem;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  transition: all 0.2s;
+	}
+
+	.remove-exercise-btn:hover {
+	  background: rgba(255, 77, 77, 0.2);
+	  color: #ff4d4d;
+	}
+
+	/* Sets Section */
+	.sets-section {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.75rem;
+	}
+
+	.set-row {
+	  display: grid;
+	  grid-template-columns: 3rem 1fr auto;
+	  gap: 1rem;
+	  align-items: center;
+	  background: #2D2D2D;
+	  padding: 0.5rem;
+	  margin-bottom: 0.1rem;
+	  border-radius: 3px;
+	}
+
+	.set-number {
+	  color: #888;
+	  font-size: 0.9rem;
+	  text-align: center;
+	}
+
+	.set-inputs {
+	  display: flex;
+	  align-items: center;
+	  gap: 0.75rem;
+	}
+
+	.set-inputs input {
+	  width: 5rem;
+	  padding: 0.5rem;
+	  background: #393939;
+	  border: 1px solid #555;
+	  border-radius: 4px;
+	  color: #EAEAEA;
+	  text-align: center;
+	}
+
+	.separator {
+	  color: #666;
+	  font-weight: 500;
+	}
+
+	.remove-set-btn {
+	  background: transparent;
+	  color: #666;
+	  border: none;
+	  padding: 0.5rem;
+	  cursor: pointer;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  border-radius: 4px;
+	  transition: all 0.2s;
+	}
+
+	.remove-set-btn:hover {
+	  background: rgba(255, 77, 77, 0.1);
+	  color: #ff4d4d;
+	}
+
+	/* Add Exercise Button */
+	#addExerciseBtn {
+	  width: 100%;
+	  padding: 1rem;
+	  background: #4DAAFF;
+	  color: white;
+	  border: none;
+	  border-radius: 6px;
+	  cursor: pointer;
+	  font-size: 1rem;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  gap: 0.5rem;
+	  transition: background-color 0.2s;
+	  margin-top: auto;
+	}
+
+	#addExerciseBtn:hover {
+	  background: #82c3ff;
+	}
+
+	/* Exercise Selection Modal */
+	#exerciseSelectionModal {
+	  width: 500px;
+	  max-height: 80vh;
+	  display: flex;
+	  flex-direction: column;
+	  padding: 0;
+	}
+
+	.modal-header {
+	  background: linear-gradient(to bottom, rgba(77, 170, 255, 0.1), transparent);
+	  padding: 1.5rem;
+	  border-bottom: 1px solid #444;
+	}
+
+	.search-box {
+	  margin-top: 1rem;
+	}
+
+	.search-box input {
+	  width: 100%;
+	  padding: 0.75rem;
+	  background: #2D2D2D;
+	  border: 1px solid #555;
+	  border-radius: 6px;
+	  color: #EAEAEA;
+	}
+
+	.exercises-list {
+	  flex-grow: 1;
+	  overflow-y: auto;
+	  padding: 1rem;
+	}
+
+	.exercise-option {
+	  padding: 1rem;
+	  background: #393939;
+	  border-radius: 6px;
+	  margin-bottom: 0.5rem;
+	  cursor: pointer;
+	  transition: all 0.2s;
+	  border: 2px solid transparent;
+	}
+
+	.exercise-option:hover {
+	  background: #444;
+	}
+
+	.exercise-option.selected {
+	  background: #2D2D2D;
+	  border-color: #4DAAFF;
+	}
+
+	.exercise-option .title {
+	  color: #4DAAFF;
+	  margin-bottom: 0.25rem;
+	}
+
+	.exercise-option .details {
+	  color: #888;
+	  font-size: 0.9rem;
+	}
+
+	/* Modal Buttons */
+	.modal-buttons {
+	  padding: 1rem;
+	  border-top: 1px solid #444;
+	  display: flex;
+	  justify-content: center;
+	  gap: 1rem;
+	  background: #2D2D2D;
+	}
+
+	.modal-buttons .primary-btn,
+	.modal-buttons .secondary-btn {
+	  padding: 0.75rem 2rem;
+	  border: none;
+	  border-radius: 6px;
+	  cursor: pointer;
+	  font-size: 1rem;
+	  transition: all 0.2s;
+	  min-width: 120px;
+	}
+
+	.modal-buttons .primary-btn {
+	  background: #4DAAFF;
+	  color: white;
+	}
+
+	.modal-buttons .primary-btn:hover {
+	  background: #82c3ff;
+	}
+
+	.modal-buttons .secondary-btn {
+	  background: #444;
+	  color: #EEE;
+	}
+
+	.modal-buttons .secondary-btn:hover {
+	  background: #555;
+	}
+
+	/* Add Set Button Styling */
+	.add-set-btn {
+	  background: rgba(77, 170, 255, 0.1);
+	  color: #4DAAFF;
+	  border: 1px solid rgba(77, 170, 255, 0.2);
+	  padding: 0.5rem 1rem;
+	  border-radius: 6px;
+	  cursor: pointer;
+	  font-size: 0.9rem;
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	  transition: all 0.2s;
+	  margin: 0.5rem 0rem 0.5rem 0rem;
+	}
+
+	.add-set-btn:hover {
+	  background: rgba(77, 170, 255, 0.15);
+	  border-color: rgba(77, 170, 255, 0.3);
+	}
+
+	#createWorkoutSaveBtn {
+	  background: #4DAAFF;
+	  color: white;
+	}
+
+	#createWorkoutSaveBtn:hover {
+	  background: #82c3ff;
+	}
+
+	#createWorkoutCancelBtn,
+	#exerciseSelectionCancelBtn {
+	  background: #444;
+	  color: #EEE;
+	}
+
+	#createWorkoutCancelBtn:hover,
+	#exerciseSelectionCancelBtn:hover {
+	  background: #555;
+	}
+	
+	#createWorkoutModal,
+	#exerciseSelectionModal {
+	  max-height: 90vh;
+	  overflow-y: auto;
+	}
+
+	#createWorkoutModal::-webkit-scrollbar,
+	#exerciseSelectionModal::-webkit-scrollbar,
+	#exerciseSelectionList::-webkit-scrollbar {
+	  width: 8px;
+	}
+
+	#createWorkoutModal::-webkit-scrollbar-track,
+	#exerciseSelectionModal::-webkit-scrollbar-track,
+	#exerciseSelectionList::-webkit-scrollbar-track {
+	  background: #2D2D2D;
+	  border-radius: 4px;
+	}
+
+	#createWorkoutModal::-webkit-scrollbar-thumb,
+	#exerciseSelectionModal::-webkit-scrollbar-thumb,
+	#exerciseSelectionList::-webkit-scrollbar-thumb {
+	  background: #555;
+	  border-radius: 4px;
+	}
+
+	#createWorkoutModal::-webkit-scrollbar-thumb:hover,
+	#exerciseSelectionModal::-webkit-scrollbar-thumb:hover,
+	#exerciseSelectionList::-webkit-scrollbar-thumb:hover {
+	  background: #666;
+	}
 
   </style>
 </head>
@@ -1692,7 +2077,7 @@
           <!-- Load Button -->
           <button class="arrow-button" id="loadDataBtn" title="Load Data">📁</button>
           <!-- Import Hevy Button -->
-          <button class="arrow-button" id="hevyImportBtn" title="Import Hevy">
+          <button class="arrow-button" id="hevyImportBtn" title="Import workouts from Hevy">
             <img src="https://play-lh.googleusercontent.com/_HgX2ELOeBOIS6H-99ymHkNcEOlqoEncbt0x-D1MSgXx0ao8sTd7GRe16u-v70EgaAI"
                  alt="Hevy" style="width:18px;height:18px;">
           </button>
@@ -1907,7 +2292,7 @@
   <!-- Hevy Workout Summary Overlay -->
   <div class="overlay" id="hevyOverlay">
     <div class="modal" id="hevyModal">
-      <h2>Hevy Workout Summary</h2>
+      <h2>Workout Summary</h2>
       <div class="hevy-modal-content">
         <div id="hevyModalWorkoutDetails"></div>
         <!-- Optional chart container if you want to show a set-based progression in the same modal -->
@@ -2156,6 +2541,102 @@
 		</div>
 	  </div>
 	</div>
+	
+	<!-- Create Workout Modal -->
+	<div class="overlay" id="createWorkoutOverlay">
+	  <div class="modal" id="createWorkoutModal">
+		<!-- Header Section -->
+		<div class="workout-header">
+		  <div class="workout-date"></div>
+		  <input type="text" id="workoutTitleInput" placeholder="Enter workout title..." class="title-input">
+		  <div class="workout-times">
+			<div class="time-group">
+			  <span class="time-label">Start</span>
+			  <input type="datetime-local" id="workoutStartTime">
+			</div>
+			<div class="time-divider"></div>
+			<div class="time-group">
+			  <span class="time-label">End</span>
+			  <input type="datetime-local" id="workoutEndTime">
+			</div>
+		  </div>
+		</div>
+
+		<!-- Exercises Section -->
+		<div class="exercises-section">
+		  <div id="exercisesList">
+			<!-- Exercise blocks will be inserted here -->
+		  </div>
+		  <button id="addExerciseBtn" class="action-button">
+			<span class="plus-icon">+</span> Add Exercise
+		  </button>
+		</div>
+
+		<div class="modal-buttons">
+		  <button id="createWorkoutSaveBtn" title="Save Workout">Save</button>
+		  <button id="createWorkoutCancelBtn" title="Cancel">Cancel</button>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Exercise Selection Modal -->
+	<div class="overlay" id="exerciseSelectionOverlay">
+	  <div class="modal" id="exerciseSelectionModal">
+		<div class="modal-header">
+		  <h2>Select Exercises</h2>
+		  <div class="search-box">
+			<input type="text" id="exerciseSearchInput" placeholder="Search exercises...">
+		  </div>
+		</div>
+		
+		<div class="exercises-list" id="exerciseSelectionList">
+		  <!-- Exercise options will be populated here -->
+		</div>
+
+		<div class="modal-buttons">
+		  <button id="exerciseSelectionSaveBtn" class="primary-btn">Add Selected</button>
+		  <button id="exerciseSelectionCancelBtn" class="secondary-btn">Cancel</button>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Exercise Block Template -->
+	<template id="exerciseTemplate">
+	  <div class="exercise-block">
+		<div class="exercise-header">
+		  <div class="exercise-title"></div>
+		  <button class="remove-exercise-btn" title="Remove Exercise">×</button>
+		</div>
+		
+		<div class="sets-section">
+		  <div class="sets-list">
+			<!-- Sets will be inserted here -->
+		  </div>
+		  <button class="add-set-btn">
+			<span class="plus-icon">+</span> Add Set
+		  </button>
+		</div>
+	  </div>
+	</template>
+
+	<!-- Set Template -->
+	<template id="setTemplate">
+	  <div class="set-row">
+		<div class="set-number"></div>
+		<div class="set-inputs">
+		  <input type="number" class="weight-input" placeholder="kg" min="0" step="0.5">
+		  <span class="separator">×</span>
+		  <input type="number" class="reps-input" placeholder="reps" min="1" step="1">
+		  <span class="separator">@</span>
+		  <input type="number" class="rpe-input" placeholder="RPE" min="1" max="10" step="0.5">
+		</div>
+		<button class="remove-set-btn" title="Remove Set">
+		  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+			<path d="M18 6L6 18M6 6l12 12"/>
+		  </svg>
+		</button>
+	  </div>
+	</template>
   <script>
     /*
       =======================================
@@ -2168,6 +2649,7 @@
 	const LS_PRESETS_KEY = "customPresets";
 	
 	let customPresets = JSON.parse(localStorage.getItem(LS_PRESETS_KEY)) || [];
+	let modalZIndexCounter = 2000;
 	
 	const baseColorOptions = [
 	  { className: "off-bg", label: "Off (Weekly Leave)" },
@@ -2425,6 +2907,364 @@
       =======================================
     */
 	
+	function openTotalDurationModal(exerciseName, dateKey) {
+	  openModalOnTop("exerciseVolumeOverlay");
+	  
+	  // Set the header text so that the chart always shows "Total Duration Over Time"
+	  document.getElementById("exerciseVolumeModal")
+		.querySelector("h2").textContent = "Total Duration Over Time";
+	  
+	  // Store these for later use (for date-range button updates)
+	  currentExerciseVolumeName = exerciseName;
+	  currentExerciseVolumeDateKey = dateKey;
+	  
+	  // Build the chart using the function that converts seconds to minutes and sets the title
+	  buildDurationTimeChart(exerciseName, dateKey);
+	}
+	
+	function buildDurationProgressionChart(exerciseName, highlightDateKey) {
+	  // Get date range from active button
+	  const selectedRange = document.querySelector('#exerciseVolumeModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(highlightDateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Calculate total duration for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (!dayObj.hevyWorkouts || dayObj.hevyWorkouts.length === 0) return;
+
+		let totalDurationForDay = 0;
+		dayObj.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(ex => {
+			if (ex.title === exerciseName) {
+			  ex.sets.forEach(set => {
+				if (set.duration_seconds) {
+				  totalDurationForDay += set.duration_seconds;
+				}
+			  });
+			}
+		  });
+		});
+		
+		if (totalDurationForDay > 0) {
+		  dataMap[k] = totalDurationForDay;
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseVolumeChart();
+		showCustomAlert("No duration data found for this time period.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({
+		x: k,
+		y: dataMap[k]
+	  }));
+	  
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', {
+		  month: 'short',
+		  day: 'numeric',
+		  year: 'numeric'
+		});
+	  });
+
+	  const durations = dataPoints.map(dp => dp.y);
+	  const minDuration = Math.min(...durations);
+	  const maxDuration = Math.max(...durations);
+	  const range = maxDuration - minDuration;
+	  const padding = range * 0.1;
+	  const suggestedMin = Math.max(0, minDuration - padding);
+	  const suggestedMax = maxDuration + padding;
+
+	  destroyExerciseVolumeChart();
+	  const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints,
+		highlightDateKey,
+		'#4DAAFF',
+		'#FFDD77',
+		2.5,
+		5
+	  );
+
+	  exerciseVolumeChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `Duration: ${exerciseName}`,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Duration (seconds)' },
+			  ticks: { 
+				color: '#ccc',
+				callback: function(value) {
+				  return formatDuration(value);
+				}
+			  },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			tooltip: {
+			  callbacks: {
+				label: function(context) {
+				  const duration = context.raw;
+				  return `Duration: ${formatDuration(duration)}`;
+				}
+			  }
+			}
+		  }
+		}
+	  });
+	}
+	
+	function getDurationStats(exerciseName) {
+	  let totalOccurrences = 0;
+	  let longestSetDuration = 0;
+	  let longestSetDate = null;
+	  let longestSessionDuration = 0;
+	  let longestSessionDate = null;
+	  let totalDuration = 0;
+
+	  Object.entries(calendarData).forEach(([dateKey, dayData]) => {
+		if (!dayData.hevyWorkouts) return;
+
+		dayData.hevyWorkouts.forEach(workout => {
+		  let sessionDuration = 0;
+
+		  workout.exercises.forEach(exercise => {
+			if (exercise.title === exerciseName) {
+			  totalOccurrences++;
+
+			  exercise.sets.forEach(set => {
+				if (!set.duration_seconds) return;
+
+				const dur = set.duration_seconds;
+				totalDuration += dur;
+				sessionDuration += dur;
+
+				// Longest single-set duration
+				if (dur > longestSetDuration) {
+				  longestSetDuration = dur;
+				  longestSetDate = workout.start_time;
+				}
+			  });
+			}
+		  });
+
+		  // After processing all sets in this workout
+		  if (sessionDuration > longestSessionDuration) {
+			longestSessionDuration = sessionDuration;
+			longestSessionDate = workout.start_time;
+		  }
+		});
+	  });
+
+	  return {
+		totalOccurrences,
+		longestSetDuration,
+		longestSetDate,
+		longestSessionDuration,
+		longestSessionDate,
+		totalDuration
+	  };
+	}
+	
+	function openModalOnTop(overlayId) {
+	  const overlayEl = document.getElementById(overlayId);
+	  if (!overlayEl) return;
+
+	  // 1) Mark it active so it becomes visible (CSS .overlay.active { display: flex; ...})
+	  overlayEl.classList.add("active");
+
+	  // 2) Bump our counter and apply it
+	  modalZIndexCounter++;
+	  overlayEl.style.zIndex = modalZIndexCounter;
+	}
+	
+	function formatDuration(seconds) {
+	  const hours = Math.floor(seconds / 3600);
+	  const minutes = Math.floor((seconds % 3600) / 60);
+	  const secs = seconds % 60;
+	  
+	  if (hours > 0) {
+		return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+	  }
+	  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+	}
+
+	// Helper function to format pace (min/km)
+	function formatPace(meters, seconds) {
+	  if (!meters || !seconds || meters <= 0) return "-:--";
+	  const km = meters / 1000;
+	  const minutes = seconds / 60;
+	  const pace = minutes / km;
+	  
+	  const paceMinutes = Math.floor(pace);
+	  const paceSeconds = Math.floor((pace - paceMinutes) * 60);
+	  return `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')}`;
+	}
+
+	// Get exercise template info including type
+	function getExerciseTemplate(exerciseTitle) {
+	  return exerciseTemplates.find(t => t.title === exerciseTitle);
+	}
+	
+	// Function to get set template based on exercise type
+	function getSetTemplate(exerciseType) {
+	  const baseTemplate = document.getElementById('setTemplate');
+	  const newTemplate = document.createElement('template');
+	  
+	  switch(exerciseType) {
+		case 'distance_duration':
+		  newTemplate.innerHTML = `
+			<div class="set-row">
+			  <div class="set-number"></div>
+			  <div class="set-inputs">
+				<input type="number" class="distance-input" placeholder="km" min="0" step="0.01" style="width: 80px;">
+				<span class="separator">for</span>
+				<!-- Time inputs -->
+				<div style="display: inline-flex; gap: 4px; align-items: center;">
+				  <input type="number" class="duration-hours" placeholder="HH" min="0" max="99" style="width: 50px;">
+				  <span style="color: #888;">:</span>
+				  <input type="number" class="duration-minutes" placeholder="MM" min="0" max="59" style="width: 50px;">
+				  <span style="color: #888;">:</span>
+				  <input type="number" class="duration-seconds" placeholder="SS" min="0" max="59" style="width: 50px;">
+				</div>
+				<div class="pace-display" style="margin-left: 10px; color: #888;">-:-- /km</div>
+			  </div>
+			  <button class="remove-set-btn" title="Remove Set">
+				<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+				  <path d="M18 6L6 18M6 6l12 12"/>
+				</svg>
+			  </button>
+			</div>
+		  `;
+		  break;
+		  
+		case 'duration':
+		  newTemplate.innerHTML = `
+			<div class="set-row">
+			  <div class="set-number"></div>
+			  <div class="set-inputs">
+				<div style="display: inline-flex; gap: 4px; align-items: center;">
+				  <input type="number" class="duration-hours" placeholder="HH" min="0" max="99" style="width: 50px;">
+				  <span style="color: #888;">:</span>
+				  <input type="number" class="duration-minutes" placeholder="MM" min="0" max="59" style="width: 50px;">
+				  <span style="color: #888;">:</span>
+				  <input type="number" class="duration-seconds" placeholder="SS" min="0" max="59" style="width: 50px;">
+				</div>
+			  </div>
+			  <button class="remove-set-btn" title="Remove Set">
+				<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+				  <path d="M18 6L6 18M6 6l12 12"/>
+				</svg>
+			  </button>
+			</div>
+		  `;
+		  break;
+		  
+		case 'bodyweight_weighted':
+		  newTemplate.innerHTML = `
+			<div class="set-row">
+			  <div class="set-number"></div>
+			  <div class="set-inputs">
+				<span class="fixed-label" style="margin-right: 4px;">Bodyweight +</span>
+				<input type="number" class="assistance-input" placeholder="Added weight" min="0" step="0.5" style="width: 130px;">
+				<span class="separator" style="padding: 0 4px;">×</span>
+				<input type="number" class="reps-input" placeholder="reps" min="1" step="1">
+			  </div>
+			  <button class="remove-set-btn" title="Remove Set">
+				<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+				  <path d="M18 6L6 18M6 6l12 12"/>
+				</svg>
+			  </button>
+			</div>
+		  `;
+		  break;
+		  
+		case 'bodyweight_assisted':
+		  newTemplate.innerHTML = `
+			<div class="set-row">
+			  <div class="set-number"></div>
+			  <div class="set-inputs">
+				<span class="fixed-label" style="margin-right: 4px;">Bodyweight −</span>
+				<input type="number" class="assistance-input" placeholder="Assist weight" min="0" step="0.5" style="width: 130px;">
+				<span class="separator" style="padding: 0 4px;">×</span>
+				<input type="number" class="reps-input" placeholder="reps" min="1" step="1">
+			  </div>
+			  <button class="remove-set-btn" title="Remove Set">
+				<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+				  <path d="M18 6L6 18M6 6l12 12"/>
+				</svg>
+			  </button>
+			</div>
+		  `;
+		  break;
+
+		case 'reps_only':
+		  newTemplate.innerHTML = `
+			<div class="set-row">
+			  <div class="set-number"></div>
+			  <div class="set-inputs">
+				<span class="fixed-label" style="margin-right: 4px;">Bodyweight x</span>
+				<input type="number" class="reps-input" placeholder="reps" min="1" step="1">
+			  </div>
+			  <button class="remove-set-btn" title="Remove Set">
+				<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+				  <path d="M18 6L6 18M6 6l12 12"/>
+				</svg>
+			  </button>
+			</div>
+		  `;
+		  break;
+		  
+		default:
+		  newTemplate.innerHTML = baseTemplate.innerHTML;
+		  break;
+	  }
+	  
+	  return newTemplate;
+	}
+
+	
 	function initializePresetCreation() {
 	    presetCreationModal = document.getElementById('presetCreationOverlay');
 	    savePresetBtn = document.getElementById('savePresetBtn');
@@ -2573,22 +3413,13 @@
 	  Object.keys(calendarData).forEach(dateKey => {
 		const dayData = calendarData[dateKey];
 		if (!dayData.hevyWorkouts) return;
-
 		dayData.hevyWorkouts.forEach(workout => {
 		  workout.exercises.forEach(exercise => {
 			exercise.sets.forEach((set, setIndex) => {
-			  if (set.weight_kg === null || set.weight_kg === undefined) {
-				// Store reference to this bodyweight exercise
-				bodyweightExercises.add({
-				  dateKey,
-				  workoutId: workout.id,
-				  exerciseIndex: workout.exercises.indexOf(exercise),
-				  setIndex
-				});
-				
-				// Set initial weight
-				set.weight_kg = findNearestWeight(dateKey);
-			  }
+			  // Previously: if (set.weight_kg === null || set.weight_kg === undefined) { 
+			  //               set.weight_kg = findNearestWeight(dateKey);
+			  //             }
+			  // Now: do nothing so that a null weight_kg remains null.
 			});
 		  });
 		});
@@ -2610,25 +3441,8 @@
 	};
 
 	function updateBodyweightExercises() {
-	  bodyweightExercises.forEach(ref => {
-		const dayData = calendarData[ref.dateKey];
-		if (!dayData?.hevyWorkouts) return;
-		
-		const workout = dayData.hevyWorkouts.find(w => w.id === ref.workoutId);
-		if (!workout) return;
-		
-		const exercise = workout.exercises[ref.exerciseIndex];
-		if (!exercise) return;
-		
-		const set = exercise.sets[ref.setIndex];
-		if (!set) return;
-		
-		// Update to nearest weight
-		set.weight_kg = findNearestWeight(ref.dateKey);
-	  });
-	  
-	  localStorage.setItem(LS_CALENDAR_DATA_KEY, JSON.stringify(calendarData));
-	  renderCalendar(currentYear, currentMonth);
+	  // Automatic update removed.
+	  // Previously, this function updated each bodyweight exercise’s set.weight_kg
 	}
 	
 	// 1) Preload images
@@ -4117,91 +4931,116 @@
       =    9) Import Hevy Data from API     =
       =======================================
     */
-    async function importHevyData(userApiKey) {
-      try {
-        document.getElementById("loadingOverlay").classList.add("active");
+	async function importHevyData(userApiKey) {
+	  try {
+		document.getElementById("loadingOverlay").classList.add("active");
 
-        // Get total workout count
-        const countResponse = await fetch("https://api.hevyapp.com/v1/workouts/count", {
-          method: "GET",
-          headers: {
-            "accept": "application/json",
-            "api-key": userApiKey
-          }
-        });
-        if (!countResponse.ok) throw new Error("Failed to fetch workout count.");
-        const countData = await countResponse.json();
-        const totalWorkouts = countData.workout_count;
+		// Get total workout count
+		const countResponse = await fetch("https://api.hevyapp.com/v1/workouts/count", {
+		  method: "GET",
+		  headers: {
+			"accept": "application/json",
+			"api-key": userApiKey
+		  }
+		});
+		if (!countResponse.ok) throw new Error("Failed to fetch workout count.");
+		const countData = await countResponse.json();
+		const totalWorkouts = countData.workout_count;
 
-        const pageSize = 10;
-        const totalPages = Math.ceil(totalWorkouts / pageSize);
-        let allWorkouts = [];
+		const pageSize = 10;
+		const totalPages = Math.ceil(totalWorkouts / pageSize);
+		let allWorkouts = [];
 
-        // Fetch all workouts page by page
-        for (let page = 1; page <= totalPages; page++) {
-          const response = await fetch(`https://api.hevyapp.com/v1/workouts?page=${page}&pageSize=${pageSize}`, {
-            method: "GET",
-            headers: {
-              "accept": "application/json",
-              "api-key": userApiKey
-            }
-          });
-          if (!response.ok) throw new Error("Failed to fetch workouts page " + page);
-          const data = await response.json();
-          if (data.workouts && Array.isArray(data.workouts)) {
-            allWorkouts = allWorkouts.concat(data.workouts);
-          }
-        }
+		// Fetch all workouts page by page
+		for (let page = 1; page <= totalPages; page++) {
+		  const response = await fetch(`https://api.hevyapp.com/v1/workouts?page=${page}&pageSize=${pageSize}`, {
+			method: "GET",
+			headers: {
+			  "accept": "application/json",
+			  "api-key": userApiKey
+			}
+		  });
+		  if (!response.ok) throw new Error("Failed to fetch workouts page " + page);
+		  const data = await response.json();
+		  if (data.workouts && Array.isArray(data.workouts)) {
+			allWorkouts = allWorkouts.concat(data.workouts);
+		  }
+		}
 
-        let importedCount = 0;
-        allWorkouts.forEach(workout => {
-          let dateKey = null;
+		let importedCount = 0;
+		let updatedCount = 0;
 
-          // If workout title is in dd/mm/yyyy format, try to parse
-          if (workout.title && /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.test(workout.title)) {
-            const parts = workout.title.split("/");
-            const dayNum = parseInt(parts[0], 10);
-            const monthNum = parseInt(parts[1], 10);
-            const yearNum = parseInt(parts[2], 10);
-            if(yearNum >= START_YEAR && yearNum <= END_YEAR){
-              dateKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
-            }
-          }
+		allWorkouts.forEach(workout => {
+		  let dateKey = null;
 
-          // If title format was off, fall back to the actual start_time
-          if(!dateKey && workout.start_time){
-            const startTime = new Date(workout.start_time);
-            const y = startTime.getFullYear();
-            if(y >= START_YEAR && y <= END_YEAR){
-              dateKey = getDateKey(startTime);
-            }
-          }
+		  // If workout title is in dd/mm/yyyy format, try to parse
+		  if (workout.title && /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.test(workout.title)) {
+			const parts = workout.title.split("/");
+			const dayNum = parseInt(parts[0], 10);
+			const monthNum = parseInt(parts[1], 10);
+			const yearNum = parseInt(parts[2], 10);
+			if(yearNum >= START_YEAR && yearNum <= END_YEAR){
+			  dateKey = `${yearNum}-${String(monthNum).padStart(2, "0")}-${String(dayNum).padStart(2,"0")}`;
+			}
+		  }
 
-          if(dateKey) {
-            const dayData = getDayData(dateKey);
-            if (!dayData.hevyWorkouts) {
-              dayData.hevyWorkouts = [];
-            }
-            // Avoid duplicates
-            const duplicate = dayData.hevyWorkouts.some(existing => existing.id === workout.id);
-            if (!duplicate) {
-              dayData.hevyWorkouts.push(workout);
-              dayData.completed = true; 
-              setDayData(dateKey, dayData);
-              importedCount++;
-            }
-          }
-        });
+		  // If title format was off, fall back to the actual start_time
+		  if(!dateKey && workout.start_time){
+			const startTime = new Date(workout.start_time);
+			const y = startTime.getFullYear();
+			if(y >= START_YEAR && y <= END_YEAR){
+			  dateKey = getDateKey(startTime);
+			}
+		  }
+
+		  if(dateKey) {
+			const dayData = getDayData(dateKey);
+			if (!dayData.hevyWorkouts) {
+			  dayData.hevyWorkouts = [];
+			}
+
+			// Check if workout already exists
+			const existingWorkoutIndex = dayData.hevyWorkouts.findIndex(existing => existing.id === workout.id);
+			
+			if (existingWorkoutIndex === -1) {
+			  // New workout - add it
+			  dayData.hevyWorkouts.push(workout);
+			  dayData.completed = true;
+			  importedCount++;
+			} else {
+			  // Workout exists - check if it was updated
+			  const existingWorkout = dayData.hevyWorkouts[existingWorkoutIndex];
+			  const existingUpdateTime = new Date(existingWorkout.updated_at).getTime();
+			  const newUpdateTime = new Date(workout.updated_at).getTime();
+			  
+			  if (newUpdateTime > existingUpdateTime) {
+				// Workout was updated - replace it
+				dayData.hevyWorkouts[existingWorkoutIndex] = workout;
+				updatedCount++;
+			  }
+			}
+			
+			setDayData(dateKey, dayData);
+		  }
+		});
+
 		fixNullWeights();
-        showCustomAlert(`Imported ${importedCount} new Hevy workouts into calendar.`);
-        renderCalendar(currentYear, currentMonth);
-      } catch(err) {
-        console.error(err);
-        showCustomAlert("An error occurred while importing Hevy data: " + err.message);
-      } finally {
-        document.getElementById("loadingOverlay").classList.remove("active");
-      }
-    }
+
+		let message = `Imported ${importedCount} new Hevy workouts`;
+		if (updatedCount > 0) {
+		  message += ` and updated ${updatedCount} existing workouts`;
+		}
+		message += " into calendar.";
+		
+		showCustomAlert(message);
+		renderCalendar(currentYear, currentMonth);
+	  } catch(err) {
+		console.error(err);
+		showCustomAlert("An error occurred while importing Hevy data: " + err.message);
+	  } finally {
+		document.getElementById("loadingOverlay").classList.remove("active");
+	  }
+	}
 
     /*
       =======================================
@@ -4319,56 +5158,46 @@
       = 11) Hevy Workout Summary Modal       =
       =======================================
     */
-	function openHevyModal(dateKey, returnToExerciseSummary = false) {
-	  // 1) Activate the overlay
-	  document.getElementById("hevyOverlay").classList.add("active");
+	function openHevyModal(dateKey) {
+	  openModalOnTop("hevyOverlay");
 
-	  // 2) Get date for display
 	  const dateObj = parseDateKey(dateKey);
 	  const formattedDate = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
 
-	  // 3) Grab your data and the container
 	  const dayData = getDayData(dateKey);
 	  const container = document.getElementById("hevyModalWorkoutDetails");
-	  
-	  // 4) Grab the modal element
 	  const modalEl = document.getElementById("hevyModal");
 
-	  // 5) First, remove .no-workout in case it was set previously
+	  // Remove .no-workout if it was set
 	  modalEl.classList.remove("no-workout");
 
-	  // 6) Update title and add subtitle
-	  document.querySelector("#hevyModal h2").textContent = "Hevy Workout Summary";
-	  
-	  // Check if subtitle div exists, if not create it
+	  // Title + subtitle
+	  document.querySelector("#hevyModal h2").textContent = "Workout Summary";
 	  let subtitleDiv = document.querySelector("#hevyModal .modal-subtitle");
 	  if (!subtitleDiv) {
-		subtitleDiv = document.createElement('div');
-		subtitleDiv.className = 'modal-subtitle';
+		subtitleDiv = document.createElement("div");
+		subtitleDiv.className = "modal-subtitle";
 		const h2 = document.querySelector("#hevyModal h2");
 		h2.parentNode.insertBefore(subtitleDiv, h2.nextSibling);
 	  }
 	  subtitleDiv.textContent = formattedDate;
 
-	  // 7) Check if there are no workouts
+	  // If no workouts
 	  if (!dayData.hevyWorkouts || dayData.hevyWorkouts.length === 0) {
 		modalEl.classList.add("no-workout");
 		container.innerHTML = "<p>No Hevy workout data for this day.</p>";
 		return;
 	  }
 
-	  // 8) Otherwise, render the normal workout summary
 	  renderHevyWorkoutsToContainer(dayData.hevyWorkouts, "hevyModalWorkoutDetails", dateKey);
-	  
-	  // 9) Scroll the modal's content to the top
-	  document.getElementById("hevyModal").scrollTop = 0;
-	  // Optionally also scroll the "details" area:
-	  document.getElementById("hevyModalWorkoutDetails").scrollTop = 0;
+
+	  modalEl.scrollTop = 0;
+	  container.scrollTop = 0;
 	}
-    function closeHevyModal() {
-      document.getElementById("hevyOverlay").classList.remove("active");
-      destroyHevyProgressChart();
-    }
+	function closeHevyModal() {
+	  document.getElementById("hevyOverlay").classList.remove("active");
+	  destroyHevyProgressChart();  // or your existing chart logic
+	}
     function destroyHevyProgressChart() {
       if(hevyProgressChart) {
         hevyProgressChart.destroy();
@@ -4392,23 +5221,16 @@
 
 	  workouts.forEach(workout => {
 		html += `<div class="hevy-workout">`;
+		// Workout Title
 		html += `<div class="hevy-workout-title">${escapeHtml(workout.title)}</div>`;
 
+		// For each exercise in this workout
 		workout.exercises.forEach(exercise => {
-		  const prInfo = getGlobalPRsForExercise(exercise.title);
-		  const prTypesMap = {};
-
-		  function markPRSet(record, prLabel) {
-			if (!record) return;
-			const key = `${record.dateKey}_${record.workoutId}_${record.setIndex}`;
-			if (!prTypesMap[key]) prTypesMap[key] = [];
-			prTypesMap[key].push(prLabel);
-		  }
-		  markPRSet(prInfo.weightPR, "Weight PR");
-		  markPRSet(prInfo.volumePR, "Volume PR");
-		  markPRSet(prInfo.ormPR,    "1RM PR");
+		  const template = getExerciseTemplate(exercise.title);
+		  const exerciseType = template ? template.type : 'weighted_reps';
 
 		  html += `<div class="hevy-exercise">`;
+		  // Clickable Exercise Title
 		  html += `
 			<div class="hevy-exercise-title"
 				 style="cursor:pointer;"
@@ -4417,149 +5239,247 @@
 			</div>
 		  `;
 
-		  // Build the .hevy-sets
+		  // Container for sets
 		  html += `<div class="hevy-sets">`;
-		  exercise.sets.forEach((set, i) => {
-			const setId = `${dateKey}_${workout.id}_${i}`;
-			let setClasses = "hevy-set";
-			let prLabelHtml = "";
 
-			if (prTypesMap[setId]) {
-			  setClasses += " pr-border"; // highlight border
-			  // CHANGED: Build shimmering gold lines in smaller text
-			  const lines = prTypesMap[setId];
-			  prLabelHtml += `<div class="pr-labels">`;
-			  lines.forEach(line => {
-				// "pr-text" => old gold shimmer, "smaller-pr" => smaller size
-				prLabelHtml += `<div class="pr-text smaller-pr">${line}</div>`;
-			  });
-			  prLabelHtml += `</div>`;
-			}
+		  // ————————————————————————————————————————
+		  //  DURATION EXERCISES
+		  // ————————————————————————————————————————
+		  if (exerciseType === 'duration') {
+			let totalDuration = 0;
 
+			exercise.sets.forEach((set, i) => {
+			  const prInfo = getSetPRInfo(set, exercise.title, dateKey, workout.id, i);
+			  let setClasses = "hevy-set";
+			  let prLabelHtml = "";
+			  if (prInfo.isPR) {
+				setClasses += " pr-border";
+				prLabelHtml = `<div class="pr-labels">`;
+				prInfo.labels.forEach(label => {
+				  prLabelHtml += `<div class="pr-text smaller-pr">${label}</div>`;
+				});
+				prLabelHtml += `</div>`;
+			  }
+			  const starHtml = prInfo.isPR ? buildStarsContainer() : "";
+			  totalDuration += set.duration_seconds;
+
+			  html += `
+				<div class="${setClasses}"
+					 data-exercise="${escapeHtml(exercise.title)}"
+					 data-duration="${set.duration_seconds}"
+					 data-date-key="${dateKey}">
+				  ${formatDuration(set.duration_seconds)}
+				  ${starHtml}
+				  ${prLabelHtml}
+				</div>
+			  `;
+			});
+
+			// Close .hevy-sets
+			html += `</div>`;
+
+			// Show total duration
 			html += `
-			  <div class="${setClasses}"
+			  <div class="hevy-exercise-volume"
 				   data-exercise="${escapeHtml(exercise.title)}"
-				   data-reps="${set.reps}"
-				   data-weight="${set.weight_kg}"
-				   data-date-key="${dateKey}">
-				
-				<span class="hevy-set-weight">${set.weight_kg}kg</span>
-				x
-				<span class="hevy-set-reps">${set.reps}</span>
-
-				${setClasses.includes('pr-border') ? buildStarsContainer() : ''}
-
-				${prLabelHtml}
+				   data-date-key="${dateKey}"
+				   style="cursor: pointer;">
+				Total Duration: ${formatDuration(totalDuration)}
 			  </div>
 			`;
-		  });
-		  html += `</div>`; // .hevy-sets
 
-		  // (unchanged: volume and 1RM lines)
-		  let exerciseVolume = 0;
-		  exercise.sets.forEach(s => { exerciseVolume += s.weight_kg * s.reps; });
-		  html += `
-			<div class="hevy-exercise-volume"
-				 data-exercise="${escapeHtml(exercise.title)}"
-				 data-date-key="${dateKey}">
-			  Volume: ${exerciseVolume.toLocaleString()}kg
-			</div>
-		  `;
+		  // ————————————————————————————————————————
+		  //  DISTANCE_DURATION EXERCISES
+		  // ————————————————————————————————————————
+		  } else if (exerciseType === 'distance_duration') {
+			let totalDistance = 0;
+			let totalDuration = 0;
 
-		  let highestOrm = 0;
-		  exercise.sets.forEach(s => {
-			const thisOrm = computeOrm(s.weight_kg, s.reps);
-			if (thisOrm > highestOrm) highestOrm = thisOrm;
-		  });
-		  if (highestOrm > 0) {
+			exercise.sets.forEach((set, i) => {
+			  const prInfo = getSetPRInfo(set, exercise.title, dateKey, workout.id, i);
+			  let setClasses = "hevy-set";
+			  let prLabelHtml = "";
+			  if (prInfo.isPR) {
+				setClasses += " pr-border";
+				prLabelHtml = `<div class="pr-labels">`;
+				prInfo.labels.forEach(label => {
+				  prLabelHtml += `<div class="pr-text smaller-pr">${label}</div>`;
+				});
+				prLabelHtml += `</div>`;
+			  }
+			  const starHtml = prInfo.isPR ? buildStarsContainer() : "";
+			  totalDistance += set.distance_meters;
+			  totalDuration += set.duration_seconds;
+			  const pace = formatPace(set.distance_meters, set.duration_seconds);
+			  html += `
+				<div class="${setClasses}"
+					 data-exercise="${escapeHtml(exercise.title)}"
+					 data-distance="${set.distance_meters}"
+					 data-duration="${set.duration_seconds}"
+					 data-date-key="${dateKey}">
+				  ${(set.distance_meters / 1000).toFixed(2)}km
+				  <span style="color: #888;">in</span>
+				  ${formatDuration(set.duration_seconds)}
+				  <div style="font-size: 0.8em; color: #888; margin-top: 4px;">
+					${pace}/km
+				  </div>
+				  ${starHtml}
+				  ${prLabelHtml}
+				</div>
+			  `;
+			});
+
+			// Close .hevy-sets
+			html += `</div>`;
+
+			// Show total distance + total duration lines
 			html += `
+			  <div class="hevy-exercise-volume"
+				   data-exercise="${escapeHtml(exercise.title)}"
+				   data-date-key="${dateKey}"
+				   style="cursor: pointer;">
+				Total Distance: ${(totalDistance / 1000).toFixed(2)}km
+			  </div>
 			  <div class="hevy-orm"
 				   data-exercise="${escapeHtml(exercise.title)}"
-				   data-date-key="${dateKey}">
-				One Rep Max: ${highestOrm.toFixed(1)}kg
+				   data-date-key="${dateKey}"
+				   style="cursor: pointer;">
+				Total Duration: ${formatDuration(totalDuration)}
 			  </div>
 			`;
+
+		  // ————————————————————————————————————————
+		  // WEIGHTED_REPS EXERCISES (Normal weighted_reps and bodyweight types)
+		  // ————————————————————————————————————————
 		  } else {
+			let totalWeight = 0;
+			exercise.sets.forEach((set, i) => {
+			  let setClasses = "hevy-set";
+			  let prLabelHtml = "";
+
+			  const prInfo = getSetPRInfo(set, exercise.title, dateKey, workout.id, i);
+			  if (prInfo.isPR) {
+				setClasses += " pr-border";
+				prLabelHtml = `<div class="pr-labels">`;
+				prInfo.labels.forEach(label => {
+				  prLabelHtml += `<div class="pr-text smaller-pr">${label}</div>`;
+				});
+				prLabelHtml += `</div>`;
+			  }
+			  const starHtml = prInfo.isPR ? buildStarsContainer() : "";
+
+			  // Compute effective weight:
+			  // For normal weighted_reps, effectiveWeight is simply set.weight_kg.
+			  // For bodyweight_weighted or bodyweight_assisted, retrieve the day's bodyweight
+			  // (from getDayData(dateKey).weight or findNearestWeight(dateKey)) and then add or subtract.
+			  let effectiveWeight = set.weight_kg;
+			  if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effectiveWeight = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effectiveWeight = bodyweight - extra;
+				} else {
+				  effectiveWeight = bodyweight;
+				}
+			  }
+
+			  html += `
+				<div class="${setClasses}"
+					 data-exercise="${escapeHtml(exercise.title)}"
+					 data-reps="${set.reps}"
+					 data-weight="${effectiveWeight}"
+					 data-date-key="${dateKey}">
+				  <span class="hevy-set-weight">${effectiveWeight}kg</span>
+				  x
+				  <span class="hevy-set-reps">${set.reps}</span>
+				  ${starHtml}
+				  ${prLabelHtml}
+				</div>
+			  `;
+			  totalWeight += (effectiveWeight * set.reps);
+			});
+			html += `</div>`;
+
+			// Weighted: Volume & 1RM lines
+			html += `
+			  <div class="hevy-exercise-volume"
+				   data-exercise="${escapeHtml(exercise.title)}"
+				   data-date-key="${dateKey}">
+				Volume: ${totalWeight.toLocaleString()}kg
+			  </div>
+			`;
+
+			let highestOrm = 0;
+			exercise.sets.forEach(s => {
+			  let effW = s.weight_kg;
+			  if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(s.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effW = bodyweight - extra;
+				} else {
+				  effW = bodyweight;
+				}
+			  }
+			  if (effW && s.reps) {
+				const thisOrm = computeOrm(effW, s.reps);
+				if (thisOrm > highestOrm) highestOrm = thisOrm;
+			  }
+			});
 			html += `
 			  <div class="hevy-orm"
 				   data-exercise="${escapeHtml(exercise.title)}"
 				   data-date-key="${dateKey}">
-				One Rep Max: N/A
+				One Rep Max: ${highestOrm > 0 ? highestOrm.toFixed(1) + 'kg' : 'N/A'}
 			  </div>
 			`;
 		  }
 
-		  html += `</div>`; // .hevy-exercise
+		  html += `</div>`; // close .hevy-exercise
 		});
 
-		// Summaries (unchanged)
-		let totalWeight = 0;
+		// Optionally show total volume across entire workout (for weighted sets)
+		let workoutVolume = 0;
 		workout.exercises.forEach(ex => {
-		  ex.sets.forEach(s => { totalWeight += (s.weight_kg * s.reps); });
+		  const exTemplate = getExerciseTemplate(ex.title);
+		  if (exTemplate && exTemplate.type !== 'distance_duration' && exTemplate.type !== 'duration') {
+			ex.sets.forEach(s => {
+			  let effW = s.weight_kg;
+			  if (exTemplate.type === 'bodyweight_weighted' || exTemplate.type === 'bodyweight_assisted') {
+				const dayData = getDayData(dateKey);
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(s.weight_kg) || 0;
+				if (exTemplate.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else {
+				  effW = bodyweight - extra;
+				}
+			  }
+			  workoutVolume += (effW * s.reps);
+			});
+		  }
 		});
-		html += `
-		  <div class="hevy-total" data-date-key="${dateKey}">
-			Total Volume: ${totalWeight.toLocaleString()}kg
-		  </div>
-		`;
+		if (workoutVolume > 0) {
+		  html += `
+			<div class="hevy-total" data-date-key="${dateKey}">
+			  Total Volume: ${workoutVolume.toLocaleString()}kg
+			</div>
+		  `;
+		}
 
-		html += `</div>`; // .hevy-workout
+		html += `</div>`; // close .hevy-workout
 	  });
 
 	  container.innerHTML = html;
-
-	  // 7) Attach click handlers to container for sets, volumes, etc.
-	  container.onclick = (e) => {
-		// a) If user clicked a .hevy-set => open the combined weight+rep progression
-		const setEl = e.target.closest(".hevy-set");
-		if (setEl) {
-		  e.stopPropagation();
-		  const exerciseName = setEl.getAttribute("data-exercise");
-		  const weight = Number(setEl.getAttribute("data-weight"));
-		  const reps   = parseInt(setEl.getAttribute("data-reps"), 10);
-		  const dKey   = setEl.getAttribute("data-date-key");
-		  openExerciseProgressionModal(exerciseName, weight, reps, dKey);
-		  return;
-		}
-
-		// b) If user clicked the exercise volume line => open the exercise volume chart
-		const volumeEl = e.target.closest(".hevy-exercise-volume");
-		if (volumeEl) {
-		  e.stopPropagation();
-		  const exerciseName = volumeEl.getAttribute("data-exercise");
-		  const dKey = volumeEl.getAttribute("data-date-key");
-		  openExerciseVolumeModal(exerciseName, dKey);
-		  return;
-		}
-
-		// c) If user clicked the workout total => open daily volume chart
-		const totalEl = e.target.closest(".hevy-total");
-		if (totalEl) {
-		  e.stopPropagation();
-		  const associatedDateKey = totalEl.getAttribute("data-date-key");
-		  openVolumeModal(associatedDateKey);
-		  return;
-		}
-
-		// d) If user clicked the 1RM line => open 1RM progression chart
-		const ormEl = e.target.closest(".hevy-orm");
-		if (ormEl) {
-		  e.stopPropagation();
-		  const exerciseName = ormEl.getAttribute("data-exercise");
-		  const dKey = ormEl.getAttribute("data-date-key");
-		  openOrmProgressModal(exerciseName, dKey);
-		  return;
-		}
-
-		// e) If user clicked the exercise title => open the exercise summary modal
-		const exerciseTitleEl = e.target.closest(".hevy-exercise-title");
-		if (exerciseTitleEl) {
-		  e.stopPropagation();
-		  const exerciseName = exerciseTitleEl.getAttribute("data-exercise");
-		  openExerciseSummaryModal(exerciseName);
-		  return;
-		}
-	  };
+	  setupWorkoutContainerHandlers(container);
 	}
 	
 	function buildStarsContainer() {
@@ -4588,78 +5508,80 @@
 	}
 	
 	function getGlobalPRsForExercise(exerciseName) {
-	  let weightPR = null;  // will store a record { dateKey, workoutId, setIndex, weight, reps, volume, orm }
+	  let weightPR = null;  // record for highest effective weight (with tie-breaker on reps)
 	  let volumePR = null;
-	  let ormPR    = null;
-	  // Loop over all days in calendarData
-	  for (const dateKey of Object.keys(calendarData)) {
+	  let ormPR = null;
+	  const allWorkouts = [];
+
+	  // Gather all workouts that include the exercise.
+	  Object.keys(calendarData).forEach(dateKey => {
 		const dayObj = calendarData[dateKey];
-		if (!dayObj.hevyWorkouts) continue;
-
-		// Loop each workout
-		dayObj.hevyWorkouts.forEach(workout => {
-		  // Loop each exercise
-		  workout.exercises.forEach((ex) => {
-			if (ex.title !== exerciseName) return;
-			// We found the exercise, now check each set
-			ex.sets.forEach((set, idx) => {
-			  const setVolume = set.weight_kg * set.reps;
-			  const setOrm    = computeOrm(set.weight_kg, set.reps);
-
-			  // We'll build a "record" with enough info to identify and compare
-			  const record = {
-				dateKey,
-				workoutId: workout.id,
-				setIndex: idx,
-				weight: set.weight_kg,
-				reps: set.reps,
-				volume: setVolume,
-				orm: setOrm
-			  };
-			  // 1) Check if it’s the new Weight PR
-			  if (!weightPR) {
-				weightPR = record;
-			  } else {
-				if (record.weight > weightPR.weight) {
-				  weightPR = record;
-				} else if (record.weight === weightPR.weight) {
-				  // Tiebreaker: compare weight*reps
-				  const currentWR = record.weight * record.reps;
-				  const bestWR    = weightPR.weight * weightPR.reps;
-				  if (currentWR > bestWR) {
-					weightPR = record;
-				  }
-				  // If still tied, keep the older (no change)
-				}
-			  }
-			  // 2) Check if it’s the new Volume PR
-			  if (!volumePR) {
-				volumePR = record;
-			  } else {
-				if (record.volume > volumePR.volume) {
-				  volumePR = record;
-				}
-				// If tied, keep the first encountered => do nothing
-			  }
-			  // 3) Check if it’s the new 1RM PR
-			  if (!ormPR) {
-				ormPR = record;
-			  } else {
-				if (record.orm > ormPR.orm) {
-				  ormPR = record;
-				}
-				// If tied, keep the first encountered => do nothing
+		if (dayObj.hevyWorkouts) {
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				allWorkouts.push({
+				  dateKey,
+				  workout,
+				  exercise: ex,
+				  date: new Date(workout.start_time)
+				});
 			  }
 			});
 		  });
+		}
+	  });
+	  allWorkouts.sort((a, b) => a.date - b.date);
+
+	  // Get the template to check the exercise type.
+	  const template = getExerciseTemplate(exerciseName);
+
+	  allWorkouts.forEach(({ dateKey, workout, exercise, date }) => {
+		exercise.sets.forEach((set, i) => {
+		  const reps = set.reps;
+		  // Default: effectiveWeight equals the stored weight_kg.
+		  let effectiveWeight = parseFloat(set.weight_kg);
+		  if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effectiveWeight = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effectiveWeight = bodyweight - extra;
+				} else {
+				  effectiveWeight = bodyweight;
+				}
+			  }
+		  const setVolume = effectiveWeight * reps;
+		  const setOrm = computeOrm(effectiveWeight, reps);
+		  const record = {
+			dateKey,
+			workoutId: workout.id,
+			setIndex: i,
+			weight: effectiveWeight,
+			reps,
+			volume: setVolume,
+			orm: setOrm,
+			date
+		  };
+
+		  if (!weightPR || (effectiveWeight > weightPR.weight) || 
+			  (effectiveWeight === weightPR.weight && reps > weightPR.reps)) {
+			weightPR = record;
+		  }
+		  if (!volumePR || setVolume > volumePR.volume) {
+			volumePR = record;
+		  }
+		  if (!ormPR || setOrm > ormPR.orm) {
+			ormPR = record;
+		  }
 		});
-	  }
-	  return {
-		weightPR,
-		volumePR,
-		ormPR
-	  };
+	  });
+	  return { weightPR, volumePR, ormPR };
 	}
+
 
     /*
       ================================================
@@ -4686,23 +5608,33 @@
       }
     }
 
-    function openExerciseProgressionModal(exerciseName, weight, reps, dateKey) {
-	  document.querySelectorAll('#exerciseProgressionModal .date-range-btn').forEach(btn => {
-		btn.classList.toggle('active', btn.getAttribute('data-range') === 'year');
-	  });
+	function openExerciseProgressionModal(exerciseName, weight, reps, dateKey) {
+	  openModalOnTop("exerciseProgressOverlay");
+	  
+	  // Update modal title based on exercise type
+	  const template = getExerciseTemplate(exerciseName);
+	  const exerciseType = template ? template.type : 'weighted_reps';
+	  const modalTitle = document.getElementById("exerciseProgressionModal").querySelector("h2");
+	  
+	  if (exerciseType === 'distance_duration') {
+		modalTitle.textContent = "Exercise: Distance & Pace Progression";
+	  } else {
+		modalTitle.textContent = "Exercise: Weight & Rep Progression";
+	  }
+	  
+	  const dateObj = parseDateKey(dateKey);
+	  const dateLabel = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
+	  document.getElementById("exerciseProgressionModalDate").textContent = dateLabel;
+
 	  currentProgressionExercise = exerciseName;
-      currentProgressionWeight = weight;
-      currentProgressionReps = reps;
-      currentProgressionDateKey = dateKey;
-      const dateObj = parseDateKey(dateKey);
-      const dateLabel = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
-      document.getElementById("exerciseProgressionModalDate").textContent = dateLabel;
+	  currentProgressionWeight = weight;
+	  currentProgressionReps = reps;
+	  currentProgressionDateKey = dateKey;
 
-      document.getElementById("exerciseProgressOverlay").classList.add("active");
-
-      buildExerciseWeightProgressChart(exerciseName, reps, dateKey);
-      buildExerciseRepProgressChart(exerciseName, weight, dateKey);
-    }
+	  buildExerciseWeightProgressChart(exerciseName, reps, dateKey);
+	  buildExerciseRepProgressChart(exerciseName, weight, dateKey);
+	}
+	
     function closeExerciseProgressModal() {
       document.getElementById("exerciseProgressOverlay").classList.remove("active");
       destroyExerciseWeightProgressChart();
@@ -4711,255 +5643,255 @@
 
     // Weight progression at a fixed rep count
     function buildExerciseWeightProgressChart(exerciseName, repCount, highlightDateKey) {
-      const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
-      const refDate = parseDateKey(highlightDateKey);
-      const { start, end } = getDateRangeBounds(selectedRange, refDate);
-      
-      const dateKeys = Object.keys(calendarData)
-        .filter(key => {
-          const date = parseDateKey(key);
-          return date >= start && date <= end;
-        })
-        .sort();
-      const dataMap = {};
+	  // Determine the active date range from the progression modal’s date-range buttons.
+	  const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(highlightDateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
 
-      // Collect max weight (for the given repCount) on each date
-      dateKeys.forEach(k => {
-        const dayObj = calendarData[k];
-        if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
-          let maxWeightForThatDay = 0;
-          dayObj.hevyWorkouts.forEach(workout => {
-            workout.exercises.forEach(ex => {
-              if (ex.title === exerciseName) {
-                ex.sets.forEach(s => {
-                  if (s.reps === repCount && s.weight_kg > maxWeightForThatDay) {
-                    maxWeightForThatDay = s.weight_kg;
-                  }
-                });
-              }
-            });
-          });
-          if (maxWeightForThatDay > 0) {
-            dataMap[k] = maxWeightForThatDay;
-          }
-        }
-      });
+	  // Get all date keys in the range
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		   const d = parseDateKey(key);
+		   return d >= start && d <= end;
+		})
+		.sort();
 
-      const chartKeys = Object.keys(dataMap).sort();
-      if (chartKeys.length < 1) {
-        destroyExerciseWeightProgressChart();
-        showCustomAlert("No weight progression data found for that set.");
-        return;
-      }
+	  const dataMap = {};
+	  const template = getExerciseTemplate(exerciseName);
 
-      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
-      const labels = chartKeys.map(k => {
-        const d = parseDateKey(k);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      });
-      const weights = dataPoints.map(dp => dp.y);
-      const minWeight = Math.min(...weights);
-      const maxWeight = Math.max(...weights);
-      const suggestedMin = Math.max(0, minWeight - 1);
-      const suggestedMax = maxWeight + 1;
+	  // For each day in the range, find the best (highest) effective weight among sets with rep count equal to repCount.
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (!dayObj.hevyWorkouts) return;
+		let bestWeightForDay = 0;
+		dayObj.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(ex => {
+			if (ex.title === exerciseName) {
+			  ex.sets.forEach(set => {
+				if (set.reps === repCount) {
+				  let effW = parseFloat(set.weight_kg);
+				  if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(k);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(k)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effW = bodyweight - extra;
+				} else {
+				  effW = bodyweight;
+				}
+			  }
+				  if (effW > bestWeightForDay) {
+					bestWeightForDay = effW;
+				  }
+				}
+			  });
+			}
+		  });
+		});
+		if (bestWeightForDay > 0) {
+		   dataMap[k] = bestWeightForDay;
+		}
+	  });
 
-      destroyExerciseWeightProgressChart();
-      const ctx = document.getElementById('exerciseWeightProgressionChart').getContext('2d');
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseWeightProgressChart();
+		showCustomAlert("No weight progression data found for that set.");
+		return;
+	  }
 
-      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, highlightDateKey, '#4DAAFF', '#FFDD77', 2.5, 5
-      );
+	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+	  const labels = chartKeys.map(k => {
+		 const d = parseDateKey(k);
+		 return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+	  });
+	  const weights = dataPoints.map(dp => dp.y);
+	  const minWeight = Math.min(...weights);
+	  const maxWeight = Math.max(...weights);
+	  const pad = (maxWeight - minWeight) * 0.1;
+	  const suggestedMin = Math.max(0, minWeight - pad);
+	  const suggestedMax = maxWeight + pad;
 
-      exerciseWeightProgressionChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: `${exerciseName} (${repCount} reps)`,
-            data: dataPoints.map(dp => dp.y),
-            borderColor: '#4DAAFF',
-            backgroundColor: 'rgba(77, 169, 255,0.2)',
-            fill: true,
-            tension: 0.1,
-            pointRadius: pointRadii,
-            pointBackgroundColor: bgColors,
-            pointBorderColor: borderColors,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-			layout: {
-		  padding: {
-			top: 0,
-			bottom: 0,
-			left: 0,
-			right: 0,
-		  }
+	  destroyExerciseWeightProgressChart();
+	  const ctx = document.getElementById('exerciseWeightProgressionChart').getContext('2d');
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		   dataPoints, highlightDateKey, '#4DAAFF', '#FFDD77', 2.5, 5
+	  );
+
+	  exerciseWeightProgressionChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		   labels: labels,
+		   datasets: [{
+			 label: `Weight progression at ${repCount} reps for ${exerciseName}`,
+			 data: dataPoints.map(dp => dp.y),
+			 borderColor: '#4DAAFF',
+			 backgroundColor: 'rgba(77, 170, 255, 0.2)',
+			 fill: true,
+			 tension: 0.1,
+			 pointRadius: pointRadii,
+			 pointBackgroundColor: bgColors,
+			 pointBorderColor: borderColors,
+			 pointHoverRadius: 6
+		   }]
 		},
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              title: { display: true, text: 'Date' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            },
-            y: {
-              suggestedMin,
-              suggestedMax,
-              title: { display: true, text: 'Weight (kg)' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            }
-          },
-          plugins: {
-            legend: { 
-				labels: { color: '#eee' },
-				padding: {
-				top: 1,
-				bottom: 1
+		options: {
+		   responsive: true,
+		   maintainAspectRatio: false,
+		   scales: {
+			  x: {
+				 title: { display: true, text: 'Date' },
+				 ticks: { color: '#ccc' },
+				 grid: { color: '#555' }
+			  },
+			  y: {
+				 suggestedMin,
+				 suggestedMax,
+				 title: { display: true, text: 'Effective Weight (kg)' },
+				 ticks: { color: '#ccc' },
+				 grid: { color: '#555' }
 			  }
-			},
-            title: {
-              display: true,
-              text: `Weight progression at ${repCount} reps`,
-              color: '#fff',
-              font: { size: 16 },
-			  padding: {
-			  top: 1,
-			  bottom: 1
+		   },
+		   plugins: {
+			  legend: { labels: { color: '#eee' } },
+			  title: {
+				 display: true,
+				 text: `Weight progression at ${repCount} reps`,
+				 color: '#fff',
+				 font: { size: 16 }
 			  }
-            }
-          }
-        }
-      });
-    }
+		   }
+		}
+	  });
+	}
+
 
     // Rep progression at a fixed weight
-    function buildExerciseRepProgressChart(exerciseName, weight, highlightDateKey) {
-      const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
-      const refDate = parseDateKey(highlightDateKey);
-      const { start, end } = getDateRangeBounds(selectedRange, refDate);
-      
-      const dateKeys = Object.keys(calendarData)
-        .filter(key => {
-          const date = parseDateKey(key);
-          return date >= start && date <= end;
-        })
-        .sort();
-      const dataMap = {};
+    function buildExerciseRepProgressChart(exerciseName, fixedWeight, dateKey) {
+	  const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(dateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const d = parseDateKey(key);
+		  return d >= start && d <= end;
+		})
+		.sort();
+	  const dataMap = {};
+	  const template = getExerciseTemplate(exerciseName);
 
-      // Collect max reps (for the given weight) on each date
-      dateKeys.forEach(k => {
-        const dayObj = calendarData[k];
-        if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
-          let maxRepForThatDay = 0;
-          dayObj.hevyWorkouts.forEach(workout => {
-            workout.exercises.forEach(ex => {
-              if (ex.title === exerciseName) {
-                ex.sets.forEach(s => {
-                  if (Number(s.weight_kg) === Number(weight) && s.reps > maxRepForThatDay) {
-                    maxRepForThatDay = s.reps;
-                  }
-                });
-              }
-            });
-          });
-          if (maxRepForThatDay > 0) {
-            dataMap[k] = maxRepForThatDay;
-          }
-        }
-      });
+	  // For each day, look for sets that match the fixed effective weight.
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (!dayObj.hevyWorkouts) return;
+		let bestRepsForDay = 0;
+		dayObj.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(ex => {
+			if (ex.title === exerciseName) {
+			  ex.sets.forEach(s => {
+				let effW = parseFloat(s.weight_kg);
+				if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(k);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(k)) || 0;
+				const extra = parseFloat(s.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effW = bodyweight - extra;
+				} else {
+				  effW = bodyweight;
+				}
+			  }
+				// Compare effective weight with the fixed weight parameter.
+				if (Number(effW) === Number(fixedWeight) && s.reps > bestRepsForDay) {
+				  bestRepsForDay = s.reps;
+				}
+			  });
+			}
+		  });
+		});
+		if (bestRepsForDay > 0) {
+		  dataMap[k] = bestRepsForDay;
+		}
+	  });
 
-      const chartKeys = Object.keys(dataMap).sort();
-      if (chartKeys.length < 1) {
-        destroyExerciseRepProgressChart();
-        showCustomAlert("No rep progression data found for that set.");
-        return;
-      }
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseRepProgressChart();
+		showCustomAlert("No rep progression data found for that set.");
+		return;
+	  }
 
-      const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
-      const labels = chartKeys.map(k => {
-        const d = parseDateKey(k);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      });
-      const reps = dataPoints.map(dp => dp.y);
-      const minRep = Math.min(...reps);
-      const maxRep = Math.max(...reps);
-      const suggestedMin = Math.max(0, minRep - 1);
-      const suggestedMax = maxRep + 1;
+	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+	  });
+	  const repsArray = dataPoints.map(dp => dp.y);
+	  const minReps = Math.min(...repsArray);
+	  const maxReps = Math.max(...repsArray);
+	  const suggestedMin = Math.max(0, minReps - 1);
+	  const suggestedMax = maxReps + 1;
 
-      destroyExerciseRepProgressChart();
-      const ctx = document.getElementById('exerciseRepProgressionChart').getContext('2d');
+	  destroyExerciseRepProgressChart();
+	  const ctx = document.getElementById('exerciseRepProgressionChart').getContext('2d');
 
-      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, highlightDateKey, '#FFDD77', '#4DAAFF', 2.5, 5
-      );
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints, dateKey, '#FFDD77', '#4DAAFF', 2.5, 5
+	  );
 
-      exerciseRepProgressionChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: `Repetitions: ${exerciseName} (${weight}kg)`,
-            data: dataPoints.map(dp => dp.y),
-            borderColor: '#FFDD77',
-            backgroundColor: 'rgba(255, 221, 119,0.2)',
-            fill: true,
-            tension: 0.1,
-            pointRadius: pointRadii,
-            pointBackgroundColor: bgColors,
-            pointBorderColor: borderColors,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-			layout: {
-		  padding: {
-			top: 0,
-			bottom: 0,
-			left: 0,
-			right: 0,
-		  }
+	  exerciseRepProgressionChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `Repetitions: ${exerciseName} (${fixedWeight}kg)`,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#FFDD77',
+			backgroundColor: 'rgba(255, 221, 119,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
 		},
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              title: { display: true, text: 'Date' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            },
-            y: {
-              suggestedMin,
-              suggestedMax,
-              title: { display: true, text: 'Repetitions' },
-              ticks: { color: '#ccc' },
-              grid: { color: '#555' }
-            }
-          },
-          plugins: {
-            legend: { 
-				labels: { color: '#eee' } ,
-				padding: {
-				top: 1,
-				bottom: 1
-			  }
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
 			},
-            title: {
-              display: true,
-              text: `Rep progression at ${weight} KG`,
-              color: '#fff',
-              font: { size: 16 },
-			  padding: {
-				top: 1,
-				bottom: 1
-			  }
-            }
-          }
-        }
-      });
-    }
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Repetitions' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			title: {
+			  display: true,
+			  text: `Rep progression at ${fixedWeight}kg`,
+			  color: '#fff',
+			  font: { size: 16 }
+			}
+		  }
+		}
+	  });
+	}
+
 
     /*
       =======================================
@@ -4974,7 +5906,7 @@
 	  });
 
 	  currentVolumeDateKey = dateKey;
-	  document.getElementById("volumeOverlay").classList.add("active");
+	  openModalOnTop("volumeOverlay");
 	  buildVolumeChart(dateKey);
 	}
     function closeVolumeModal() {
@@ -4985,71 +5917,74 @@
       }
     }
 	function buildVolumeChart(highlightDateKey) {
-	  // 1) Figure out which date-range button is active in the Volume modal
-	  const selectedRangeBtn = document.querySelector('#volumeModal .date-range-btn.active');
-	  const selectedRange = selectedRangeBtn ? selectedRangeBtn.getAttribute('data-range') : 'year';
-
-	  // 2) Convert highlightDateKey → Date → get date bounds
+	  const selectedRange = document.querySelector('#volumeModal .date-range-btn.active').getAttribute('data-range');
 	  const refDate = parseDateKey(highlightDateKey);
 	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
-
-	  // 3) Filter calendarData to find only days in-range
-	  //    that also have at least 1 Hevy workout.
+	  
 	  const dateKeys = Object.keys(calendarData)
-		.filter(k => {
-		  const d = parseDateKey(k);
-		  const inRange = (d >= start && d <= end);
-		  const hasHevy = calendarData[k].hevyWorkouts && calendarData[k].hevyWorkouts.length > 0;
-		  return inRange && hasHevy;
+		.filter(key => {
+		  const d = parseDateKey(key);
+		  return d >= start && d <= end;
 		})
 		.sort();
 
-	  // 4) Build data points (date → total volume)
-	  const dataPoints = dateKeys.map(k => {
-		let volume = 0;
-		const day = calendarData[k];
-		day.hevyWorkouts.forEach(w => {
-		  w.exercises.forEach(ex => {
-			ex.sets.forEach(set => {
-			  volume += set.weight_kg * set.reps;
-			});
+	  const dataMap = {};
+	  // For each day, if there is at least one Hevy workout, sum the volume.
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (!dayObj.hevyWorkouts || dayObj.hevyWorkouts.length === 0) return;
+		let totalVolumeForDay = 0;
+		dayObj.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(ex => {
+			// For weighted exercises (including bodyweight types)
+			const exTemplate = getExerciseTemplate(ex.title);
+			if (exTemplate && exTemplate.type !== 'distance_duration' && exTemplate.type !== 'duration') {
+			  ex.sets.forEach(s => {
+				let effW = parseFloat(s.weight_kg);
+				if (exTemplate.type === 'bodyweight_weighted' || exTemplate.type === 'bodyweight_assisted') {
+				  const dayData = getDayData(k);
+				  const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(k)) || 0;
+				  const extra = parseFloat(s.weight_kg) || 0;
+				  effW = (exTemplate.type === 'bodyweight_weighted') ? (bodyweight + extra) : (bodyweight - extra);
+				}
+				totalVolumeForDay += (effW * s.reps);
+			  });
+			}
 		  });
 		});
-		return { x: k, y: volume };
+		if (totalVolumeForDay > 0) {
+		  dataMap[k] = totalVolumeForDay;
+		}
 	  });
 
-	  // If no data points at all
-	  if (dataPoints.length < 1) {
-		showCustomAlert("No volume data found.");
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyVolumeChart();
+		showCustomAlert("No volume data found for this time period.");
 		return;
 	  }
 
-	  // 5) Build arrays for Chart.js
-	  const labels = dataPoints.map(dp => {
-		const d = parseDateKey(dp.x);
+	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
 		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 	  });
 	  const volumes = dataPoints.map(dp => dp.y);
 	  const minVolume = Math.min(...volumes);
 	  const maxVolume = Math.max(...volumes);
-	  const suggestedMin = Math.max(0, minVolume - 10);
-	  const suggestedMax = maxVolume + 10;
+	  const range = maxVolume - minVolume;
+	  const padding = range * 0.1;
+	  const suggestedMin = Math.max(0, minVolume - padding);
+	  const suggestedMax = maxVolume + padding;
 
-	  // Destroy old chart if exists
 	  if (volumeChart) {
 		volumeChart.destroy();
 		volumeChart = null;
 	  }
-
-	  // 6) Create a new Chart.js line chart
 	  const ctx = document.getElementById('volumeChart').getContext('2d');
+
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-		dataPoints, // array of { x, y }
-		highlightDateKey, 
-		'#4DAAFF', // normal color
-		'#FFDD77',           // highlight color
-		2.5,                 // normal radius
-		5                    // highlight radius
+		dataPoints, highlightDateKey, '#4DAAFF', '#FFDD77', 2.5, 5
 	  );
 
 	  volumeChart = new Chart(ctx, {
@@ -5058,7 +5993,7 @@
 		  labels: labels,
 		  datasets: [{
 			label: 'Volume (kg)',
-			data: volumes, // or dataPoints.map(dp => dp.y)
+			data: volumes,
 			borderColor: '#4DAAFF',
 			backgroundColor: 'rgba(77, 170, 255,0.2)',
 			fill: true,
@@ -5100,20 +6035,26 @@
       =======================================
     */
 	function openExerciseVolumeModal(exerciseName, dateKey) {
-	  // 1) Set default date range button to "Year"
+	  // Reset the date-range buttons so that "Year" is active
 	  const modalRangeBtns = document.querySelectorAll('#exerciseVolumeModal .date-range-btn');
 	  modalRangeBtns.forEach(btn => {
 		btn.classList.toggle('active', btn.getAttribute('data-range') === 'year');
 	  });
 
-	  // 2) Store these in our new global variables
+	  // Store exercise info for later range updates
 	  currentExerciseVolumeName = exerciseName;
 	  currentExerciseVolumeDateKey = dateKey;
 
-	  // 3) Show the overlay
-	  document.getElementById("exerciseVolumeOverlay").classList.add("active");
+	  // Open the overlay/modal
+	  openModalOnTop("exerciseVolumeOverlay");
 
-	  // 4) Build (or rebuild) the chart with default range
+	  // Set the header text to the appropriate title for weighted (volume) exercises.
+	  // This ensures that if the modal was previously used for a duration exercise,
+	  // it no longer shows "Total Duration Over Time".
+	  document.getElementById("exerciseVolumeModal")
+		.querySelector("h2").textContent = "Total Volume Over Time";
+
+	  // Build the chart for weighted exercise volume
 	  buildExerciseVolumeProgressionChart(exerciseName, dateKey);
 	}
     function closeExerciseVolumeModal() {
@@ -5127,79 +6068,79 @@
       }
     }
 	function buildExerciseVolumeProgressionChart(exerciseName, highlightDateKey) {
-	  // 1) Which date-range button is active in the Exercise Volume modal?
-	  const selectedRangeBtn = document.querySelector('#exerciseVolumeModal .date-range-btn.active');
-	  const selectedRange = selectedRangeBtn ? selectedRangeBtn.getAttribute('data-range') : 'year';
-
-	  // 2) Convert highlightDateKey → Date → get date bounds
+	  // Determine the active date range.
+	  const selectedRange = document.querySelector('#exerciseVolumeModal .date-range-btn.active').getAttribute('data-range');
 	  const refDate = parseDateKey(highlightDateKey);
 	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
-
-	  // 3) Filter dateKeys by date range
+	  
 	  const dateKeys = Object.keys(calendarData)
-		.filter(k => {
-		  const d = parseDateKey(k);
+		.filter(key => {
+		  const d = parseDateKey(key);
 		  return d >= start && d <= end;
 		})
 		.sort();
 
-	  // 4) Build a map of date => total volume for this exercise
 	  const dataMap = {};
+	  const template = getExerciseTemplate(exerciseName);
+
+	  // For each date, sum volume using effective weight.
 	  dateKeys.forEach(k => {
 		const dayObj = calendarData[k];
-		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
-		  let exerciseVolume = 0;
-		  dayObj.hevyWorkouts.forEach(workout => {
-			workout.exercises.forEach(ex => {
-			  if (ex.title === exerciseName) {
-				ex.sets.forEach(s => {
-				  exerciseVolume += (s.weight_kg * s.reps);
-				});
+		if (!dayObj.hevyWorkouts || dayObj.hevyWorkouts.length === 0) return;
+		let exerciseVolume = 0;
+		dayObj.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(ex => {
+			if (ex.title === exerciseName) {
+			  ex.sets.forEach(s => {
+				let effW = parseFloat(s.weight_kg);
+				if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(k);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(k)) || 0;
+				const extra = parseFloat(s.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effW = bodyweight - extra;
+				} else {
+				  effW = bodyweight;
+				}
 			  }
-			});
+				exerciseVolume += (effW * s.reps);
+			  });
+			}
 		  });
-		  if (exerciseVolume > 0) {
-			dataMap[k] = exerciseVolume;
-		  }
+		});
+		if (exerciseVolume > 0) {
+		  dataMap[k] = exerciseVolume;
 		}
 	  });
 
-	  // 5) If no data points found, exit
 	  const chartKeys = Object.keys(dataMap).sort();
 	  if (chartKeys.length < 1) {
 		destroyExerciseVolumeChart();
-		document.getElementById("exerciseVolumeOverlay").classList.remove("active");
 		showCustomAlert(`No volume data found for '${exerciseName}'.`);
 		return;
 	  }
 
-	  // 6) Build final arrays for Chart.js
 	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
 	  const labels = chartKeys.map(k => {
 		const d = parseDateKey(k);
 		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 	  });
-
 	  const volumes = dataPoints.map(dp => dp.y);
 	  const minV = Math.min(...volumes);
 	  const maxV = Math.max(...volumes);
 	  const range = maxV - minV;
 	  const pad = range * 0.1;
-	  const suggestedMin = (minV - pad < 0) ? 0 : (minV - pad);
+	  const suggestedMin = Math.max(0, minV - pad);
 	  const suggestedMax = maxV + pad;
 
-	  // Destroy old chart if it exists
 	  destroyExerciseVolumeChart();
-
-	  // 7) Build the new Chart.js line chart
 	  const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-		dataPoints, 
-		highlightDateKey,
-		'#4DAAFF', // normal color
-		'#FFDD77',           // highlight color
-		2.5,
-		5
+		dataPoints, highlightDateKey, '#4DAAFF', '#FFDD77', 2.5, 5
 	  );
 
 	  exerciseVolumeChart = new Chart(ctx, {
@@ -5231,7 +6172,7 @@
 			y: {
 			  suggestedMin,
 			  suggestedMax,
-			  title: { display: true, text: 'Exercise Volume (kg)' },
+			  title: { display: true, text: 'Volume (kg)' },
 			  ticks: { color: '#ccc' },
 			  grid: { color: '#555' }
 			}
@@ -5256,7 +6197,7 @@
     });
       currentOrmExercise = exerciseName;
       currentOrmDateKey = dateKey;
-      document.getElementById("ormProgressOverlay").classList.add("active");
+      openModalOnTop("ormProgressOverlay");
       buildExerciseOrmProgressChart(exerciseName, dateKey);
     }
     function closeOrmProgressModal() {
@@ -5274,45 +6215,53 @@
 	let currentOrmDateKey = null;
 
 	function buildExerciseOrmProgressChart(exerciseName, highlightDateKey) {
-	  // Figure out which date range to display
 	  const selectedRange = document.querySelector('#exerciseOrmProgressModal .date-range-btn.active').getAttribute('data-range');
 	  const refDate = parseDateKey(highlightDateKey);
 	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
 
-	  // Collect only the date keys that fall within (start..end)
+	  const template = getExerciseTemplate(exerciseName);
+	  const dataMap = {};
+
 	  const dateKeys = Object.keys(calendarData)
 		.filter(key => {
-		  const date = parseDateKey(key);
-		  return date >= start && date <= end;
+		  const d = parseDateKey(key);
+		  return d >= start && d <= end;
 		})
 		.sort();
 
-	  // dataMap is now an object that stores { orm, bestWeight, bestReps }
-	  const dataMap = {};
-
-	  // We'll store the best (weight, reps) that produced the highest ORM each day
 	  dateKeys.forEach(k => {
 		let dayMaxOrm = 0;
-		let bestSet = null; // to store { weight, reps } for that day's best set
-
+		let bestSet = null;
 		const dayObj = calendarData[k];
 		if (dayObj.hevyWorkouts) {
 		  dayObj.hevyWorkouts.forEach(workout => {
 			workout.exercises.forEach(ex => {
 			  if (ex.title === exerciseName) {
-				ex.sets.forEach(s => {
-				  const setOrm = computeOrm(s.weight_kg, s.reps);
-				  if (setOrm > dayMaxOrm) {
-					dayMaxOrm = setOrm;
-					bestSet = { weight: s.weight_kg, reps: s.reps };
+				ex.sets.forEach((s, i) => {
+				  let effW = parseFloat(s.weight_kg);
+				  if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(k);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(k)) || 0;
+				const extra = parseFloat(s.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effW = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effW = bodyweight - extra;
+				} else {
+				  effW = bodyweight;
+				}
+			  }
+				  const thisOrm = computeOrm(effW, s.reps);
+				  if (thisOrm > dayMaxOrm) {
+					dayMaxOrm = thisOrm;
+					bestSet = { weight: effW, reps: s.reps };
 				  }
 				});
 			  }
 			});
 		  });
 		}
-
-		// Only record if the day's best ORM > 0
 		if (dayMaxOrm > 0 && bestSet) {
 		  dataMap[k] = {
 			orm: dayMaxOrm,
@@ -5322,7 +6271,6 @@
 		}
 	  });
 
-	  // If no data points, exit
 	  const chartKeys = Object.keys(dataMap).sort();
 	  if (chartKeys.length < 1) {
 		destroyOrmProgressChart();
@@ -5331,39 +6279,23 @@
 		return;
 	  }
 
-	  // Build arrays for Chart.js
-	  // We'll keep the numeric ORMs in dataPoints,
-	  // and remember that 'chartKeys[index]' can retrieve the metadata from dataMap.
 	  const dataPoints = chartKeys.map(k => dataMap[k].orm);
-
-	  // Build the user-facing labels (display dates)
 	  const labels = chartKeys.map(k => {
 		const d = parseDateKey(k);
-		return d.toLocaleDateString('en-US', {
-		  month: 'short',
-		  day: 'numeric',
-		  year: 'numeric'
-		});
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 	  });
-
-	  // Figure out suggestedMin / suggestedMax for Y-axis
-	  const orms = dataPoints;
-	  const minOrm = Math.min(...orms);
-	  const maxOrm = Math.max(...orms);
+	  const minOrm = Math.min(...dataPoints);
+	  const maxOrm = Math.max(...dataPoints);
 	  const range = maxOrm - minOrm;
 	  const pad = range * 0.1;
 	  const suggestedMin = (minOrm - pad < 0) ? 0 : (minOrm - pad);
 	  const suggestedMax = maxOrm + pad;
 
-	  // destroy old chart if it exists
 	  destroyOrmProgressChart();
-
-	  // get canvas context
 	  const ctx = document.getElementById('exerciseOrmProgressChart').getContext('2d');
 
-	  // build highlight arrays for the chart
 	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-		chartKeys.map(k => ({ x: k, y: dataMap[k].orm })), // pass array of { x, y }
+		chartKeys.map(k => ({ x: k, y: dataMap[k].orm })),
 		highlightDateKey,
 		'#4DAAFF',
 		'#FFDD77',
@@ -5371,14 +6303,13 @@
 		5
 	  );
 
-	  // Provide a custom tooltip callback to show weight x reps
 	  exerciseOrmProgressChart = new Chart(ctx, {
 		type: 'line',
 		data: {
 		  labels: labels,
 		  datasets: [{
 			label: `ORM: ${exerciseName}`,
-			data: dataPoints, // numeric ORM values
+			data: dataPoints,
 			borderColor: '#4DAAFF',
 			backgroundColor: 'rgba(77, 170, 255,0.2)',
 			fill: true,
@@ -5407,27 +6338,18 @@
 			}
 		  },
 		  plugins: {
-			legend: {
-			  labels: { color: '#eee' }
-			},
+			legend: { labels: { color: '#eee' } },
 			tooltip: {
 			  callbacks: {
-				// Top line in tooltip
 				title: function(tooltipItems) {
-				  // Typically tooltipItems is array of points; we use the first
-				  return tooltipItems[0].label; // e.g. "Jan 10, 2025"
+				  return tooltipItems[0].label;
 				},
-				// Second line(s) in tooltip
 				label: function(context) {
-				  // The dataIndex points to whichever day we hovered
 				  const i = context.dataIndex;
-				  const dateKey = chartKeys[i]; // e.g. "2025-01-10"
-				  const info = dataMap[dateKey]; // { orm, bestWeight, bestReps }
-
-				  // Build lines
+				  const dateKey = chartKeys[i];
+				  const info = dataMap[dateKey];
 				  const ormText = `ORM: ${info.orm.toFixed(1)}kg`;
 				  const setText = `(${info.bestWeight}kg x ${info.bestReps})`;
-				  // Return an array => multiple lines in the tooltip
 				  return [ormText, setText];
 				}
 			  }
@@ -5436,6 +6358,7 @@
 		}
 	  });
 	}
+
 
     /*
       =======================================
@@ -5602,7 +6525,7 @@
       confirmButtons.style.display = "none";
       defaultButton.style.display = "block";
 
-      overlay.classList.add("active");
+      openModalOnTop("customAlertOverlay");
     }
     function showCustomConfirm(message, onConfirm) {
       const overlay = document.getElementById("customAlertOverlay");
@@ -5706,95 +6629,248 @@
       = 19) Exercise Summary Modal        =
       =====================================
     */
+	
 	function openExerciseSummaryModal(exerciseName) {
-	  document.getElementById("exerciseSummaryOverlay").classList.add("active");
-	  
+	  // Bring the exercise summary overlay on top
+	  openModalOnTop("exerciseSummaryOverlay"); 
+
 	  const content = document.getElementById("exerciseSummaryContent");
-	  const stats = getExerciseStats(exerciseName);
-	  
+	  const template = getExerciseTemplate(exerciseName);
+	  const exerciseType = template ? template.type : "weighted_reps";
+
+	  // Basic heading
 	  let html = `
 		<div class="exercise-summary-header">
 		  ${escapeHtml(exerciseName)}
-		  <button class="compare-button" 
-          style="margin: auto;"
-          onclick="openExerciseHistoryModal('${escapeHtml(exerciseName)}')">
+		  <button class="compare-button"
+				  onclick="openExerciseHistoryModal('${escapeHtml(exerciseName)}')">
 			Exercise History
 		  </button>
 		</div>
+	  `;
 
-		<div class="key-stats-grid">
-		  <div class="key-stat" data-date="${stats.heaviestWeightDate}">
-			<div class="key-stat-label">Heaviest Weight</div>
-			<div class="key-stat-value">${stats.heaviestWeight}kg</div>
-		  </div>
-		  <div class="key-stat" data-date="${stats.bestOrmDate}">
-			<div class="key-stat-label">Estimated 1RM</div>
-			<div class="key-stat-value glowing-orm">${stats.bestOrm.toFixed(1)}kg</div>
-		  </div>
-		  <div class="key-stat">
-			<div class="key-stat-label">Exercise Frequency</div>
-			<div class="key-stat-value">${stats.totalOccurrences}</div>
-		  </div>
-		  <div class="key-stat" data-date="${stats.bestSetVolumeDate}">
-			<div class="key-stat-label">Best Set Volume</div>
-			<div class="key-stat-value">${stats.bestSetDetails.weight}kg × ${stats.bestSetDetails.reps}</div>
-		  </div>
-		  <div class="key-stat" data-date="${stats.bestSessionVolumeDate}">
-			<div class="key-stat-label">Best Session Volume</div>
-			<div class="key-stat-value">${stats.bestSessionVolume.toLocaleString()}kg</div>
-		  </div>
-		  <div class="key-stat">
-			<div class="key-stat-label">Total Volume</div>
-			<div class="key-stat-value">${stats.totalVolume.toLocaleString()}kg</div>
-		  </div>
-		</div>
+	  if (exerciseType === "duration") {
+		// Duration stats
+		const stats = getDurationStats(exerciseName);
 
-		<div class="exercise-stat-block">
-		  <div class="exercise-stat-title">Best Weight by Rep Range</div>
-		  <div class="rep-range-list">`;
-	  
-	  const sortedReps = Object.keys(stats.repRanges).map(Number).sort((a, b) => a - b);
-	  
-	  sortedReps.forEach(reps => {
-		const data = stats.repRanges[reps];
-		const isOrmSet = computeOrm(data.weight, reps) === stats.bestOrm;
 		html += `
-		  <div class="rep-range-row" data-date="${data.date}">
-			<span class="rep-range-count">${reps} reps</span>
-			<span class="rep-range-weight ${isOrmSet ? 'glowing-orm' : ''}">${data.weight}kg</span>
+		  <div class="key-stats-grid">
+			<div class="key-stat" data-date="${stats.longestSetDate || ''}">
+			  <div class="key-stat-label">Longest Duration (Set)</div>
+			  <div class="key-stat-value">
+				${formatDuration(stats.longestSetDuration)}
+			  </div>
+			</div>
+
+			<div class="key-stat" data-date="${stats.longestSessionDate || ''}">
+			  <div class="key-stat-label">Longest Duration (Session)</div>
+			  <div class="key-stat-value">
+				${formatDuration(stats.longestSessionDuration)}
+			  </div>
+			</div>
+
+			<div class="key-stat" data-frequency="true">
+			  <div class="key-stat-label">Exercise Frequency</div>
+			  <div class="key-stat-value">${stats.totalOccurrences}</div>
+			</div>
+
+			<div class="key-stat">
+			  <div class="key-stat-label">Total Duration</div>
+			  <div class="key-stat-value">
+				${formatDuration(stats.totalDuration)}
+			  </div>
+			</div>
 		  </div>
 		`;
-	  });
-	  
-	  html += '</div></div>';
-	  
-	  content.innerHTML = html;
 
-	  // Add click handlers
-	  // For frequency stat
-	  const frequencyStats = content.querySelector('.key-stat:nth-child(3)');
-	  if (frequencyStats) {
-		frequencyStats.addEventListener('click', () => openExerciseFrequencyModal(exerciseName));
+	  } else if (exerciseType === "distance_duration") {
+		const stats = getCardioStats(exerciseName);
+
+		html += `
+		  <div class="key-stats-grid">
+			<div class="key-stat" data-date="${stats.longestSetDate || ''}">
+			  <div class="key-stat-label">Longest Distance (Set)</div>
+			  <div class="key-stat-value">
+				${(stats.longestSetDistance / 1000).toFixed(2)}km
+			  </div>
+			</div>
+
+			<div class="key-stat" data-date="${stats.longestSessionDate || ''}">
+			  <div class="key-stat-label">Longest Distance (Session)</div>
+			  <div class="key-stat-value">
+				${(stats.longestSessionDistance / 1000).toFixed(2)}km
+			  </div>
+			</div>
+
+			<div class="key-stat" data-date="${stats.bestPace5kDate || ''}">
+			  <div class="key-stat-label">Best Pace (5km+)</div>
+			  <div class="key-stat-value">
+				${
+				  stats.bestPace5kPlus
+					? formatPace(5000, stats.bestPace5kPlus * 5) + "/km"
+					: "N/A"
+				}
+			  </div>
+			</div>
+
+			<div class="key-stat" data-frequency="true">
+			  <div class="key-stat-label">Exercise Frequency</div>
+			  <div class="key-stat-value">${stats.totalOccurrences}</div>
+			</div>
+
+			<div class="key-stat" data-date="${stats.longestDurationDate || ''}">
+			  <div class="key-stat-label">Longest Duration</div>
+			  <div class="key-stat-value">
+				${formatDuration(stats.longestSetDuration)}
+			  </div>
+			</div>
+
+			<div class="key-stat">
+			  <div class="key-stat-label">Total Distance</div>
+			  <div class="key-stat-value">
+				${(stats.totalDistance / 1000).toFixed(2)}km
+			  </div>
+			</div>
+		  </div>
+
+		  <div class="exercise-stat-block">
+			<div class="exercise-stat-title">Best Pace by Distance</div>
+			<div class="rep-range-list">
+		`;
+
+		const segmentsSorted = Object.keys(stats.bestPacesByDistance)
+		  .map(d => parseInt(d, 10))
+		  .sort((a, b) => a - b);
+
+		segmentsSorted.forEach(dist => {
+		  const paceObj = stats.bestPacesByDistance[dist];
+		  let labelStr = dist + 'm+';
+		  switch(dist) {
+			case 60:    labelStr = "60m+";    break;
+			case 100:   labelStr = "100m+";   break;
+			case 400:   labelStr = "400m+";   break;
+			case 800:   labelStr = "800m+";   break;
+			case 1000:  labelStr = "1km+";    break;
+			case 2000:  labelStr = "2km+";    break;
+			case 3000:  labelStr = "3km+";    break;
+			case 4000:  labelStr = "4km+";    break;
+			case 5000:  labelStr = "5km+";    break;
+			case 10000: labelStr = "10km+";   break;
+			case 21100: labelStr = "21.1km+"; break;
+			case 42195: labelStr = "42.195km+"; break;
+		  }
+
+		  if (paceObj.paceValue < Infinity) {
+			const paceStr = formatPace(1000, paceObj.paceValue * 60) + "/km";
+			html += `
+			  <div class="rep-range-row" data-date="${paceObj.dateKey}">
+				<span class="rep-range-count">${labelStr}</span>
+				<span class="rep-range-weight">${paceStr}</span>
+			  </div>
+			`;
+		  } else {
+			html += `
+			  <div class="rep-range-row">
+				<span class="rep-range-count">${labelStr}</span>
+				<span class="rep-range-weight">N/A</span>
+			  </div>
+			`;
+		  }
+		});
+
+		html += `</div></div>`;
+
+	  } else {
+		const stats = getExerciseStats(exerciseName);
+
+		html += `
+		  <div class="key-stats-grid">
+			<div class="key-stat" data-date="${stats.heaviestWeightDate}">
+			  <div class="key-stat-label">Heaviest Weight</div>
+			  <div class="key-stat-value">${stats.heaviestWeight}kg</div>
+			</div>
+			<div class="key-stat" data-date="${stats.bestOrmDate}">
+			  <div class="key-stat-label">Estimated 1RM</div>
+			  <div class="key-stat-value glowing-orm">
+				${stats.bestOrm.toFixed(1)}kg
+			  </div>
+			</div>
+			<div class="key-stat" data-frequency="true">
+			  <div class="key-stat-label">Exercise Frequency</div>
+			  <div class="key-stat-value">${stats.totalOccurrences}</div>
+			</div>
+			<div class="key-stat" data-date="${stats.bestSetVolumeDate}">
+			  <div class="key-stat-label">Best Set Volume</div>
+			  <div class="key-stat-value">
+				${stats.bestSetDetails.weight}kg × ${stats.bestSetDetails.reps}
+			  </div>
+			</div>
+			<div class="key-stat" data-date="${stats.bestSessionVolumeDate}">
+			  <div class="key-stat-label">Best Session Volume</div>
+			  <div class="key-stat-value">
+				${stats.bestSessionVolume.toLocaleString()}kg
+			  </div>
+			</div>
+			<div class="key-stat" data-total-volume="true">
+			  <div class="key-stat-label">Total Volume</div>
+			  <div class="key-stat-value">${stats.totalVolume.toLocaleString()}kg</div>
+			</div>
+		  </div>
+
+		  <div class="exercise-stat-block">
+			<div class="exercise-stat-title">Best Weight by Rep Range</div>
+			<div class="rep-range-list">
+		`;
+
+		const sortedReps = Object.keys(stats.repRanges).map(Number).sort((a, b) => a - b);
+		sortedReps.forEach(reps => {
+		  const data = stats.repRanges[reps];
+		  const isOrmSet = (computeOrm(data.weight, reps) === stats.bestOrm);
+		  html += `
+			<div class="rep-range-row" data-date="${data.date}">
+			  <span class="rep-range-count">${reps} reps</span>
+			  <span class="rep-range-weight ${isOrmSet ? 'glowing-orm' : ''}">
+				${data.weight}kg
+			  </span>
+			</div>
+		  `;
+		});
+
+		html += `</div></div>`;
 	  }
 
-	  // For date-linked stats
-	  content.querySelectorAll('[data-date]').forEach(element => {
-		element.addEventListener('click', () => {
-		  const date = element.getAttribute('data-date');
+	  // Inject into the modal
+	  content.innerHTML = html;
+
+	  // Set up click handlers
+	  content.querySelectorAll("[data-date]").forEach(element => {
+		element.addEventListener("click", () => {
+		  const date = element.getAttribute("data-date");
 		  if (date) {
-			// Convert the date to our date key format (YYYY-MM-DD)
 			const dateObj = new Date(date);
 			const dateKey = getDateKey(dateObj);
 			openHevyModal(dateKey);
-			closeExerciseSummaryModal();
 		  }
 		});
 	  });
-	  const totalVolumeStats = content.querySelector('.key-stat:nth-child(6)'); // Sixth key-stat is total volume
-		if (totalVolumeStats) {
-		  totalVolumeStats.addEventListener('click', () => openTotalVolumeDistributionModal());
-		}
+
+	  // Frequency handler
+	  const freqElem = content.querySelector("[data-frequency='true']");
+	  if (freqElem) {
+		freqElem.addEventListener("click", () => {
+		  openExerciseFrequencyModal(exerciseName);
+		});
+	  }
+
+	  // Total volume handler
+	  const totalVolElem = content.querySelector("[data-total-volume='true']");
+	  if (totalVolElem) {
+		totalVolElem.addEventListener("click", () => {
+		  openTotalVolumeDistributionModal(getDateKey(new Date()));
+		});
+	  }
 	}
+	
 
 	function closeExerciseSummaryModal() {
 	  document.getElementById("exerciseSummaryOverlay").classList.remove("active");
@@ -5812,76 +6888,66 @@
 	  let bestSessionVolume = 0;
 	  let bestSessionVolumeDate = null;
 	  let totalVolume = 0;
-	  
-	  // Initialize repRanges as empty object
 	  const repRanges = {};
-	  
-	  // First pass: Go through all workouts to build rep ranges
-	  Object.values(calendarData).forEach(dayData => {
-		if (dayData.hevyWorkouts) {
-		  dayData.hevyWorkouts.forEach(workout => {
-			let sessionVolume = 0;
-			
-			workout.exercises.forEach(exercise => {
-			  if (exercise.title === exerciseName) {
-				totalOccurrences++;
-				
-				exercise.sets.forEach(set => {
-				  const reps = set.reps;
-				  const weight = set.weight_kg;
-				  const setVolume = weight * reps;
-				  
-				  // Initialize rep range if it doesn't exist
-				  if (!repRanges[reps]) {
-					repRanges[reps] = {
-					  weight: 0,
-					  date: null
-					};
-				  }
-				  
-				  // Update rep range if this weight is higher
-				  if (weight > repRanges[reps].weight) {
-					repRanges[reps] = {
-					  weight: weight,
-					  date: workout.start_time
-					};
-				  }
-				  
-				  // Track best set volume
-				  if (setVolume > bestSetVolume) {
-					bestSetVolume = setVolume;
-					bestSetVolumeDate = workout.start_time;
-					bestSetDetails = { weight, reps };
-				  }
-				  
-				  // Track heaviest weight
-				  if (weight > heaviestWeight) {
-					heaviestWeight = weight;
-					heaviestWeightDate = workout.start_time;
-				  }
 
-				  // Track best ORM
-				  const orm = computeOrm(weight, reps);
-				  if (orm > bestOrm) {
-					bestOrm = orm;
-					bestOrmDate = workout.start_time;
-				  }
-				  
-				  sessionVolume += setVolume;
-				  totalVolume += setVolume;
-				});
+	  const template = getExerciseTemplate(exerciseName);
+
+	  Object.entries(calendarData).forEach(([dateKey, dayData]) => {
+		if (!dayData.hevyWorkouts) return;
+		dayData.hevyWorkouts.forEach(workout => {
+		  let sessionVolume = 0;
+		  workout.exercises.forEach(ex => {
+			if (ex.title === exerciseName) {
+			  totalOccurrences++;
+			  ex.sets.forEach(set => {
+				let effectiveWeight = parseFloat(set.weight_kg);
+				if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effectiveWeight = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effectiveWeight = bodyweight - extra;
+				} else {
+				  effectiveWeight = bodyweight;
+				}
 			  }
-			});
-			
-			// Track best session
-			if (sessionVolume > bestSessionVolume) {
-			  bestSessionVolume = sessionVolume;
-			  bestSessionVolumeDate = workout.start_time;
+				// Update rep ranges
+				if (!repRanges[set.reps]) {
+				  repRanges[set.reps] = { weight: 0, date: null };
+				}
+				if (effectiveWeight > repRanges[set.reps].weight) {
+				  repRanges[set.reps] = { weight: effectiveWeight, date: workout.start_time };
+				}
+				const setVolume = effectiveWeight * set.reps;
+				const orm = computeOrm(effectiveWeight, set.reps);
+
+				if (setVolume > bestSetVolume) {
+				  bestSetVolume = setVolume;
+				  bestSetVolumeDate = workout.start_time;
+				  bestSetDetails = { weight: effectiveWeight, reps: set.reps };
+				}
+				if (effectiveWeight > heaviestWeight) {
+				  heaviestWeight = effectiveWeight;
+				  heaviestWeightDate = workout.start_time;
+				}
+				if (orm > bestOrm) {
+				  bestOrm = orm;
+				  bestOrmDate = workout.start_time;
+				}
+				sessionVolume += setVolume;
+				totalVolume += setVolume;
+			  });
 			}
 		  });
-		}
+		  if (sessionVolume > bestSessionVolume) {
+			bestSessionVolume = sessionVolume;
+			bestSessionVolumeDate = workout.start_time;
+		  }
+		});
 	  });
-	  
 	  return { 
 		totalOccurrences, 
 		repRanges,
@@ -5899,19 +6965,18 @@
 	}
 	// EXERCISE HISTORY Modal
 	function openExerciseHistoryModal(exerciseName) {
-	  // Activate the modal overlay
-	  document.getElementById("exerciseHistoryOverlay").classList.add("active");
+	  openModalOnTop("exerciseHistoryOverlay");
 	  document.getElementById("exerciseHistorySubheader").textContent = exerciseName;
-	  // Get the content container and clear previous content
+	  
 	  const content = document.getElementById("exerciseHistoryContent");
 	  content.innerHTML = '';
 	  
-	  // Get all historical sessions for this exercise
 	  const sessions = getAllSessionsForExercise(exerciseName);
+	  const template = getExerciseTemplate(exerciseName);
+	  const exerciseType = template ? template.type : 'weighted_reps';
 	  
 	  let html = '';
 	  
-	  // Build HTML for each session
 	  sessions.forEach(session => {
 		const formattedDate = session.date.toLocaleDateString('en-US', {
 		  year: 'numeric',
@@ -5925,63 +6990,148 @@
 			<div class="hevy-sets exercise-history-sets">
 		`;
 		
-		// Add sets with PR detection
-		session.exercise.sets.forEach((set, index) => {
-		  const prInfo = getSetPRInfo(set, session.exercise.title, session.dateKey, session.workout.id, index);
-		  const prClass = prInfo.isPR ? 'pr-border' : '';
-		  const prLabels = prInfo.labels.length > 0 ? `
-			<div class="pr-labels">
-			  ${prInfo.labels.map(label => `<div class="pr-text smaller-pr">${label}</div>`).join('')}
-			</div>
-		  ` : '';
+		if (exerciseType === 'duration') {
+		  let totalDuration = 0;
+
+		  session.exercise.sets.forEach((set, index) => {
+			const prInfo = getSetPRInfo(set, exerciseName, session.dateKey, session.workout.id, index);
+			const prClass = prInfo.isPR ? 'pr-border' : '';
+			const prLabels = prInfo.labels.length > 0 ? `
+			  <div class="pr-labels">
+				${prInfo.labels.map(label => `<div class="pr-text smaller-pr">${label}</div>`).join('')}
+			  </div>
+			` : '';
+
+			totalDuration += set.duration_seconds;
+			
+			html += `
+			  <div class="hevy-set ${prClass}">
+				${formatDuration(set.duration_seconds)}
+				${prInfo.isPR ? buildStarsContainer() : ''}
+				${prLabels}
+			  </div>
+			`;
+		  });
 		  
+		  // Add total duration for the session
 		  html += `
-			<div class="hevy-set ${prClass}" 
-				 data-exercise="${escapeHtml(session.exercise.title)}"
-				 data-reps="${set.reps}"
-				 data-weight="${set.weight_kg}"
-				 data-date-key="${session.dateKey}">
-			  <span class="hevy-set-weight">${set.weight_kg}kg</span>
-			  x
-			  <span class="hevy-set-reps">${set.reps}</span>
-			  ${prInfo.isPR ? buildStarsContainer() : ''}
-			  ${prLabels}
 			</div>
-		  `;
-		});
-		
-		html += `
+			<div style="margin-top: 0.5rem; text-align: center; color: #888;">
+			  Total Duration: ${formatDuration(totalDuration)}
 			</div>
 		  </div>
-		`;
+		  `;
+		  
+		} else if (exerciseType === 'distance_duration') {
+		  session.exercise.sets.forEach((set, index) => {
+			const prInfo = getSetPRInfo(set, exerciseName, session.dateKey, session.workout.id, index);
+			const prClass = prInfo.isPR ? 'pr-border' : '';
+			const prLabels = prInfo.labels.length > 0 ? `
+			  <div class="pr-labels">
+				${prInfo.labels.map(label => `<div class="pr-text smaller-pr">${label}</div>`).join('')}
+			  </div>
+			` : '';
+			
+			const pace = formatPace(set.distance_meters, set.duration_seconds);
+			
+			html += `
+			  <div class="hevy-set ${prClass}">
+				${(set.distance_meters / 1000).toFixed(2)}km
+				<span style="color: #888;">in</span>
+				${formatDuration(set.duration_seconds)}
+				<div style="font-size: 0.8em; color: #888; margin-top: 4px;">
+				  ${pace}/km
+				</div>
+				${prInfo.isPR ? buildStarsContainer() : ''}
+				${prLabels}
+			  </div>
+			`;
+		  });
+		  
+		  // Add totals
+		  let totalDistance = 0;
+		  let totalDuration = 0;
+		  session.exercise.sets.forEach(set => {
+			totalDistance += set.distance_meters;
+			totalDuration += set.duration_seconds;
+		  });
+		  
+		  html += `
+			</div>
+			<div style="margin-top: 0.5rem; text-align: center; color: #888;">
+			  Total Distance: ${(totalDistance / 1000).toFixed(2)}km
+			  <br>
+			  Total Duration: ${formatDuration(totalDuration)}
+			</div>
+		  </div>
+		  `;
+		  
+		} else {
+		  // For weighted exercises (normal weighted_reps and bodyweight-based types)
+		  session.exercise.sets.forEach((set, index) => {
+			const prInfo = getSetPRInfo(set, exerciseName, session.dateKey, session.workout.id, index);
+			const prClass = prInfo.isPR ? 'pr-border' : '';
+			const prLabels = prInfo.labels.length > 0 ? `
+			  <div class="pr-labels">
+				${prInfo.labels.map(label => `<div class="pr-text smaller-pr">${label}</div>`).join('')}
+			  </div>
+			` : '';
+			
+			// Compute effective weight: if the template type is bodyweight_weighted or bodyweight_assisted,
+			// then effectiveWeight = (day's bodyweight) ± (set.weight_kg); otherwise, it's just set.weight_kg.
+			let effectiveWeight = parseFloat(set.weight_kg);
+			if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(session.dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(session.dateKey)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effectiveWeight = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effectiveWeight = bodyweight - extra;
+				} else {
+				  effectiveWeight = bodyweight;
+				}
+			  }
+			
+			html += `
+			  <div class="hevy-set ${prClass}" data-exercise="${escapeHtml(exerciseName)}" data-reps="${set.reps}" data-weight="${effectiveWeight}" data-date-key="${session.dateKey}">
+				<span class="hevy-set-weight">${effectiveWeight}kg</span>
+				x
+				<span class="hevy-set-reps">${set.reps}</span>
+				${prInfo.isPR ? buildStarsContainer() : ''}
+				${prLabels}
+			  </div>
+			`;
+		  });
+		  
+		  html += `</div></div>`;
+		}
 	  });
 
-	  // Handle empty state
 	  if (sessions.length === 0) {
 		html = '<p style="text-align: center; color: #888; padding: 2rem;">No historical data found for this exercise.</p>';
 	  }
 
-	  // Insert generated HTML
 	  content.innerHTML = html;
 
-	  // Add click handlers for sets
-	  content.addEventListener('click', (e) => {
-		const setEl = e.target.closest('.hevy-set');
-		if (setEl) {
-		  const exerciseName = setEl.dataset.exercise;
-		  const weight = parseFloat(setEl.dataset.weight);
-		  const reps = parseInt(setEl.dataset.reps, 10);
-		  const dateKey = setEl.dataset.dateKey;
-		  openExerciseProgressionModal(exerciseName, weight, reps, dateKey);
-		}
-	  });
+	  // Only add click handlers for weighted exercises
+	  if (exerciseType === 'weighted_reps') {
+		content.addEventListener('click', (e) => {
+		  const setEl = e.target.closest('.hevy-set');
+		  if (setEl) {
+			const exerciseName = setEl.dataset.exercise;
+			const weight = parseFloat(setEl.dataset.weight);
+			const reps = parseInt(setEl.dataset.reps, 10);
+			const dateKey = setEl.dataset.dateKey;
+			openExerciseProgressionModal(exerciseName, weight, reps, dateKey);
+		  }
+		});
+	  }
 
-	  // Add close handler
-	  document.getElementById("exerciseHistoryCloseBtn").addEventListener("click", closeExerciseHistoryModal);
-
-	  // Scroll to top
 	  content.scrollTop = 0;
 	}
+
 
 	function closeExerciseHistoryModal() {
 	  document.getElementById("exerciseHistoryOverlay").classList.remove("active");
@@ -5989,46 +7139,126 @@
 
 	// Add to existing getSetPRInfo function (if not exists, create it)
 	function getSetPRInfo(set, exerciseName, dateKey, workoutId, setIndex) {
+	  const template = getExerciseTemplate(exerciseName);
+	  const exerciseType = template ? template.type : 'weighted_reps';
+	  
 	  const prInfo = {
 		isPR: false,
 		labels: []
 	  };
-	  
-	  const globalPRs = getGlobalPRsForExercise(exerciseName);
-	  const setDate = parseDateKey(dateKey);
-	  
-	  // Check weight PR
-	  if (set.weight_kg === globalPRs.weightPR?.weight && 
-		  setDate.getTime() === parseDateKey(globalPRs.weightPR.dateKey).getTime() &&
-		  workoutId === globalPRs.weightPR.workoutId &&
-		  setIndex === globalPRs.weightPR.setIndex) {
-		prInfo.isPR = true;
-		prInfo.labels.push('Weight PR');
-	  }
-	  
-	  // Check volume PR
-	  const setVolume = set.weight_kg * set.reps;
-	  if (setVolume === globalPRs.volumePR?.volume && 
-		  setDate.getTime() === parseDateKey(globalPRs.volumePR.dateKey).getTime() &&
-		  workoutId === globalPRs.volumePR.workoutId &&
-		  setIndex === globalPRs.volumePR.setIndex) {
-		prInfo.isPR = true;
-		prInfo.labels.push('Volume PR');
-	  }
-	  
-	  // Check ORM PR
-	  const setORM = computeOrm(set.weight_kg, set.reps);
-	  if (setORM === globalPRs.ormPR?.orm && 
-		  setDate.getTime() === parseDateKey(globalPRs.ormPR.dateKey).getTime() &&
-		  workoutId === globalPRs.ormPR.workoutId &&
-		  setIndex === globalPRs.ormPR.setIndex) {
-		prInfo.isPR = true;
-		prInfo.labels.push('1RM PR');
+
+	  if (exerciseType === 'duration') {
+		// Find best duration ever recorded for this exercise
+		let bestDuration = {
+		  duration: 0,
+		  dateKey: null,
+		  workoutId: null,
+		  setIndex: null
+		};
+
+		Object.entries(calendarData).forEach(([k, dayData]) => {
+		  if (!dayData.hevyWorkouts) return;
+		  dayData.hevyWorkouts.forEach(w => {
+			w.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach((s, i) => {
+				  if (s.duration_seconds > bestDuration.duration) {
+					bestDuration = {
+					  duration: s.duration_seconds,
+					  dateKey: k,
+					  workoutId: w.id,
+					  setIndex: i
+					};
+				  }
+				});
+			  }
+			});
+		  });
+		});
+
+		// Check if this set is the best duration
+		if (set.duration_seconds === bestDuration.duration &&
+			dateKey === bestDuration.dateKey &&
+			workoutId === bestDuration.workoutId &&
+			setIndex === bestDuration.setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Duration PR');
+		}
+	  } else if (exerciseType === 'distance_duration') {
+		const prs = getCardioPRs(exerciseName);
+		
+		if (prs.distancePR && 
+			prs.distancePR.dateKey === dateKey && 
+			prs.distancePR.workoutId === workoutId && 
+			prs.distancePR.setIndex === setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Distance PR');
+		}
+
+		if (prs.durationPR && 
+			prs.durationPR.dateKey === dateKey && 
+			prs.durationPR.workoutId === workoutId && 
+			prs.durationPR.setIndex === setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Duration PR');
+		}
+
+		if (prs.pacePR && 
+			prs.pacePR.dateKey === dateKey && 
+			prs.pacePR.workoutId === workoutId && 
+			prs.pacePR.setIndex === setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Pace (5km+) PR');
+		}
+	  } else {
+		const globalPRs = getGlobalPRsForExercise(exerciseName);
+		const setDate = parseDateKey(dateKey);
+		
+		// Compute effective weight.
+		let effectiveWeight = parseFloat(set.weight_kg);
+		if (template && (template.type === 'bodyweight_weighted' || template.type === 'bodyweight_assisted' || template.type === 'reps_only')) {
+				const dayData = getDayData(dateKey);
+				// Ensure numeric conversion for both the bodyweight and extra weight.
+				const bodyweight = parseFloat(dayData.weight) || parseFloat(findNearestWeight(dateKey)) || 0;
+				const extra = parseFloat(set.weight_kg) || 0;
+				if (template.type === 'bodyweight_weighted') {
+				  effectiveWeight = bodyweight + extra;
+				} else if (template.type === 'bodyweight_assisted') {
+				  effectiveWeight = bodyweight - extra;
+				} else {
+				  effectiveWeight = bodyweight;
+				}
+			  }
+		
+		if (effectiveWeight === globalPRs.weightPR?.weight &&
+			setDate.getTime() === parseDateKey(globalPRs.weightPR.dateKey).getTime() &&
+			workoutId === globalPRs.weightPR.workoutId &&
+			setIndex === globalPRs.weightPR.setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Weight PR');
+		}
+		
+		const setVolume = effectiveWeight * set.reps;
+		if (setVolume === globalPRs.volumePR?.volume &&
+			setDate.getTime() === parseDateKey(globalPRs.volumePR.dateKey).getTime() &&
+			workoutId === globalPRs.volumePR.workoutId &&
+			setIndex === globalPRs.volumePR.setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('Volume PR');
+		}
+		
+		const setORM = computeOrm(effectiveWeight, set.reps);
+		if (setORM === globalPRs.ormPR?.orm &&
+			setDate.getTime() === parseDateKey(globalPRs.ormPR.dateKey).getTime() &&
+			workoutId === globalPRs.ormPR.workoutId &&
+			setIndex === globalPRs.ormPR.setIndex) {
+		  prInfo.isPR = true;
+		  prInfo.labels.push('1RM PR');
+		}
 	  }
 	  
 	  return prInfo;
 	}
-	
 	
 	/*
       =======================================
@@ -6055,7 +7285,7 @@
 	}
 
 	function openExerciseFrequencyModal(selectedExercise) {
-	  document.getElementById("exerciseFrequencyOverlay").classList.add("active");
+	  openModalOnTop("exerciseFrequencyOverlay");
 	  
 	  const frequencies = getAllExerciseFrequencies();
 	  
@@ -6163,7 +7393,7 @@
 
 	function openTotalVolumeDistributionModal(selectedExercise = null) {
 	  // 1) Show the overlay
-	  document.getElementById("totalVolumeDistributionOverlay").classList.add("active");
+	  openModalOnTop("totalVolumeDistributionOverlay");
 	  
 	  // 2) Gather volume data for all exercises
 	  const volumeData = getExerciseVolumeTotals(); 
@@ -6283,7 +7513,1572 @@
 	
     /*
       =======================================
-      = 22) DOM Loaded: Event Setup         =
+      = 22) Exercise Creation	            =
+      =======================================
+    */
+	
+	// Global variables
+	let currentWorkoutDateKey = null;
+	let exerciseSelectionCallback = null;
+	let selectedExercises = new Set();
+
+	// Exercise Selection Modal
+	function openExerciseSelectionModal(callback) {
+	  // 1) Store callback
+	  exerciseSelectionCallback = callback;
+	  selectedExercises.clear();
+
+	  // 2) Bring this overlay to the top
+	  openModalOnTop("exerciseSelectionOverlay");
+
+	  // 3) Grab references
+	  const list = document.getElementById("exerciseSelectionList");
+	  const searchInput = document.getElementById("exerciseSearchInput");
+
+	  // 4) Clear previous content
+	  list.innerHTML = '';
+	  searchInput.value = '';
+
+	  // 5) Populate list
+	  populateExerciseList();
+
+	  // 6) Optionally focus search
+	  searchInput.focus();
+	}
+
+	function populateExerciseList(searchTerm = '') {
+	  const list = document.getElementById('exerciseSelectionList');
+	  list.innerHTML = '';
+	  
+	  const filteredExercises = searchTerm 
+		? exerciseTemplates.filter(ex => 
+			ex.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			ex.primary_muscle_group.toLowerCase().includes(searchTerm.toLowerCase()))
+		: exerciseTemplates;
+
+	  filteredExercises.forEach(exercise => {
+		const div = document.createElement('div');
+		div.className = `exercise-option ${selectedExercises.has(exercise.id) ? 'selected' : ''}`;
+		div.setAttribute('data-exercise-id', exercise.id);
+		div.innerHTML = `
+		  <div class="title">${exercise.title}</div>
+		  <div class="details">
+			${exercise.primary_muscle_group.charAt(0).toUpperCase() + 
+			exercise.primary_muscle_group.slice(1)} · ${exercise.equipment || 'No equipment'}
+		  </div>
+		`;
+		
+		div.addEventListener('click', () => {
+		  toggleExerciseSelection(exercise.id, div);
+		});
+		
+		list.appendChild(div);
+	  });
+	}
+
+	function toggleExerciseSelection(exerciseId, element) {
+	  if (selectedExercises.has(exerciseId)) {
+		selectedExercises.delete(exerciseId);
+		element.classList.remove('selected');
+	  } else {
+		selectedExercises.add(exerciseId);
+		element.classList.add('selected');
+	  }
+	}
+
+	function closeExerciseSelectionModal() {
+	  document.getElementById('exerciseSelectionOverlay').classList.remove('active');
+	  selectedExercises.clear();
+	  exerciseSelectionCallback = null;
+	}
+
+	// Initialize workout creation functionality
+	function initWorkoutCreation() {
+	  // Add the create workout button to the toolbar
+	  const importBtn = document.getElementById('hevyImportBtn');
+	  const createBtn = document.createElement('button');
+	  createBtn.className = 'arrow-button';
+	  createBtn.id = 'createWorkoutBtn';
+	  createBtn.title = 'Create Workout';
+	  createBtn.innerHTML = '+';
+	  importBtn.parentNode.insertBefore(createBtn, importBtn.nextSibling);
+
+	  // Event listeners for the create workout button
+	  createBtn.addEventListener('click', () => {
+		if (selectedDates.size !== 1) {
+		  showCustomAlert('Please select exactly one day to create a workout.');
+		  return;
+		}
+		openCreateWorkoutModal([...selectedDates][0]);
+	  });
+
+	  // Initialize search functionality
+	  document.getElementById('exerciseSearchInput').addEventListener('input', (e) => {
+		populateExerciseList(e.target.value.trim());
+	  });
+
+	  // Exercise selection modal buttons
+	  document.getElementById('exerciseSelectionSaveBtn').addEventListener('click', () => {
+		if (selectedExercises.size === 0) {
+		  showCustomAlert('Please select at least one exercise.');
+		  return;
+		}
+		if (exerciseSelectionCallback) {
+		  const exercises = Array.from(selectedExercises)
+			.map(id => exerciseTemplates.find(t => t.id === id))
+			.filter(ex => ex !== undefined);
+		  exerciseSelectionCallback(exercises);
+		}
+		closeExerciseSelectionModal();
+	  });
+
+	  document.getElementById('exerciseSelectionCancelBtn').addEventListener('click', closeExerciseSelectionModal);
+
+	  // Initialize other event listeners
+	  initCreateWorkoutModalListeners();
+	}
+
+	function openCreateWorkoutModal(dateKey) {
+	  currentWorkoutDateKey = dateKey;
+	  const date = parseDateKey(dateKey);
+	  
+	  // Set default times (9 AM for start, 10 AM for end)
+	  const startTime = new Date(date);
+	  startTime.setHours(9, 0, 0, 0);
+	  const endTime = new Date(date);
+	  endTime.setHours(10, 0, 0, 0);
+	  
+	  // Update modal fields
+	  document.getElementById('workoutTitleInput').value = '';
+	  document.getElementById('workoutStartTime').value = startTime.toISOString().slice(0, 16);
+	  document.getElementById('workoutEndTime').value = endTime.toISOString().slice(0, 16);
+	  
+	  // Clear exercises
+	  document.getElementById('exercisesList').innerHTML = '';
+	  
+	  // Show modal
+	  openModalOnTop("createWorkoutOverlay");
+	  
+	  // Update header date
+	  const dateEl = document.querySelector('.workout-date');
+	  dateEl.textContent = date.toLocaleDateString('en-US', {
+		weekday: 'long',
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric'
+	  });
+	}
+
+	function closeCreateWorkoutModal() {
+	  document.getElementById('createWorkoutOverlay').classList.remove('active');
+	  currentWorkoutDateKey = null;
+	}
+
+	function initCreateWorkoutModalListeners() {
+	  // Add Exercise button
+	  document.getElementById('addExerciseBtn').addEventListener('click', () => {
+		openExerciseSelectionModal((exercises) => {
+		  exercises.forEach((exercise, index) => {
+			addExerciseBlock(exercise);
+		  });
+		});
+	  });
+	  
+	  // Save and Cancel buttons
+	  document.getElementById('createWorkoutSaveBtn').addEventListener('click', saveWorkout);
+	  document.getElementById('createWorkoutCancelBtn').addEventListener('click', closeCreateWorkoutModal);
+	  
+	  // Exercise list event delegation
+	  document.getElementById('exercisesList').addEventListener('click', handleExerciseListClicks);
+	}
+
+	function addExerciseBlock(exercise) {
+	  const template = document.getElementById('exerciseTemplate');
+	  const clone = template.content.cloneNode(true);
+	  const container = document.getElementById('exercisesList');
+	  
+	  // Set exercise title and data
+	  clone.querySelector('.exercise-title').textContent = exercise.title;
+	  const block = clone.querySelector('.exercise-block');
+	  block.setAttribute('data-exercise-id', exercise.id);
+	  block.setAttribute('data-exercise-type', exercise.type);
+	  block.setAttribute('data-exercise-index', container.children.length);
+	  
+	  container.appendChild(block);
+	  addSetToExercise(block);
+	}
+
+	function handleExerciseListClicks(e) {
+	  // Remove exercise button
+	  if (e.target.closest('.remove-exercise-btn')) {
+		const block = e.target.closest('.exercise-block');
+		if (block) {
+		  block.remove();
+		  // Reindex remaining exercises
+		  reindexExercises();
+		}
+	  }
+	  
+	  // Add set button
+	  if (e.target.closest('.add-set-btn')) {
+		const block = e.target.closest('.exercise-block');
+		addSetToExercise(block);
+	  }
+	  
+	  // Remove set button
+	  if (e.target.closest('.remove-set-btn')) {
+		const setRow = e.target.closest('.set-row');
+		if (setRow) {
+		  const block = setRow.closest('.exercise-block');
+		  setRow.remove();
+		  // Only renumber sets if the block still exists
+		  if (block) {
+			renumberSets(block);
+		  }
+		}
+	  }
+	}
+
+	function reindexExercises() {
+	  const blocks = document.querySelectorAll('.exercise-block');
+	  blocks.forEach((block, index) => {
+		block.setAttribute('data-exercise-index', index);
+	  });
+	}
+
+	function addSetToExercise(block) {
+	  const exerciseType = block.getAttribute('data-exercise-type');
+	  const template = getSetTemplate(exerciseType);
+	  const clone = template.content.cloneNode(true);
+	  const setsList = block.querySelector('.sets-list');
+	  setsList.appendChild(clone);
+	  
+	  // Initialize time inputs for duration-based exercises
+	  if (exerciseType === 'distance_duration' || exerciseType === 'duration') {
+		initTimeInputs(setsList.lastElementChild);
+	  }
+	  
+	  // For bodyweight exercises, no pre-filling is required now since the bodyweight input was removed.
+	  
+	  renumberSets(block);
+	}
+
+	function renumberSets(block) {
+	  if (!block) return; // Guard clause to prevent null reference
+	  
+	  // Find the sets-list container first
+	  const setsList = block.querySelector('.sets-list');
+	  if (!setsList) return; // Guard clause if sets-list not found
+	  
+	  // Get all set rows within this specific sets-list
+	  const sets = setsList.querySelectorAll('.set-row');
+	  sets.forEach((set, index) => {
+		const numberElement = set.querySelector('.set-number');
+		if (numberElement) {
+		  numberElement.textContent = `Set ${index + 1}`;
+		}
+		set.setAttribute('data-set-index', index);
+	  });
+	}
+
+	function saveWorkout() {
+	  // Get basic workout info
+	  const title = document.getElementById('workoutTitleInput').value.trim();
+	  const startTime = document.getElementById('workoutStartTime').value;
+	  const endTime = document.getElementById('workoutEndTime').value;
+	  
+	  // Validation
+	  if (!title || !startTime || !endTime) {
+		showCustomAlert('Please fill in all required workout fields.');
+		return;
+	  }
+
+	  if (new Date(endTime) <= new Date(startTime)) {
+		showCustomAlert('End time must be after start time.');
+		return;
+	  }
+
+	  const workoutId = 'LOCAL_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+	  const exercises = [];
+	  const exerciseBlocks = document.querySelectorAll('.exercise-block');
+	  let isValid = true;
+
+	  exerciseBlocks.forEach(block => {
+		const exerciseId = block.getAttribute('data-exercise-id');
+		const exerciseType = block.getAttribute('data-exercise-type');
+		const exerciseIndex = parseInt(block.getAttribute('data-exercise-index'));
+		const exerciseTemplate = exerciseTemplates.find(t => t.id === exerciseId);
+		
+		if (!exerciseTemplate) {
+		  isValid = false;
+		  showCustomAlert('Invalid exercise selection.');
+		  return;
+		}
+
+		// Get all set rows for this exercise
+		const setRows = block.querySelectorAll('.set-row');
+		if (setRows.length === 0) {
+		  isValid = false;
+		  showCustomAlert(`Each exercise must have at least one set. Please add a set to ${exerciseTemplate.title}.`);
+		  return;
+		}
+
+		const sets = [];
+		setRows.forEach((setRow, idx) => {
+		  let setData;
+
+		  try {
+			setData = {
+			  index: idx,
+			  type: "normal",
+			  ...getSetData(setRow, exerciseType)
+			};
+		  } catch (error) {
+			isValid = false;
+			showCustomAlert(`Error processing set data for ${exerciseTemplate.title}: ${error.message}`);
+			return;
+		  }
+
+		  // Validate the set data
+		  if (!validateSetData(setData, exerciseType)) {
+			isValid = false;
+			if (exerciseType === 'duration') {
+			  showCustomAlert(`Please fill in a valid duration for all sets in ${exerciseTemplate.title}.`);
+			} else if (exerciseType === 'distance_duration') {
+			  showCustomAlert(`Please fill in valid distance and duration for all sets in ${exerciseTemplate.title}.`);
+			} else {
+			  showCustomAlert(`Please fill in valid weight and reps for all sets in ${exerciseTemplate.title}.`);
+			}
+			return;
+		  }
+
+		  sets.push(setData);
+		});
+
+		if (!isValid) return;
+
+		exercises.push({
+		  index: exerciseIndex,
+		  title: exerciseTemplate.title,
+		  notes: "",
+		  exercise_template_id: exerciseId,
+		  superset_id: null,
+		  sets: sets
+		});
+	  });
+
+	  if (!isValid) return;
+	  if (exercises.length === 0) {
+		showCustomAlert('Please add at least one exercise to the workout.');
+		return;
+	  }
+
+	  exercises.sort((a, b) => a.index - b.index);
+
+	  const workout = {
+		id: workoutId,
+		title: title,
+		description: null,
+		start_time: new Date(startTime).toISOString(),
+		end_time: new Date(endTime).toISOString(),
+		created_at: new Date().toISOString(),
+		updated_at: new Date().toISOString(),
+		exercises: exercises
+	  };
+
+	  const dayData = getDayData(currentWorkoutDateKey);
+	  if (!dayData.hevyWorkouts) {
+		dayData.hevyWorkouts = [];
+	  }
+	  dayData.hevyWorkouts.push(workout);
+	  dayData.completed = true;
+	  
+	  setDayData(currentWorkoutDateKey, dayData);
+	  closeCreateWorkoutModal();
+	  renderCalendar(currentYear, currentMonth);
+	  showCustomAlert('Workout created successfully!');
+	}
+
+	// Initialize everything when DOM loads
+	document.addEventListener('DOMContentLoaded', () => {
+	  initWorkoutCreation();
+	});
+	
+    /*
+      =======================================
+      = 23) Distance_Duration Exercises     =
+      =======================================
+    */
+	
+	function getCardioStats(exerciseName) {
+	  let totalDistance = 0;
+	  let totalDuration = 0;
+	  let longestSetDistance = 0;
+	  let longestSetDuration = 0;
+	  let longestSetDate = null;
+	  let longestDurationDate = null;
+	  let bestPace5kPlus = Infinity;
+	  let bestPace5kDate = null;
+	  let longestSessionDistance = 0;
+	  let longestSessionDate = null;
+	  let longestSessionDuration = 0;
+	  let longestSessionDurationDate = null;
+	  let totalOccurrences = 0;
+
+	  // For “best pace by distance,” we’ll store these distances (in meters) and track the best pace:
+	  const distanceSegments = [
+		{ dist: 60,    label: '60m+' },
+		{ dist: 100,   label: '100m+' },
+		{ dist: 400,   label: '400m+' },
+		{ dist: 800,   label: '800m+' },
+		{ dist: 1000,  label: '1km+' },
+		{ dist: 2000,  label: '2km+' },
+		{ dist: 3000,  label: '3km+' },
+		{ dist: 4000,  label: '4km+' },
+		{ dist: 5000,  label: '5km+' },
+		{ dist: 10000, label: '10km+' },
+		{ dist: 21100, label: '21.1km+' },    // Half Marathon
+		{ dist: 42195, label: '42.195km+' }  // Full Marathon
+	  ];
+	  // We'll store best pace in min/km (as a float) + the dateKey
+	  const bestPacesByDistance = {};
+	  distanceSegments.forEach(seg => {
+		bestPacesByDistance[seg.dist] = {
+		  paceValue: Infinity,  // the numeric pace in min/km
+		  dateKey: null
+		};
+	  });
+
+	  // Now loop over the calendar data for this exercise
+	  Object.entries(calendarData).forEach(([dateKey, dayData]) => {
+		if (!dayData.hevyWorkouts) return;
+
+		dayData.hevyWorkouts.forEach(workout => {
+		  let sessionDistance = 0;
+		  let sessionDuration = 0;
+
+		  workout.exercises.forEach(exercise => {
+			if (exercise.title === exerciseName) {
+			  totalOccurrences++;
+
+			  exercise.sets.forEach(set => {
+				if (!set.distance_meters || !set.duration_seconds) return;
+
+				const dist = set.distance_meters;
+				const dur = set.duration_seconds;
+				totalDistance += dist;
+				totalDuration += dur;
+
+				sessionDistance += dist;
+				sessionDuration += dur;
+
+				// Longest single-set distance
+				if (dist > longestSetDistance) {
+				  longestSetDistance = dist;
+				  longestSetDate = workout.start_time;
+				}
+				// Longest single-set duration
+				if (dur > longestSetDuration) {
+				  longestSetDuration = dur;
+				  longestDurationDate = workout.start_time;
+				}
+
+				// Best pace for sets >= 5km
+				if (dist >= 5000) {
+				  const paceSecPerKm = dur / (dist / 1000); // seconds/km
+				  if (paceSecPerKm < bestPace5kPlus) {
+					bestPace5kPlus = paceSecPerKm;
+					bestPace5kDate = workout.start_time;
+				  }
+				}
+
+				// Also update bestPacesByDistance
+				distanceSegments.forEach(seg => {
+				  if (dist >= seg.dist) {
+					// paceSecPerKm:
+					const paceSecPerKm = dur / (dist / 1000);
+					// convert to min/km
+					const paceMinPerKm = paceSecPerKm / 60;
+					if (paceMinPerKm < bestPacesByDistance[seg.dist].paceValue) {
+					  bestPacesByDistance[seg.dist].paceValue = paceMinPerKm;
+					  bestPacesByDistance[seg.dist].dateKey = getDateKey(new Date(workout.start_time));
+					}
+				  }
+				});
+			  });
+			}
+		  });
+
+		  // After all sets in this workout
+		  if (sessionDistance > longestSessionDistance) {
+			longestSessionDistance = sessionDistance;
+			longestSessionDate = workout.start_time;
+		  }
+		  if (sessionDuration > longestSessionDuration) {
+			longestSessionDuration = sessionDuration;
+			longestSessionDurationDate = workout.start_time;
+		  }
+		});
+	  });
+
+	  // If we never set bestPace5kPlus, leave it null
+	  if (bestPace5kPlus === Infinity) bestPace5kPlus = null;
+
+	  const stats = {
+		totalOccurrences,
+		longestSetDistance,
+		longestSetDate,
+		longestSetDuration,
+		longestDurationDate,
+		bestPace5kPlus,   // in sec/km if not null
+		bestPace5kDate,
+		longestSessionDistance,
+		longestSessionDate,
+		longestSessionDuration,
+		longestSessionDurationDate,
+		totalDistance,
+		totalDuration,
+		bestPacesByDistance // { 60: { paceValue, dateKey }, 100: { ... }, ... }
+	  };
+
+	  return stats;
+	}
+	
+	function openDistanceProgressionModal(exerciseName, dateKey) {
+	  openModalOnTop("exerciseProgressOverlay");
+	  
+	  const dateObj = parseDateKey(dateKey);
+	  const dateLabel = `${dateObj.getDate()} ${monthNames[dateObj.getMonth()]}, ${dateObj.getFullYear()}`;
+	  document.getElementById("exerciseProgressionModalDate").textContent = dateLabel;
+
+	  // Store current exercise info for range button updates
+	  currentProgressionExercise = exerciseName;
+	  currentProgressionDateKey = dateKey;
+
+	  buildDistanceProgressionChart(exerciseName, dateKey);
+	  buildPaceProgressionChart(exerciseName, dateKey);
+
+	  // Set up range button handlers
+	  document.querySelectorAll('#exerciseProgressionModal .date-range-btn').forEach(btn => {
+		const existingListener = btn.getAttribute('distance-listener');
+		if (!existingListener) {
+		  btn.addEventListener('click', () => {
+			if (!btn.classList.contains('active')) {
+			  document.querySelectorAll('#exerciseProgressionModal .date-range-btn')
+				.forEach(b => b.classList.remove('active'));
+			  btn.classList.add('active');
+			  
+			  buildDistanceProgressionChart(currentProgressionExercise, currentProgressionDateKey);
+			  buildPaceProgressionChart(currentProgressionExercise, currentProgressionDateKey);
+			}
+		  });
+		  btn.setAttribute('distance-listener', 'true');
+		}
+	  });
+	}
+
+	function buildDistanceProgressionChart(exerciseName, dateKey) {
+	  const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(dateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Collect max distance for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+		  let maxDistanceForDay = 0;
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  if (s.distance_meters > maxDistanceForDay) {
+					maxDistanceForDay = s.distance_meters;
+				  }
+				});
+			  }
+			});
+		  });
+		  if (maxDistanceForDay > 0) {
+			dataMap[k] = maxDistanceForDay;
+		  }
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseWeightProgressChart();
+		showCustomAlert("No distance progression data found.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] / 1000 })); // Convert to km
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+	  });
+
+	  const distances = dataPoints.map(dp => dp.y);
+	  const minDistance = Math.min(...distances);
+	  const maxDistance = Math.max(...distances);
+	  const suggestedMin = Math.max(0, minDistance - 0.5);
+	  const suggestedMax = maxDistance + 0.5;
+
+	  destroyExerciseWeightProgressChart();
+	  const ctx = document.getElementById('exerciseWeightProgressionChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints, dateKey, '#4DAAFF', '#FFDD77', 2.5, 5
+	  );
+
+	  exerciseWeightProgressionChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: exerciseName,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 169, 255,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Distance (km)' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			title: {
+			  display: true,
+			  text: 'Distance Progression',
+			  color: '#fff',
+			  font: { size: 16 }
+			}
+		  }
+		}
+	  });
+	}
+
+	function buildPaceProgressionChart(exerciseName, dateKey) {
+	  const selectedRange = document.querySelector('#exerciseProgressionModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(dateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Collect best pace (min/km) for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+		  let bestPaceForDay = Infinity;
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  if (s.distance_meters >= 1000) { // Only consider segments of 1km or more
+					const paceMinPerKm = (s.duration_seconds / 60) / (s.distance_meters / 1000);
+					if (paceMinPerKm < bestPaceForDay) {
+					  bestPaceForDay = paceMinPerKm;
+					}
+				  }
+				});
+			  }
+			});
+		  });
+		  if (bestPaceForDay < Infinity) {
+			dataMap[k] = bestPaceForDay;
+		  }
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseRepProgressChart();
+		showCustomAlert("No pace progression data found.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({ x: k, y: dataMap[k] }));
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+	  });
+
+	  const paces = dataPoints.map(dp => dp.y);
+	  const minPace = Math.min(...paces);
+	  const maxPace = Math.max(...paces);
+	  const suggestedMin = Math.max(0, minPace - 0.5);
+	  const suggestedMax = maxPace + 0.5;
+
+	  destroyExerciseRepProgressChart();
+	  const ctx = document.getElementById('exerciseRepProgressionChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints, dateKey, '#FFDD77', '#4DAAFF', 2.5, 5
+	  );
+
+	  exerciseRepProgressionChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: exerciseName,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#FFDD77',
+			backgroundColor: 'rgba(255, 221, 119,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Pace (min/km)' },
+			  ticks: {
+				color: '#ccc',
+				callback: function(value) {
+				  return formatPace(1000, value * 60) + '/km';
+				}
+			  },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			title: {
+			  display: true,
+			  text: 'Pace Progression (Best Pace per Day)',
+			  color: '#fff',
+			  font: { size: 16 }
+			},
+			tooltip: {
+			  callbacks: {
+				label: function(context) {
+				  const pace = context.raw;
+				  return `Pace: ${formatPace(1000, pace * 60)}/km`;
+				}
+			  }
+			}
+		  }
+		}
+	  });
+	}
+
+	// Distance over time chart
+	function openDistanceOverTimeModal(exerciseName, dateKey) {
+	  openModalOnTop("exerciseVolumeOverlay");
+	  
+	  // Store these for range button updates
+	  currentExerciseVolumeName = exerciseName;
+	  currentExerciseVolumeDateKey = dateKey;
+	  
+	  buildDistanceOverTimeChart(exerciseName, dateKey);
+	}
+
+	function buildDistanceOverTimeChart(exerciseName, dateKey) {
+	  const selectedRange = document.querySelector('#exerciseVolumeModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(dateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Calculate total distance for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+		  let totalDistanceForDay = 0;
+		  let totalDurationForDay = 0;
+		  
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  totalDistanceForDay += s.distance_meters;
+				  totalDurationForDay += s.duration_seconds;
+				});
+			  }
+			});
+		  });
+		  
+		  if (totalDistanceForDay > 0) {
+			dataMap[k] = {
+			  distance: totalDistanceForDay,
+			  duration: totalDurationForDay
+			};
+		  }
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseVolumeChart();
+		showCustomAlert("No distance data found for this time period.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({
+		x: k,
+		y: dataMap[k].distance / 1000, // Convert to km
+		duration: dataMap[k].duration
+	  }));
+	  
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', {
+		  month: 'short',
+		  day: 'numeric',
+		  year: 'numeric'
+		});
+	  });
+
+	  const distances = dataPoints.map(dp => dp.y);
+	  const minDistance = Math.min(...distances);
+	  const maxDistance = Math.max(...distances);
+	  const range = maxDistance - minDistance;
+	  const padding = range * 0.1;
+	  const suggestedMin = Math.max(0, minDistance - padding);
+	  const suggestedMax = maxDistance + padding;
+
+	  destroyExerciseVolumeChart();
+	  const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints,
+		dateKey,
+		'#4DAAFF',
+		'#FFDD77',
+		2.5,
+		5
+	  );
+
+	  exerciseVolumeChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `Distance: ${exerciseName}`,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Distance (km)' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			tooltip: {
+			  callbacks: {
+				label: function(context) {
+				  const index = context.dataIndex;
+				  const distance = context.raw;
+				  const duration = dataPoints[index].duration;
+				  const pace = formatPace(distance * 1000, duration);
+				  return [
+					`Distance: ${distance.toFixed(2)}km`,
+					`Duration: ${formatDuration(duration)}`,
+					`Pace: ${pace}/km`
+				  ];
+				}
+			  }
+			}
+		  }
+		}
+	  });
+	}
+	
+	// Build distance chart showing total distance over time
+	function buildDistanceTimeChart(exerciseName, highlightDateKey) {
+	  const selectedRange = document.querySelector('#exerciseVolumeModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(highlightDateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Calculate total distance for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+		  let totalDistanceForDay = 0;
+		  
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  if (s.distance_meters) {
+					totalDistanceForDay += s.distance_meters;
+				  }
+				});
+			  }
+			});
+		  });
+		  
+		  if (totalDistanceForDay > 0) {
+			dataMap[k] = totalDistanceForDay;
+		  }
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseVolumeChart();
+		showCustomAlert("No distance data found for this time period.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({
+		x: k,
+		y: dataMap[k] / 1000 // Convert to km
+	  }));
+	  
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', {
+		  month: 'short',
+		  day: 'numeric',
+		  year: 'numeric'
+		});
+	  });
+
+	  const distances = dataPoints.map(dp => dp.y);
+	  const minDistance = Math.min(...distances);
+	  const maxDistance = Math.max(...distances);
+	  const range = maxDistance - minDistance;
+	  const padding = range * 0.1;
+	  const suggestedMin = Math.max(0, minDistance - padding);
+	  const suggestedMax = maxDistance + padding;
+
+	  destroyExerciseVolumeChart();
+	  const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints,
+		highlightDateKey,
+		'#4DAAFF',
+		'#FFDD77',
+		2.5,
+		5
+	  );
+
+	  exerciseVolumeChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `Total Distance: ${exerciseName}`,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Distance (km)' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			title: {
+			  display: true,
+			  text: 'Total Distance Over Time',
+			  color: '#fff',
+			  font: { size: 16 }
+			}
+		  }
+		}
+	  });
+	}
+
+	// Build duration chart showing total duration over time
+	function buildDurationTimeChart(exerciseName, highlightDateKey) {
+	  const selectedRange = document.querySelector('#exerciseVolumeModal .date-range-btn.active').getAttribute('data-range');
+	  const refDate = parseDateKey(highlightDateKey);
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
+	  
+	  const dateKeys = Object.keys(calendarData)
+		.filter(key => {
+		  const date = parseDateKey(key);
+		  return date >= start && date <= end;
+		})
+		.sort();
+
+	  const dataMap = {};
+
+	  // Calculate total duration for each day
+	  dateKeys.forEach(k => {
+		const dayObj = calendarData[k];
+		if (dayObj.hevyWorkouts && dayObj.hevyWorkouts.length > 0) {
+		  let totalDurationForDay = 0;
+		  
+		  dayObj.hevyWorkouts.forEach(workout => {
+			workout.exercises.forEach(ex => {
+			  if (ex.title === exerciseName) {
+				ex.sets.forEach(s => {
+				  if (s.duration_seconds) {
+					totalDurationForDay += s.duration_seconds;
+				  }
+				});
+			  }
+			});
+		  });
+		  
+		  if (totalDurationForDay > 0) {
+			dataMap[k] = totalDurationForDay;
+		  }
+		}
+	  });
+
+	  const chartKeys = Object.keys(dataMap).sort();
+	  if (chartKeys.length < 1) {
+		destroyExerciseVolumeChart();
+		showCustomAlert("No duration data found for this time period.");
+		return;
+	  }
+
+	  const dataPoints = chartKeys.map(k => ({
+		x: k,
+		y: dataMap[k] / 60 // Convert to minutes
+	  }));
+	  
+	  const labels = chartKeys.map(k => {
+		const d = parseDateKey(k);
+		return d.toLocaleDateString('en-US', {
+		  month: 'short',
+		  day: 'numeric',
+		  year: 'numeric'
+		});
+	  });
+
+	  const durations = dataPoints.map(dp => dp.y);
+	  const minDuration = Math.min(...durations);
+	  const maxDuration = Math.max(...durations);
+	  const range = maxDuration - minDuration;
+	  const padding = range * 0.1;
+	  const suggestedMin = Math.max(0, minDuration - padding);
+	  const suggestedMax = maxDuration + padding;
+
+	  destroyExerciseVolumeChart();
+	  const ctx = document.getElementById('exerciseVolumeChart').getContext('2d');
+
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints,
+		highlightDateKey,
+		'#4DAAFF',
+		'#FFDD77',
+		2.5,
+		5
+	  );
+
+	  exerciseVolumeChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  labels: labels,
+		  datasets: [{
+			label: `Total Duration: ${exerciseName}`,
+			data: dataPoints.map(dp => dp.y),
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 170, 255,0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin,
+			  suggestedMax,
+			  title: { display: true, text: 'Duration (minutes)' },
+			  ticks: { 
+				color: '#ccc',
+				callback: function(value) {
+				  return formatDuration(value * 60);
+				}
+			  },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } },
+			title: {
+			  display: true,
+			  text: 'Total Duration Over Time',
+			  color: '#fff',
+			  font: { size: 16 }
+			},
+			tooltip: {
+			  callbacks: {
+				label: function(context) {
+				  return `Duration: ${formatDuration(context.raw * 60)}`;
+				}
+			  }
+			}
+		  }
+		}
+	  });
+	}
+	
+	function openExerciseDistanceModal(exerciseName, dateKey) {
+	  // 1) Reset date-range buttons so "year" is active
+	  const modalRangeBtns = document.querySelectorAll('#exerciseVolumeModal .date-range-btn');
+	  modalRangeBtns.forEach(btn => {
+		btn.classList.remove('active');
+		if (btn.getAttribute('data-range') === 'year') {
+		  btn.classList.add('active');
+		}
+	  });
+
+	  // 2) Show the modal
+	  openModalOnTop("exerciseVolumeOverlay");
+	  document.getElementById("exerciseVolumeModal").querySelector("h2").textContent =
+		"Distance Progression";
+		
+		currentExerciseVolumeName = exerciseName;
+		currentExerciseVolumeDateKey = dateKey;
+
+	  // 3) Build the default chart (uses 'year' range by default now)
+	  buildDistanceTimeChart(exerciseName, dateKey);
+	}
+
+	function openExerciseDurationModal(exerciseName, dateKey) {
+	  // 1) Reset date-range buttons so "year" is active
+	  const modalRangeBtns = document.querySelectorAll('#exerciseVolumeModal .date-range-btn');
+	  modalRangeBtns.forEach(btn => {
+		btn.classList.remove('active');
+		if (btn.getAttribute('data-range') === 'year') {
+		  btn.classList.add('active');
+		}
+	  });
+
+	  // 2) Show the modal
+	  openModalOnTop("exerciseVolumeOverlay");
+	  document.getElementById("exerciseVolumeModal").querySelector("h2").textContent =
+		"Duration Progression";
+		
+		currentExerciseVolumeName = exerciseName;
+		currentExerciseVolumeDateKey = dateKey;
+
+	  // 3) Build the default chart (uses 'year' range by default now)
+	  buildDurationTimeChart(exerciseName, dateKey);
+	}
+		
+	function setupWorkoutContainerHandlers(container) {
+	  container.addEventListener('click', (e) => {
+		// Exercise title clicks
+		const titleEl = e.target.closest(".hevy-exercise-title");
+		if (titleEl) {
+		  e.stopPropagation();
+		  const exerciseName = titleEl.getAttribute("data-exercise");
+		  openExerciseSummaryModal(exerciseName);
+		  return;
+		}
+
+		// Get exercise type
+		const setEl = e.target.closest(".hevy-set");
+		if (setEl) {
+		  e.stopPropagation();
+		  const exerciseName = setEl.getAttribute("data-exercise");
+		  const template = getExerciseTemplate(exerciseName);
+		  const exerciseType = template ? template.type : 'weighted_reps';
+		  
+		  // Don't handle clicks for duration or distance_duration exercises
+		  if (exerciseType === 'duration' || exerciseType === 'distance_duration') {
+			return;
+		  }
+
+		  const weight = Number(setEl.getAttribute("data-weight"));
+		  const reps = parseInt(setEl.getAttribute("data-reps"), 10);
+		  const dateKey = setEl.getAttribute("data-date-key");
+		  openExerciseProgressionModal(exerciseName, weight, reps, dateKey);
+		  return;
+		}
+
+		// Volume/Distance clicks
+		const volumeEl = e.target.closest(".hevy-exercise-volume");
+		if (volumeEl) {
+		  e.stopPropagation();
+		  const exerciseName = volumeEl.getAttribute("data-exercise");
+		  const template = getExerciseTemplate(exerciseName);
+		  const exerciseType = template ? template.type : 'weighted_reps';
+		  
+		  const dateKey = volumeEl.getAttribute("data-date-key");
+		  if (exerciseType === 'duration') {
+			openTotalDurationModal(exerciseName, dateKey);
+		  } else if (exerciseType === 'distance_duration') {
+			openExerciseDistanceModal(exerciseName, dateKey);
+		  } else {
+			openExerciseVolumeModal(exerciseName, dateKey);
+		  }
+		  return;
+		}
+
+		// ORM/Duration clicks
+		const ormEl = e.target.closest(".hevy-orm");
+		if (ormEl) {
+		  e.stopPropagation();
+		  const exerciseName = ormEl.getAttribute("data-exercise");
+		  const template = getExerciseTemplate(exerciseName);
+		  const exerciseType = template ? template.type : 'weighted_reps';
+		  
+		  const dateKey = ormEl.getAttribute("data-date-key");
+		  if (exerciseType === 'distance_duration') {
+			openExerciseDurationModal(exerciseName, dateKey);
+		  } else if (exerciseType !== 'duration') {
+			openOrmProgressModal(exerciseName, dateKey);
+		  }
+		  return;
+		}
+
+		// Total volume clicks (workout level)
+		const totalEl = e.target.closest(".hevy-total");
+		if (totalEl) {
+		  e.stopPropagation();
+		  const dateKey = totalEl.getAttribute("data-date-key");
+		  openVolumeModal(dateKey);
+		  return;
+		}
+	  });
+	}
+
+	function getCardioPRs(exerciseName) {
+	  let distancePR = null;  // { dateKey, workoutId, setIndex, distance, duration }
+	  let durationPR = null;  // { dateKey, workoutId, setIndex, distance, duration }
+	  let pacePR = null;      // { dateKey, workoutId, setIndex, distance, duration, pace }
+	  
+	  Object.entries(calendarData).forEach(([dateKey, dayData]) => {
+		if (!dayData.hevyWorkouts) return;
+		
+		dayData.hevyWorkouts.forEach(workout => {
+		  workout.exercises.forEach(exercise => {
+			if (exercise.title === exerciseName) {
+			  exercise.sets.forEach((set, setIndex) => {
+				if (!set.distance_meters || !set.duration_seconds) return;
+				
+				const record = {
+				  dateKey,
+				  workoutId: workout.id,
+				  setIndex,
+				  distance: set.distance_meters,
+				  duration: set.duration_seconds
+				};
+
+				// Distance PR
+				if (!distancePR || record.distance > distancePR.distance || 
+				   (record.distance === distancePR.distance && record.duration < distancePR.duration)) {
+				  distancePR = record;
+				}
+
+				// Duration PR
+				if (!durationPR || record.duration > durationPR.duration ||
+				   (record.duration === durationPR.duration && record.distance > durationPR.distance)) {
+				  durationPR = record;
+				}
+
+				// Pace PR (5km+)
+				if (record.distance >= 5000) {
+				  const pace = record.duration / (record.distance / 1000);
+				  if (!pacePR || 
+					  pace < (pacePR.duration / (pacePR.distance / 1000)) ||
+					  (pace === (pacePR.duration / (pacePR.distance / 1000)) && record.distance > pacePR.distance)) {
+					pacePR = { ...record, pace };
+				  }
+				}
+			  });
+			}
+		  });
+		});
+	  });
+	  
+	  return { distancePR, durationPR, pacePR };
+	}
+	
+	// Update the saveWorkout function to handle the new inputs
+	function getSetData(setRow, exerciseType) {
+	  if (exerciseType === 'distance_duration') {
+		const distanceKm = parseFloat(setRow.querySelector('.distance-input').value || '0');
+		const hours = parseInt(setRow.querySelector('.duration-hours').value || '0', 10);
+		const minutes = parseInt(setRow.querySelector('.duration-minutes').value || '0', 10);
+		const seconds = parseInt(setRow.querySelector('.duration-seconds').value || '0', 10);
+		const distanceMeters = Math.floor(distanceKm * 1000);
+		const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+		return {
+		  distance_meters: distanceMeters,
+		  duration_seconds: totalSeconds,
+		  weight_kg: null,
+		  reps: null
+		};
+	  } else if (exerciseType === 'duration') {
+		const hours = parseInt(setRow.querySelector('.duration-hours').value || '0', 10);
+		const minutes = parseInt(setRow.querySelector('.duration-minutes').value || '0', 10);
+		const seconds = parseInt(setRow.querySelector('.duration-seconds').value || '0', 10);
+		const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+		return {
+		  distance_meters: null,
+		  duration_seconds: totalSeconds,
+		  weight_kg: null,
+		  reps: null
+		};
+	  } else if (exerciseType === 'bodyweight_weighted' || exerciseType === 'bodyweight_assisted') {
+		const extraWeight = parseFloat(setRow.querySelector('.assistance-input').value);
+		const reps = parseInt(setRow.querySelector('.reps-input').value);
+		return {
+		  weight_kg: extraWeight,
+		  reps: reps,
+		  rpe: null,
+		  distance_meters: null,
+		  duration_seconds: null
+		};
+	  } else if (exerciseType === 'reps_only') {
+		const reps = parseInt(setRow.querySelector('.reps-input').value);
+		return {
+		  weight_kg: null,
+		  reps: reps,
+		  rpe: null,
+		  distance_meters: null,
+		  duration_seconds: null
+		};
+	  } else {
+		const weight = parseFloat(setRow.querySelector('.weight-input').value);
+		const reps = parseInt(setRow.querySelector('.reps-input').value);
+		const rpeInput = setRow.querySelector('.rpe-input');
+		const rpe = rpeInput ? parseFloat(rpeInput.value) : null;
+		return {
+		  weight_kg: weight,
+		  reps: reps,
+		  rpe: isNaN(rpe) ? null : rpe,
+		  distance_meters: null,
+		  duration_seconds: null
+		};
+	  }
+	}
+
+	// Validate set data
+	function validateSetData(setData, exerciseType) {
+	  if (exerciseType === 'distance_duration') {
+		if (!setData.distance_meters || !setData.duration_seconds || setData.distance_meters <= 0 || setData.duration_seconds <= 0) {
+		  return false;
+		}
+	  } else if (exerciseType === 'duration') {
+		if (!setData.duration_seconds || setData.duration_seconds <= 0) {
+		  return false;
+		}
+	  } else if (exerciseType === 'bodyweight_weighted' || exerciseType === 'bodyweight_assisted') {
+		if (isNaN(setData.weight_kg)) return false;
+		if (!setData.reps || setData.reps < 1) return false;
+	  } else if (exerciseType === 'reps_only') {
+		if (!setData.reps || setData.reps < 1) return false;
+	  } else {
+		if (!setData.weight_kg || setData.weight_kg < 0 || setData.reps < 1) return false;
+	  }
+	  return true;
+	}
+
+	
+	// Handle numeric input validation
+	function validateTimeInput(input, max) {
+	  let value = parseInt(input.value);
+	  
+	  // Remove leading zeros
+	  if (input.value.startsWith('0') && input.value.length > 1) {
+		input.value = value.toString();
+	  }
+	  
+	  // Handle empty or invalid input
+	  if (isNaN(value)) {
+		input.value = '';
+		return;
+	  }
+	  
+	  // Clamp value between 0 and max
+	  value = Math.min(Math.max(0, value), max);
+	  input.value = value.toString();
+	  
+	  // Add leading zero if needed
+	  if (value < 10 && input.value.length === 1) {
+		input.value = '0' + value;
+	  }
+	}
+
+	// Initialize time input handlers for a set
+	function initTimeInputs(setRow) {
+	  const hoursInput = setRow.querySelector('.duration-hours');
+	  const minutesInput = setRow.querySelector('.duration-minutes');
+	  const secondsInput = setRow.querySelector('.duration-seconds');
+	  const distanceInput = setRow.querySelector('.distance-input');
+	  const paceDisplay = setRow.querySelector('.pace-display');
+	  
+	  // Add validation and formatting for each time input
+	  if (hoursInput) {
+		hoursInput.addEventListener('input', () => {
+		  validateTimeInput(hoursInput, 99);
+		  if (paceDisplay) updatePaceDisplay(setRow);
+		});
+		hoursInput.addEventListener('blur', () => {
+		  if (hoursInput.value === '') hoursInput.value = '00';
+		});
+	  }
+	  
+	  if (minutesInput) {
+		minutesInput.addEventListener('input', () => {
+		  validateTimeInput(minutesInput, 59);
+		  if (paceDisplay) updatePaceDisplay(setRow);
+		});
+		minutesInput.addEventListener('blur', () => {
+		  if (minutesInput.value === '') minutesInput.value = '00';
+		});
+	  }
+	  
+	  if (secondsInput) {
+		secondsInput.addEventListener('input', () => {
+		  validateTimeInput(secondsInput, 59);
+		  if (paceDisplay) updatePaceDisplay(setRow);
+		});
+		secondsInput.addEventListener('blur', () => {
+		  if (secondsInput.value === '') secondsInput.value = '00';
+		});
+	  }
+	  
+	  // Update pace when distance changes (only for distance_duration type)
+	  if (distanceInput) {
+		distanceInput.addEventListener('input', () => {
+		  updatePaceDisplay(setRow);
+		});
+	  }
+	}
+
+	// Update the pace display for a set
+	function updatePaceDisplay(setRow) {
+	  const hours = parseInt(setRow.querySelector('.duration-hours')?.value || '0');
+	  const minutes = parseInt(setRow.querySelector('.duration-minutes')?.value || '0');
+	  const seconds = parseInt(setRow.querySelector('.duration-seconds')?.value || '0');
+	  const distance = parseFloat(setRow.querySelector('.distance-input')?.value || '0');
+	  const paceDisplay = setRow.querySelector('.pace-display');
+	  
+	  if (!paceDisplay) return;
+	  
+	  if (distance > 0) {
+		const totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+		const pacePerKm = totalSeconds / distance;
+		const paceMinutes = Math.floor(pacePerKm / 60);
+		const paceSeconds = Math.floor(pacePerKm % 60);
+		paceDisplay.textContent = `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} /km`;
+	  } else {
+		paceDisplay.textContent = '-:-- /km';
+	  }
+	}
+	
+    /*
+      =======================================
+      = 24) DOM Loaded: Event Setup         =
       =======================================
     */
 	window.addEventListener("DOMContentLoaded", () => {
@@ -6429,17 +9224,34 @@
 	  const rangeBtn = e.target.closest(".date-range-btn");
 	  if (!rangeBtn) return;
 
-	  // If it’s already active, do nothing
-	  if (rangeBtn.classList.contains("active")) return;
-
-	  // Otherwise, remove active from all, then set active on the clicked one
+	  // Remove 'active' from all range buttons, then set on the clicked one
 	  document.querySelectorAll("#exerciseVolumeModal .date-range-btn")
 		.forEach(btn => btn.classList.remove("active"));
 	  rangeBtn.classList.add("active");
 
-	  // Rebuild the chart using the newly selected range
+	  // Re-build the correct chart
 	  if (currentExerciseVolumeName && currentExerciseVolumeDateKey) {
-		buildExerciseVolumeProgressionChart(currentExerciseVolumeName, currentExerciseVolumeDateKey);
+		const template = getExerciseTemplate(currentExerciseVolumeName);
+		if (template && (template.type === 'distance_duration' || template.type === 'duration')) {
+		  if (template.type === 'distance_duration') {
+			// For distance_duration exercises, decide based on the heading text
+			const heading = document.getElementById("exerciseVolumeModal")
+							   .querySelector("h2").textContent;
+			if (heading.includes("Distance")) {
+			  // Rebuild the distance chart
+			  buildDistanceTimeChart(currentExerciseVolumeName, currentExerciseVolumeDateKey);
+			} else {
+			  // Rebuild the duration chart
+			  buildDurationTimeChart(currentExerciseVolumeName, currentExerciseVolumeDateKey);
+			}
+		  } else if (template.type === 'duration') {
+			// For duration type exercises, always build the duration chart
+			buildDurationTimeChart(currentExerciseVolumeName, currentExerciseVolumeDateKey);
+		  }
+		} else {
+		  // For weighted exercises → normal volume progression
+		  buildExerciseVolumeProgressionChart(currentExerciseVolumeName, currentExerciseVolumeDateKey);
+		}
 	  }
 	});
 
