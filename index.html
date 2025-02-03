@@ -2900,12 +2900,83 @@
 	let presetCreationModal;
 	let savePresetBtn;
 	let cancelPresetBtn;
+	
+	// Workout editing
+	let isEditingWorkout = false;
+	let editingWorkoutId = null;
 
     /*
       =======================================
       =       2) Helper Functions           =
       =======================================
     */
+	
+	function addExistingSet(block, setData) {
+	  if (!block || !setData) return;
+
+	  const exerciseType = block.getAttribute('data-exercise-type');
+	  const template = getSetTemplate(exerciseType);
+	  const clone = template.content.cloneNode(true);
+	  const setsList = block.querySelector('.sets-list');
+	  const newSetRow = clone.querySelector('.set-row');
+	  
+	  if (!setsList || !newSetRow) return;
+	  
+	  // Helper function to safely set input values
+	  const setInputValue = (selector, value) => {
+		const input = newSetRow.querySelector(selector);
+		if (input) {
+		  input.value = value;
+		}
+	  };
+	  
+	  // Populate the set data based on exercise type
+	  if (exerciseType === 'distance_duration') {
+		const distanceKm = setData.distance_meters / 1000;
+		setInputValue('.distance-input', distanceKm.toFixed(2));
+		
+		const hours = Math.floor(setData.duration_seconds / 3600);
+		const minutes = Math.floor((setData.duration_seconds % 3600) / 60);
+		const seconds = setData.duration_seconds % 60;
+		
+		setInputValue('.duration-hours', hours.toString().padStart(2, '0'));
+		setInputValue('.duration-minutes', minutes.toString().padStart(2, '0'));
+		setInputValue('.duration-seconds', seconds.toString().padStart(2, '0'));
+		
+	  } else if (exerciseType === 'duration') {
+		const hours = Math.floor(setData.duration_seconds / 3600);
+		const minutes = Math.floor((setData.duration_seconds % 3600) / 60);
+		const seconds = setData.duration_seconds % 60;
+		
+		setInputValue('.duration-hours', hours.toString().padStart(2, '0'));
+		setInputValue('.duration-minutes', minutes.toString().padStart(2, '0'));
+		setInputValue('.duration-seconds', seconds.toString().padStart(2, '0'));
+		
+	  } else if (exerciseType === 'bodyweight_weighted' || exerciseType === 'bodyweight_assisted') {
+		setInputValue('.assistance-input', setData.weight_kg || 0);
+		setInputValue('.reps-input', setData.reps);
+		
+	  } else if (exerciseType === 'reps_only') {
+		setInputValue('.reps-input', setData.reps);
+		
+	  } else {
+		setInputValue('.weight-input', setData.weight_kg);
+		setInputValue('.reps-input', setData.reps);
+		const rpeInput = newSetRow.querySelector('.rpe-input');
+		if (rpeInput && setData.rpe) {
+		  rpeInput.value = setData.rpe;
+		}
+	  }
+	  
+	  setsList.appendChild(newSetRow);
+	  
+	  // Initialize time inputs if needed
+	  if (exerciseType === 'distance_duration' || exerciseType === 'duration') {
+		initTimeInputs(newSetRow);
+	  }
+	  
+	  renumberSets(block);
+	}
 	
 	function openTotalDurationModal(exerciseName, dateKey) {
 	  openModalOnTop("exerciseVolumeOverlay");
@@ -7603,14 +7674,115 @@
 	  createBtn.innerHTML = '+';
 	  importBtn.parentNode.insertBefore(createBtn, importBtn.nextSibling);
 
+	  // Add the edit workout button
+	  const editBtn = document.createElement('button');
+	  editBtn.className = 'arrow-button';
+	  editBtn.id = 'editWorkoutBtn';
+	  editBtn.title = 'Edit Workout';
+	  editBtn.innerHTML = '✎';
+	  importBtn.parentNode.insertBefore(editBtn, createBtn.nextSibling);
+
 	  // Event listeners for the create workout button
 	  createBtn.addEventListener('click', () => {
 		if (selectedDates.size !== 1) {
 		  showCustomAlert('Please select exactly one day to create a workout.');
 		  return;
 		}
+		isEditingWorkout = false;
+		editingWorkoutId = null;
 		openCreateWorkoutModal([...selectedDates][0]);
 	  });
+
+	  // Event listener for edit workout button
+	  editBtn.addEventListener('click', () => {
+	  if (selectedDates.size !== 1) {
+		showCustomAlert('Please select exactly one day to edit a workout.');
+		return;
+	  }
+	  const dateKey = [...selectedDates][0];
+	  const dayData = getDayData(dateKey);
+	  
+	  if (!dayData.hevyWorkouts || dayData.hevyWorkouts.length === 0) {
+		showCustomAlert('No workout found on the selected day to edit.');
+		return;
+	  }
+	  
+	  // If multiple workouts exist, show selection modal
+	  if (dayData.hevyWorkouts.length > 1) {
+		// Create and show the workout selection overlay
+		let html = `
+		  <div class="overlay" id="workoutSelectionOverlay">
+			<div class="modal" style="width: 400px; padding: 1.5rem;">
+			  <h2 style="text-align: center; margin-bottom: 1rem; color: #EAEAEA;">Select Workout to Edit</h2>
+			  <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+		`;
+		
+		dayData.hevyWorkouts.forEach((workout, index) => {
+		  const workoutTime = new Date(workout.start_time).toLocaleTimeString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true
+		  });
+		  
+		  html += `
+			<div class="workout-option" data-workout-id="${workout.id}"
+				 style="background: #393939; padding: 1rem; border-radius: 6px; cursor: pointer;
+						transition: all 0.2s; display: flex; justify-content: space-between;
+						align-items: center;">
+			  <span style="color: #4DAAFF; font-weight: 500;">
+				${workout.title || `Workout ${index + 1}`}
+			  </span>
+			  <span style="color: #888;">${workoutTime}</span>
+			</div>
+		  `;
+		});
+		
+		html += `
+			  </div>
+			</div>
+		  </div>
+		`;
+		
+		// Add the modal to the document
+		const tempDiv = document.createElement('div');
+		tempDiv.innerHTML = html;
+		document.body.appendChild(tempDiv.firstElementChild);
+		
+		// Show the modal
+		const overlay = document.getElementById('workoutSelectionOverlay');
+		openModalOnTop("workoutSelectionOverlay");
+		
+		// Add click handlers
+		overlay.addEventListener('click', (e) => {
+		  const option = e.target.closest('.workout-option');
+		  if (option) {
+			const selectedId = option.getAttribute('data-workout-id');
+			isEditingWorkout = true;
+			editingWorkoutId = selectedId;
+			overlay.remove();
+			openCreateWorkoutModal(dateKey);
+		  }
+		});
+		
+		// Add hover effects
+		const options = overlay.querySelectorAll('.workout-option');
+		options.forEach(option => {
+		  option.addEventListener('mouseenter', () => {
+			option.style.background = '#424242';
+			option.style.transform = 'translateY(-2px)';
+		  });
+		  option.addEventListener('mouseleave', () => {
+			option.style.background = '#393939';
+			option.style.transform = 'translateY(0)';
+		  });
+		});
+	  } else {
+		// Single workout - edit it directly
+		isEditingWorkout = true;
+		editingWorkoutId = dayData.hevyWorkouts[0].id;
+		openCreateWorkoutModal(dateKey);
+	  }
+	});
 
 	  // Initialize search functionality
 	  document.getElementById('exerciseSearchInput').addEventListener('input', (e) => {
@@ -7642,31 +7814,89 @@
 	  currentWorkoutDateKey = dateKey;
 	  const date = parseDateKey(dateKey);
 	  
-	  // Set default times (9 AM for start, 10 AM for end)
-	  const startTime = new Date(date);
+	  // Set default start/end times - now using local timezone
+	  let startTime = new Date(date);
 	  startTime.setHours(9, 0, 0, 0);
-	  const endTime = new Date(date);
+	  let endTime = new Date(date);
 	  endTime.setHours(10, 0, 0, 0);
 	  
-	  // Update modal fields
-	  document.getElementById('workoutTitleInput').value = '';
-	  document.getElementById('workoutStartTime').value = startTime.toISOString().slice(0, 16);
-	  document.getElementById('workoutEndTime').value = endTime.toISOString().slice(0, 16);
+	  let title = '';
 	  
-	  // Clear exercises
+	  // If editing, populate with existing workout data
+	  if (isEditingWorkout) {
+		const dayData = getDayData(dateKey);
+		const workout = dayData.hevyWorkouts.find(w => w.id === editingWorkoutId);
+		
+		if (workout) {
+		  // Convert UTC timestamps to local date objects
+		  startTime = new Date(workout.start_time);
+		  endTime = new Date(workout.end_time);
+		  title = workout.title;
+		}
+	  }
+	  
+	  // Format datetime-local inputs in the correct format (YYYY-MM-DDThh:mm)
+	  const formatDateTimeLocal = (date) => {
+		return new Date(date.getTime() - (date.getTimezoneOffset() * 60000))
+		  .toISOString()
+		  .slice(0, 16);
+	  };
+	  
+	  // Update modal fields
+	  document.getElementById('workoutTitleInput').value = title;
+	  document.getElementById('workoutStartTime').value = formatDateTimeLocal(startTime);
+	  document.getElementById('workoutEndTime').value = formatDateTimeLocal(endTime);
+	  
+	  // Clear exercises list
 	  document.getElementById('exercisesList').innerHTML = '';
+	  
+	  // If editing, populate exercises
+	  if (isEditingWorkout) {
+		const dayData = getDayData(dateKey);
+		const workout = dayData.hevyWorkouts.find(w => w.id === editingWorkoutId);
+		
+		if (workout && workout.exercises) {
+		  workout.exercises.forEach(exercise => {
+			const template = exerciseTemplates.find(t => t.id === exercise.exercise_template_id);
+			if (template) {
+			  const block = addExerciseBlock(template);
+			  
+			  if (block) {
+				// Remove the default empty set
+				const setsList = block.querySelector('.sets-list');
+				if (setsList) {
+				  setsList.innerHTML = '';
+				  
+				  // Add existing sets
+				  exercise.sets.forEach(set => {
+					addExistingSet(block, set);
+				  });
+				}
+			  }
+			}
+		  });
+		}
+	  }
 	  
 	  // Show modal
 	  openModalOnTop("createWorkoutOverlay");
 	  
 	  // Update header date
-	  const dateEl = document.querySelector('.workout-date');
-	  dateEl.textContent = date.toLocaleDateString('en-US', {
-		weekday: 'long',
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric'
-	  });
+	  const dateEl = document.querySelector('#createWorkoutModal .workout-date');
+	  if (dateEl) {
+		dateEl.textContent = date.toLocaleDateString('en-US', {
+		  weekday: 'long',
+		  year: 'numeric',
+		  month: 'long',
+		  day: 'numeric'
+		});
+	  }
+	  
+	  // Update modal title based on mode
+	  const modalTitle = document.querySelector('#createWorkoutModal h2');
+	  if (modalTitle) {
+		modalTitle.textContent = isEditingWorkout ? 'Edit Workout' : 'Create Workout';
+	  }
 	}
 
 	function closeCreateWorkoutModal() {
@@ -7706,6 +7936,7 @@
 	  
 	  container.appendChild(block);
 	  addSetToExercise(block);
+	  return block;  // Return the block element
 	}
 
 	function handleExerciseListClicks(e) {
@@ -7798,7 +8029,10 @@
 		return;
 	  }
 
-	  const workoutId = 'LOCAL_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+	  // Generate new ID only if creating
+	  const workoutId = isEditingWorkout ? editingWorkoutId : 
+		'LOCAL_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+		
 	  const exercises = [];
 	  const exerciseBlocks = document.querySelectorAll('.exercise-block');
 	  let isValid = true;
@@ -7815,7 +8049,6 @@
 		  return;
 		}
 
-		// Get all set rows for this exercise
 		const setRows = block.querySelectorAll('.set-row');
 		if (setRows.length === 0) {
 		  isValid = false;
@@ -7839,7 +8072,6 @@
 			return;
 		  }
 
-		  // Validate the set data
 		  if (!validateSetData(setData, exerciseType)) {
 			isValid = false;
 			if (exerciseType === 'duration') {
@@ -7881,7 +8113,9 @@
 		description: null,
 		start_time: new Date(startTime).toISOString(),
 		end_time: new Date(endTime).toISOString(),
-		created_at: new Date().toISOString(),
+		created_at: isEditingWorkout ? 
+		  calendarData[currentWorkoutDateKey].hevyWorkouts.find(w => w.id === workoutId).created_at : 
+		  new Date().toISOString(),
 		updated_at: new Date().toISOString(),
 		exercises: exercises
 	  };
@@ -7890,13 +8124,24 @@
 	  if (!dayData.hevyWorkouts) {
 		dayData.hevyWorkouts = [];
 	  }
-	  dayData.hevyWorkouts.push(workout);
+	  
+	  if (isEditingWorkout) {
+		// Replace the existing workout
+		const workoutIndex = dayData.hevyWorkouts.findIndex(w => w.id === workoutId);
+		if (workoutIndex !== -1) {
+		  dayData.hevyWorkouts[workoutIndex] = workout;
+		}
+	  } else {
+		// Add new workout
+		dayData.hevyWorkouts.push(workout);
+	  }
+	  
 	  dayData.completed = true;
 	  
 	  setDayData(currentWorkoutDateKey, dayData);
 	  closeCreateWorkoutModal();
 	  renderCalendar(currentYear, currentMonth);
-	  showCustomAlert('Workout created successfully!');
+	  showCustomAlert(isEditingWorkout ? 'Workout updated successfully!' : 'Workout created successfully!');
 	}
 
 	// Initialize everything when DOM loads
