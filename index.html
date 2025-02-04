@@ -7,6 +7,8 @@
   <!-- Include Chart.js from a CDN -->
   <script src="exercise_templates.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
@@ -2266,28 +2268,37 @@
   </div>
 
   <!-- Stats Overlay -->
-  <div class="overlay" id="statsOverlay">
-    <div class="modal" id="statsModal">
-      <h2>Statistics</h2>
-      <div class="stats-summary">
-        <div class="stat-item">
-          Sessions Completed: <span class="counter-value" id="sessionCounter">0</span>
-        </div>
-        <div class="stat-item">
-          Days Trained: <span class="counter-value" id="daysTrainedCounter">0</span>
-        </div>
-        <div class="stat-item">
-          Percentage Trained: <span class="counter-value" id="percentageCounter">0.00%</span>
-        </div>
-      </div>
-      <div class="modal-row" style="height:300px;">
-        <canvas id="weightChart"></canvas>
-      </div>
-      <div class="modal-buttons">
-        <button id="statsCloseBtn" title="Close Statistics">Close</button>
-      </div>
-    </div>
-  </div>
+	<div class="overlay" id="statsOverlay">
+	  <div class="modal" id="statsModal">
+		<h2>Statistics</h2>
+		<div class="stats-summary">
+		  <div class="stat-item">
+			Sessions Completed: <span class="counter-value" id="sessionCounter">0</span>
+		  </div>
+		  <div class="stat-item">
+			Days Trained: <span class="counter-value" id="daysTrainedCounter">0</span>
+		  </div>
+		  <div class="stat-item">
+			Percentage Trained: <span class="counter-value" id="percentageCounter">0.00%</span>
+		  </div>
+		</div>
+		<!-- NEW date-range buttons row -->
+		<div class="modal-row" style="margin-bottom: 1rem;">
+		  <div style="display: flex; gap: 0.5rem; justify-content: center;">
+			<button class="date-range-btn active" data-range="year">Year</button>
+			<button class="date-range-btn" data-range="month">Month</button>
+			<button class="date-range-btn" data-range="week">Week</button>
+			<button class="date-range-btn" data-range="all">All Time</button>
+		  </div>
+		</div>
+		<div class="modal-row" style="height:300px;">
+		  <canvas id="weightChart"></canvas>
+		</div>
+		<div class="modal-buttons">
+		  <button id="statsCloseBtn" title="Close Statistics">Close</button>
+		</div>
+	  </div>
+	</div>
 
   <!-- Hevy Workout Summary Overlay -->
   <div class="overlay" id="hevyOverlay">
@@ -2910,6 +2921,18 @@
       =       2) Helper Functions           =
       =======================================
     */
+	
+	function setupWeightChartRangeButtons() {
+	  document.querySelectorAll('#statsModal .date-range-btn').forEach(btn => {
+		btn.addEventListener('click', function() {
+		  // Remove active class from all range buttons and mark this one as active.
+		  document.querySelectorAll('#statsModal .date-range-btn').forEach(b => b.classList.remove('active'));
+		  btn.classList.add('active');
+		  // Rebuild the weight chart with the new range.
+		  buildWeightChart();
+		});
+	  });
+	}
 	
 	function addExistingSet(block, setData) {
 	  if (!block || !setData) return;
@@ -4926,7 +4949,7 @@
       =   8) Data Backup (Load/Save JSON)   =
       =======================================
     */
-	function saveData() {
+	async function saveData() {
 	  const dataToSave = {
 		calendarData: calendarData,
 		defaultCycle: defaultCycleData,
@@ -4934,12 +4957,35 @@
 	  };
 	  const dataStr = JSON.stringify(dataToSave, null, 2);
 	  const blob = new Blob([dataStr], { type: "application/json" });
-	  const url = URL.createObjectURL(blob);
-	  const a = document.createElement("a");
-	  a.href = url;
-	  a.download = 'calendar-data-backup.json';
-	  a.click();
-	  URL.revokeObjectURL(url);
+	  
+	  // If the File System Access API is available, use it.
+	  if (window.showSaveFilePicker) {
+		try {
+		  const options = {
+			types: [{
+			  description: 'JSON Files',
+			  accept: { 'application/json': ['.json'] }
+			}],
+			// This suggested name will be used in the Save dialog.
+			suggestedName: 'calendar-data-backup.json'
+		  };
+		  // This call opens the file save dialog.
+		  const handle = await window.showSaveFilePicker(options);
+		  const writable = await handle.createWritable();
+		  await writable.write(blob);
+		  await writable.close();
+		} catch (error) {
+		  console.error("Save cancelled or failed:", error);
+		}
+	  } else {
+		// Fallback for browsers that do not support the File System Access API:
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "calendar-data-backup.json";
+		a.click();
+		URL.revokeObjectURL(url);
+	  }
 	}
 	function loadData(file) {
 	  const reader = new FileReader();
@@ -5118,10 +5164,17 @@
       = 10) Stats Modal & 'WeightChart'      =
       =======================================
     */
-    function openStatsModal() {
-      document.getElementById("statsOverlay").classList.add("active");
-      buildWeightChart();
-    }
+	function openStatsModal() {
+	  // Default to "year": remove active from all and then set the year button active.
+	  document.querySelectorAll('#statsModal .date-range-btn').forEach(btn => {
+		btn.classList.remove('active');
+		if (btn.getAttribute('data-range') === 'year') {
+		  btn.classList.add('active');
+		}
+	  });
+	  document.getElementById("statsOverlay").classList.add("active");
+	  buildWeightChart();
+	}
     function closeStatsModal() {
       document.getElementById("statsOverlay").classList.remove("active");
       if(weightChart){
@@ -5129,81 +5182,112 @@
         weightChart = null;
       }
     }
-    function buildWeightChart(){
-      // Gather all date keys that have a valid weight
-      const weightKeys = Object.keys(calendarData)
-        .filter(k => calendarData[k].weight && parseFloat(calendarData[k].weight) > 0)
-        .sort();
-      if(weightKeys.length < 1){
-        if(weightChart){
-          weightChart.destroy();
-          weightChart = null;
-        }
-        return;
-      }
-      const dataPoints = weightKeys.map(k => ({ x: k, y: parseFloat(calendarData[k].weight) }));
-      const labels = weightKeys.map(k => {
-        const d = parseDateKey(k);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      });
-      const weights = dataPoints.map(dp => dp.y);
-      const minWeight = Math.min(...weights);
-      const maxWeight = Math.max(...weights);
-      const suggestedMin = Math.max(0, minWeight - 1);
-      const suggestedMax = maxWeight + 1;
+	function buildWeightChart() {
+	  // Get the active date-range button from the stats modal;
+	  // default to 'year' if none is active.
+	  const activeBtn = document.querySelector('#statsModal .date-range-btn.active');
+	  const selectedRange = activeBtn ? activeBtn.getAttribute('data-range') : 'year';
+	  
+	  // Use today's date as the reference date
+	  const refDate = new Date();
+	  const { start, end } = getDateRangeBounds(selectedRange, refDate);
 
-      if(weightChart){
-        weightChart.destroy();
-        weightChart = null;
-      }
-      const ctx = document.getElementById('weightChart').getContext('2d');
+	  // Filter calendarData keys by date range and valid weight
+	  const weightKeys = Object.keys(calendarData)
+		.filter(k => {
+		  const date = parseDateKey(k);
+		  return date >= start && date <= end &&
+				 calendarData[k].weight &&
+				 parseFloat(calendarData[k].weight) > 0;
+		})
+		.sort();
+	  
+	  // If no valid weights in the range, destroy the chart and return
+	  if (weightKeys.length < 1) {
+		if (weightChart) {
+		  weightChart.destroy();
+		  weightChart = null;
+		}
+		return;
+	  }
+	  
+	  // Build data points for the chart – each with x (date) and y (weight)
+	  const dataPoints = weightKeys.map(k => ({
+		x: k, // Expecting "YYYY-MM-DD" (parseable by the adapter)
+		y: parseFloat(calendarData[k].weight)
+	  }));
+	  
+	  // Determine Y axis bounds
+	  const weights = dataPoints.map(dp => dp.y);
+	  const minWeight = Math.min(...weights);
+	  const maxWeight = Math.max(...weights);
+	  const suggestedMin = Math.max(0, minWeight - 1);
+	  const suggestedMax = maxWeight + 1;
+	  
+	  // Destroy any existing chart before re-creating
+	  if (weightChart) {
+		weightChart.destroy();
+		weightChart = null;
+	  }
+	  
+	  const ctx = document.getElementById('weightChart').getContext('2d');
+	  
+	  // Highlight today's weight if available
+	  const todayKey = getDateKey(new Date());
+	  const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
+		dataPoints, todayKey, '#4DAAFF', '#FFDD77', 2.5, 5
+	  );
+	  
+	  // Create the Chart.js line chart using a time scale for the x axis.
+	  weightChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+		  // We use the dataPoints array which includes x values
+		  datasets: [{
+			label: 'Weight (kg)',
+			data: dataPoints,
+			borderColor: '#4DAAFF',
+			backgroundColor: 'rgba(77, 169, 255, 0.2)',
+			fill: true,
+			tension: 0.1,
+			pointRadius: pointRadii,
+			pointBackgroundColor: bgColors,
+			pointBorderColor: borderColors,
+			pointHoverRadius: 6
+		  }]
+		},
+		options: {
+		  responsive: true,
+		  maintainAspectRatio: false,
+		  scales: {
+			x: {
+			  type: 'time',
+			  time: {
+				unit: 'day',
+				tooltipFormat: 'MMM d, yyyy',
+				displayFormats: {
+				  day: 'MMM d'
+				}
+			  },
+			  title: { display: true, text: 'Date' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			},
+			y: {
+			  suggestedMin: suggestedMin,
+			  suggestedMax: suggestedMax,
+			  title: { display: true, text: 'Weight (kg)' },
+			  ticks: { color: '#ccc' },
+			  grid: { color: '#555' }
+			}
+		  },
+		  plugins: {
+			legend: { labels: { color: '#eee' } }
+		  }
+		}
+	  });
+	}
 
-      // We highlight "today" if it's in data
-      const todayKey = getDateKey(new Date());
-      const { bgColors, borderColors, pointRadii } = buildHighlightArrays(
-        dataPoints, todayKey, '#4DAAFF', '#FFDD77', 2.5, 5
-      );
-
-      weightChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Weight (kg)',
-            data: dataPoints.map(dp => dp.y),
-            borderColor: '#4DAAFF',
-            backgroundColor: 'rgba(77, 169, 255,0.2)',
-            fill: true,
-            tension: 0.1,
-            pointRadius: pointRadii,
-            pointBackgroundColor: bgColors,
-            pointBorderColor: borderColors,
-            pointHoverRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { 
-              title: { display: true, text: 'Date' }, 
-              ticks: { color: '#ccc' }, 
-              grid: { color: '#555' }
-            },
-            y: { 
-              suggestedMin, 
-              suggestedMax, 
-              title: { display: true, text: 'Weight (kg)' }, 
-              ticks: { color: '#ccc' }, 
-              grid: { color: '#555' } 
-            }
-          },
-          plugins: {
-            legend: { labels: { color: '#eee' } }
-          }
-        }
-      });
-    }
     function buildHighlightArrays(dataPoints, highlightDateKey, normalColor, highlightColor, normalRadius=4, highlightRadius=6) {
       const bgColors = [];
       const borderColors = [];
@@ -9336,6 +9420,9 @@
 	  });
 	  document.head.appendChild(styleSheet);
 	  buildColorSwatches();
+	  
+	  // weight chart buttons
+	  setupWeightChartRangeButtons();
 
       // Single modal
       document.getElementById("singleSaveBtn").addEventListener("click", saveSingleModal);
